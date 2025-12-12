@@ -4,6 +4,15 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/store/*": ["store/*"],
+      "@/lib/*": ["lib/*"]
+    }
+  },
   images: {
     // Используем remotePatterns вместо domains, как требуется
     remotePatterns: [
