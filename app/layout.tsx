@@ -1,13 +1,13 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const roboto = Roboto({
+const roboto = Inter({
   weight: ["400", "500", "700"], // какие начертания нужны
   subsets: ["latin", "cyrillic"], // можно оставить только "latin", если кириллица не нужна
   display: "swap",               // чтобы не было задержки при загрузке
-  variable: "--font-roboto",     // создаст CSS-переменную для использования
+  variable: "--font-Inter",     // создаст CSS-переменную для использования
 });
 
 
@@ -40,10 +40,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.variable}`}>
 
-
             <main>{children}</main>
             {modal}
-
 
       </body>
     </html>
