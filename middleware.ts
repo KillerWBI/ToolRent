@@ -1,17 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const privateRoutes = ['/profile', '/create', '/tools/new'];
-const authRoutes = ['/auth/login', '/auth/register'];
+// точные приватные маршруты
+const PRIVATE_ROUTES = ['/profile'];          // свой профиль
+// все приватные маршруты с префиксом
+const PRIVATE_PREFIXES = ['/dashboard'];
+// маршруты авторизации
+const AUTH_PREFIXES = ['/login', '/register'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get('accessToken')?.value;
 
-  if (!token && privateRoutes.some(p => pathname.startsWith(p))) {
-    return NextResponse.redirect(new URL('/auth/login', request.url));
+  // приватная страница без токена
+  const isPrivate =
+    PRIVATE_ROUTES.includes(pathname) ||
+    PRIVATE_PREFIXES.some(prefix => pathname.startsWith(prefix));
+
+  // страницы логина/регистрации для уже залогиненного пользователя
+  const isAuthRoute = AUTH_PREFIXES.some(prefix => pathname.startsWith(prefix));
+
+  // ❌ пользователь не залогинен → редирект на /auth/login
+  if (!token && isPrivate) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (token && authRoutes.some(p => pathname.startsWith(p))) {
+  // ❌ пользователь залогинен → редирект с /auth/login или /auth/register на /
+  if (token && isAuthRoute) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -19,5 +33,9 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/create/:path*', '/auth/:path*', '/tools/new'],
+  matcher: [
+    '/profile',          // свой профиль
+    '/dashboard/:path*', // все приватные dashboard маршруты
+    '/auth/:path*',      // страницы логина/регистрации
+  ],
 };
