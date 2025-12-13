@@ -1,4 +1,6 @@
 // app/layout.tsx
+import Footer from "@/components/layout/Footer/Footer";
+import Header from "@/components/layout/Header/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -39,10 +41,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable}`}>
-
+          <Header/>
             <main>{children}</main>
             {modal}
-
+          <Footer/>
       </body>
     </html>
   );
