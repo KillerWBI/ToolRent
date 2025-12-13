@@ -79,3 +79,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+// Backwards-compatible alias: some files import `useAuth`
+export const useAuth = useAuthStore;
