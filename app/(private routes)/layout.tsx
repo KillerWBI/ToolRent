@@ -4,6 +4,6 @@ import { verifyAuthServer } from '../../lib/auth';
 
 export default async function PrivateLayout({ children }: { children: ReactNode }) {
   const token = await verifyAuthServer();
-  if (!token) redirect('/auth/login');
+  if (!token) redirect('/login');
   return <>{children}</>;
 }
