@@ -1,7 +1,7 @@
 "use client";
 
-import { create } from "zustand";
 import axios from "axios";
+import { create } from "zustand";
 
 interface User {
   id: string;
@@ -18,7 +18,7 @@ interface AuthState {
   logout: () => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_SERVER_URL; 
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 // ⚠️ ВАЖНО: для client-side всегда NEXT_PUBLIC_
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         loading: false,
       });
     } catch (error) {
-      console.warn("Auth: user not authenticated");
+      console.warn(error + "Auth: user not authenticated");
 
       set({
         user: null,
@@ -79,3 +79,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+// Backwards-compatible alias: some files import `useAuth`
+export const useAuth = useAuthStore;

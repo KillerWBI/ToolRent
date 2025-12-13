@@ -1,15 +1,15 @@
-import { Tool } from "@/types/tool";
-import { ToolsResponse } from "@/lib/api/tools";
-import styles from "./FeaturedToolsBlock.module.css";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
+import { ToolsResponse } from "@/lib/api/tools";
+import { Tool } from "@/types/tool";
 import Link from "next/link";
+import styles from "./FeaturedToolsBlock.module.css";
 
 // Функция для получения данных на сервере
+
 async function getFeaturedTools(): Promise<Tool[]> {
     try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
-        const res = await fetch(`${apiUrl}/tools`, {
+        const res = await fetch(`${process.env.NEXT_SERVER_URL}/api/tools`, {
             next: { revalidate: 60 }, // Обновлять данные раз в минуту
         });
 
