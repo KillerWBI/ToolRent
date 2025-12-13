@@ -5,32 +5,29 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const roboto = Inter({
-  weight: ["400", "500", "700"], // какие начертания нужны
-  subsets: ["latin", "cyrillic"], // можно оставить только "latin", если кириллица не нужна
-  display: "swap",               // чтобы не было задержки при загрузке
-  variable: "--font-Inter",     // создаст CSS-переменную для использования
+const inter = Inter({
+    weight: ["400", "500", "600", "700"], // Regular, Medium, SemiBold, Bold
+    subsets: ["latin", "cyrillic"],
+    display: "swap",
+    variable: "--font-Inter",
 });
 
-
 export const metadata: Metadata = {
-  title: "Tools – Create Tools",
-  description: "Create, organize and manage your notes easily with Tools.",
-  openGraph: {
-    title: "NoteHub – Create Tools",
-    description: "Create, organize and manage your notes easily with Tools.",
-    url: "",
-    images: [
-      {
-        url: "",
-        width: 1200,
-        height: 630,
-        alt: "Tools gifts",
-      },
-    ],
-  },
+    title: {
+        template: "%s | ToolNext",
+        default: "ToolNext — Оренда професійних інструментів",
+    },
+    description:
+        "Зручний сервіс для оренди та здачі будівельних інструментів. Широкий вибір категорій, чесні рейтинги та відгуки. Знайдіть потрібний інструмент або заробляйте на власному обладнанні.",
+    openGraph: {
+        title: "ToolNext — Оренда професійних інструментів",
+        description:
+            "Платформа для оренди інструментів. Дрилі, пили, генератори та інше обладнання для вашого ремонту та будівництва.",
+        siteName: "ToolNext",
+        locale: "uk_UA",
+        type: "website",
+    },
 };
-
 export default function RootLayout({
   children,
   modal,
@@ -40,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable}`}>
+      <body className={`${inter.variable}`}>
           <Header/>
             <main>{children}</main>
             {modal}

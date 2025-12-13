@@ -1,7 +1,7 @@
 "use client";
 
-import axios from "axios";
 import { create } from "zustand";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -10,38 +10,72 @@ interface User {
 
 interface AuthState {
   user: User | null;
+  isAuthenticated: boolean;
   loading: boolean;
+
   setUser: (user: User | null) => void;
-  logout: () => void;
   fetchUser: () => Promise<void>;
+  logout: () => void;
 }
 
-const API_URL = process.env.NEXT_SERVER_URL;
+const API_URL = process.env.NEXT_PUBLIC_SERVER_URL; 
+// ⚠️ ВАЖНО: для client-side всегда NEXT_PUBLIC_
 
-export const useAuth = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  isAuthenticated: false,
   loading: true,
 
-  setUser: (user) => set({ user }),
-
-  logout: () => {
-    set({ user: null });
-    if (typeof window !== "undefined") {
-      document.cookie =
-        "accessToken=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
-    }
-  },
+  setUser: (user) =>
+    set({
+      user,
+      isAuthenticated: !!user,
+      loading: false,
+    }),
 
   fetchUser: async () => {
     set({ loading: true });
+
     try {
-      const res = await axios.get(`${API_URL}/me`, {
-        withCredentials: true, // чтобы отправлять cookie
+      const res = await axios.get<User>(`${API_URL}/me`, {
+        withCredentials: true,
       });
-      set({ user: res.data, loading: false });
-    } catch (err) {
-      console.error("Fetch user failed:", err);
-      set({ user: null, loading: false });
+
+      set({
+        user: res.data,
+        isAuthenticated: true,
+        loading: false,
+      });
+    } catch (error) {
+      console.warn("Auth: user not authenticated");
+
+      set({
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+      });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await axios.post(
+        `${API_URL}/logout`,
+        {},
+        { withCredentials: true }
+      );
+    } catch {
+      // даже если сервер упал — чистим локально
+    }
+
+    set({
+      user: null,
+      isAuthenticated: false,
+    });
+
+    if (typeof window !== "undefined") {
+      document.cookie =
+        "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
     }
   },
 }));
