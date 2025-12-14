@@ -1,23 +1,32 @@
+import type { PublicUser } from "@/types/user";
 import styles from "./UserProfile.module.css";
 
 type Props = {
-  name: string;
+  user: PublicUser;
 };
 
-function getInitial(name: string) {
-  const trimmed = (name || "").trim();
-  if (!trimmed) return "?";
-  return trimmed[0].toUpperCase();
-}
+export default function UserProfile({ user }: Props) {
+  const letter = (user?.name?.trim()?.[0] || "?").toUpperCase();
+  const hasAvatar = Boolean((user as any)?.avatarUrl);
 
-export default function UserProfile({ name }: Props) {
   return (
-    <section className={styles.root} aria-label="User profile">
-      <div className={styles.avatar} aria-hidden="true">
-        {getInitial(name)}
-      </div>
+    <div className={styles.wrap}>
+      {hasAvatar ? (
+        <img
+          className={styles.avatarImg}
+          src={(user as any).avatarUrl}
+          alt={user.name}
+          width={96}
+          height={96}
+          loading="lazy"
+        />
+      ) : (
+        <div className={styles.avatarLetter} aria-label={`Аватар ${user.name}`}>
+          {letter}
+        </div>
+      )}
 
-      <p className={styles.name}>{name}</p>
-    </section>
+      <h1 className={styles.name}>{user.name}</h1>
+    </div>
   );
 }

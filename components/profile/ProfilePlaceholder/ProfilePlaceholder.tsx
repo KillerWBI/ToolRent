@@ -1,30 +1,35 @@
-"use client";
-
 import Link from "next/link";
 import styles from "./ProfilePlaceholder.module.css";
-import useAuth from "@/hooks/useAuth";
 
-export default function ProfilePlaceholder() {
-  const { isAuthenticated } = useAuth();
+type Props = {
+  isAuthorized?: boolean;
+};
 
+export default function ProfilePlaceholder({ isAuthorized = false }: Props) {
   return (
-    <div className={styles.root}>
-      <p className={styles.title}>
+    <div className={styles.wrap}>
+      <p className={styles.text}>
         У цього користувача ще не опубліковано жодного інструменту
       </p>
 
-      <p className={styles.desc}>
-        Усі інструменти можна переглянути в каталозі.
-      </p>
-
-      {isAuthenticated ? (
-        <Link className={styles.button} href="/create">
-          Опублікувати інструмент
-        </Link>
+      {isAuthorized ? (
+        <>
+          <p className={styles.subtext}>
+            Опублікуйте свій перший інструмент та почніть заробляти
+          </p>
+          <Link className={styles.btn} href="/tools/add">
+            Опублікувати інструмент
+          </Link>
+        </>
       ) : (
-        <Link className={styles.button} href="/tools">
-          Всі інструменти
-        </Link>
+        <>
+          <p className={styles.subtext}>
+            У нас є великий вибір інструментів від інших користувачів
+          </p>
+          <Link className={styles.btn} href="/tools">
+            Всі інструменти
+          </Link>
+        </>
       )}
     </div>
   );

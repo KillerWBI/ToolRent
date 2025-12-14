@@ -1,26 +1,38 @@
-.root {
+.wrap {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
-.avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
+.avatarImg,
+.avatarLetter {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  flex: 0 0 96px;
+}
 
-  background: #d9d9d9;
-  color: rgba(0, 0, 0, 0.75);
+.avatarImg {
+  object-fit: cover;
+  display: block;
+}
 
-  font-size: 26px;
+.avatarLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9eef5;
+  color: #111827;
   font-weight: 800;
-  line-height: 1;
+  font-size: 36px;
+  letter-spacing: 0.5px;
+  user-select: none;
 }
 
 .name {
   margin: 0;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #111827;
 }
