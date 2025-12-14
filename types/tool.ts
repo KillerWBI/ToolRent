@@ -20,20 +20,17 @@ export interface Feedback {
     createdAt: string;
 }
 
-export interface Tool {
-    _id: string;
-    name: string;
-    description: string;
-    pricePerDay: number;
-    images: string[];
-    terms: string;
-    // Specifications приходить як об'єкт { "Ключ": "Значення" }
-    specifications?: Record<string, string>;
-    rating: number;
-    category: Category; // Populate
-    owner: UserInfo; // Populate
-    feedbacks?: Feedback[]; // Populate (якщо запитуємо getToolById)
-    bookedDates?: { from: string; to: string }[];
-    createdAt: string;
-    updatedAt: string;
-}
+
+export type Tool = {
+  _id: string; 
+  owner: string; 
+  category: string;
+  name: string;
+  description: string;
+  pricePerDay: number;
+  images: string; 
+  rating?: number;
+  specifications?: Record<string, string>;
+  rentalTerms?: string;
+};
+

@@ -1,0 +1,31 @@
+
+.wrap {
+  margin-top: 12px;
+  max-width: 520px;
+}
+
+.text {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.subtext {
+  margin: 0 0 16px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: #6d28d9;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
