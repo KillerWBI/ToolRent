@@ -1,0 +1,77 @@
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255);
+  z-index: 9999;
+  display: flex;
+}
+
+.burgerHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  height: 72px;
+  box-sizing: border-box;
+}
+
+.closeButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #000;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.closeButton span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: #000;
+  border-radius: 2px;
+  transform-origin: center;
+  transition: all 0.3s ease;
+}
+
+/* Когда меню открыто, делаем крестик */
+.closeButton.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.closeButton.open span:nth-child(2) {
+  opacity: 0; /* скрываем среднюю полоску */
+}
+
+.closeButton.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.navMobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.navMobile a {
+  text-decoration: none;
+  color: #111;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: 0%;
+  text-align: center;
+}
