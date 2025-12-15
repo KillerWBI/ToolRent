@@ -1,35 +1,121 @@
+/* Контейнер */
 .wrapper {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  width: 100%;
 }
-
+/* Обгортка */
 .selectWrapper {
   position: relative;
+  width: 304px;
 }
 
-.select {
+/* --- ЗАКРИТА КНОПКА (SelectButton) --- */
+.selectButton {
   width: 304px;
   height: 40px;
-  padding: 10px 40px 10px 14px;
-  border: 1px solid #cfc3ff;
-  border-radius: 8px;
-  background: #fff;
 
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='none'><path d='M12 15.2019C11.888 15.2019 11.7825 15.1813 11.6833 15.1399C11.584 15.0986 11.4886 15.0323 11.3973 14.9409L6.45329 9.99694C6.28329 9.82694 6.20246 9.62385 6.21079 9.38769C6.21912 9.15152 6.30829 8.94844 6.47829 8.77844C6.64829 8.60844 6.85137 8.52344 7.08754 8.52344C7.32371 8.52344 7.52679 8.60844 7.69679 8.77844L12 13.1067L16.3283 8.77844C16.4983 8.60844 16.6972 8.5276 16.925 8.53594C17.1529 8.54427 17.3518 8.63344 17.5218 8.80344C17.6918 8.97344 17.7768 9.17652 17.7768 9.41269C17.7768 9.64885 17.6918 9.85194 17.5218 10.0219L12.6028 14.9409C12.5115 15.0323 12.4161 15.0986 12.3168 15.1399C12.2176 15.1813 12.112 15.2019 12 15.2019Z' fill='black'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 12px;
+
+  border: 2px solid var(--color-neutral-darkest);
+  border-radius: 6px;
+
+  background: var(--opacity-transparent);
+
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-neutral-darkest);
+
+  cursor: pointer;
 }
 
+/* Стрілка */
+.arrow {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-neutral-darkest);
+  border-bottom: 2px solid var(--color-neutral-darkest);
+  transform: rotate(45deg);
+  transition: 0.25s ease;
+}
+
+.arrow[data-open="true"] {
+  transform: rotate(-135deg);
+}
+
+/* ВІДКРИТЕ МЕНЮ */
+.dropdown {
+  position: absolute;
+  top: 44px; /* вирівнюємо точно під кнопку */
+  width: 304px;
+  height: 305px;
+
+  border: 2px solid var(--color-electric-violet-light);
+  border-radius: 6px;
+
+  background: var(--color-electric-violet-lightest);
+
+  overflow-y: auto;
+  padding: 6px 0;
+
+  z-index: 20;
+}
+
+/* СКРОЛ */
+.dropdown::-webkit-scrollbar {
+  width: 7px;
+  background: var(--color-electric-violet-dark);
+  border-radius: 4px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  width: 3px;
+  height: 56px;
+  background: var(--color-electric-violet-light);
+  border-radius: 4px;
+}
+
+/* --- ПУНКТИ МЕНЮ --- */
+.option {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-neutral-darkest);
+
+  cursor: pointer;
+}
+
+.option:last-child {
+  margin-bottom: 0;
+}
+
+/* Ховер */
+.option:hover {
+  background: rgba(106, 90, 205, 0.15);
+}
+
+/* Кнопка скидання */
 .resetButton {
-  color: #6a5acd;
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 150%;
+  color: var(--color-neutral-darkest);
+
   background: transparent;
   border: none;
-  font-size: 14px;
   cursor: pointer;
-  width: 119px;
-  height: 21px;
 }
 
 .resetButton:disabled {
