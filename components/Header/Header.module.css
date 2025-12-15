@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+}
+
+.auth {
+  display: flex;
+  gap: 12px;
+}
+
+.primary {
+  background: #2563eb;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.burger {
+  display: none;
+}
+
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .nav,
+  .auth,
+  .user {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+}
