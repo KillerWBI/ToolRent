@@ -1,3 +1,4 @@
+import BenefitsBlock from "@/components/home/BenefitsBlock/BenefitsBlock";
 import FeaturedToolsBlock from "@/components/home/FeaturedToolsBlock/FeaturedToolsBlock";
 
 export const metadata = {
@@ -8,6 +9,7 @@ export const metadata = {
 export default function HomePage() {
     return (
         <main>
+            <BenefitsBlock/>
             <FeaturedToolsBlock />
         </main>
     );

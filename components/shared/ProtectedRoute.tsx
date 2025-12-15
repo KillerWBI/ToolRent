@@ -1,17 +1,21 @@
 "use client";
 
 import { useAuth } from "@/store/auth.store";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
-  const router = useRouter();
+  const { user, loading, fetchUser } = useAuth();
+
 
   useEffect(() => {
-    if (!user) router.push("/login");
-  }, [user, router]);
+    // попробуем получить пользователя, если ещё не загружен
+    if (!user && !loading) {
+      fetchUser();
+    }
 
-  if (!user) return null;
-  return children;
+  }, [user, loading, fetchUser]);
+
+
+
+  return <>{children}</>;
 }
