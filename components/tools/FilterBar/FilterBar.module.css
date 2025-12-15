@@ -53,7 +53,7 @@
 /* ВІДКРИТЕ МЕНЮ */
 .dropdown {
   position: absolute;
-  top: 44px; /* вирівнюємо точно під кнопку */
+  top: 44px;
   width: 304px;
   height: 305px;
 
