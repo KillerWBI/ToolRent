@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import ProtectedRoute from "../components/shared/ProtectedRoute";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,10 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable}`}>
+        <ProtectedRoute>
           <Header/>
             <main>{children}</main>
             {modal}
           <Footer/>
+        </ProtectedRoute>
       </body>
     </html>
   );
