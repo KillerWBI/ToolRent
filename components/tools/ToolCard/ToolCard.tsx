@@ -74,7 +74,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
                     <p className={styles.price}>{tool.pricePerDay} грн/доба</p>
                 </div>
 
-                {renderStars(tool.rating)}
+                {renderStars(tool.rating ?? 0)}
 
                 <div className={styles.actions}>
                     {isAuthenticated ? (

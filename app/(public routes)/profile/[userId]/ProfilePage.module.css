@@ -1,0 +1,20 @@
+
+.page {
+  width: 100%;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.toolsSection {
+  margin-top: 24px;
+}
+
+.toolsTitle {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+}

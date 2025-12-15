@@ -8,10 +8,12 @@ import styles from "./FeaturedToolsBlock.module.css";
 
 async function getFeaturedTools(): Promise<Tool[]> {
     try {
-
-        const res = await fetch(`${process.env.NEXT_SERVER_URL}/api/tools`, {
-            next: { revalidate: 60 }, // Обновлять данные раз в минуту
-        });
+        const res = await fetch(
+            `${process.env.NEXT_SERVER_URL}/api/tools`,
+            {
+                next: { revalidate: 60 }, // Обновлять данные раз в минуту
+            }
+        );
 
         if (!res.ok) {
             throw new Error("Failed to fetch tools");
