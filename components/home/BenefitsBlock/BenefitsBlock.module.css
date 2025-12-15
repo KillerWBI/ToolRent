@@ -1,36 +1,78 @@
 .benefitsBlock{
-    padding-top:112px;
-    padding-bottom: 112px;
-}
-.benefitsDesc{
-    display: flex;
-    gap: 80px;
-    margin-bottom: 80px;
-}
-.benefitsSvg{
-    margin-bottom: 24px;
+    padding-top:64px;
+    padding-bottom: 64px;
 }
 .benefitsTitle{
-    font-size: 40px;
+    font-size: 32px;
     font-weight: 700;
+    line-height: 1.2;
     margin: 0;
     margin-bottom: 24px;
-    width: 616px;
+
 }
 .benefitsText{
-    font-size: 18px;
-    width: 616px;
-    margin: 0;;
-}
-.benefitsLst{
-    display: flex;
-    gap: 32px;
-    list-style: none;
-    padding:0;
-}
-.benefitsListItem{
-    width: 416px;
-}
-.benefitsListText{
     font-size: 16px;
+    letter-spacing: 0;
+    margin-bottom: 40px;
+    margin-top: 0;
+}
+
+.benefitsLst{
+    list-style: none;
+    padding-left:0;
+}
+.benefitsSvg{
+    fill: #000000;
+    margin-bottom: 24px;
+    margin-top:0;
+}
+
+.benefitsListTitel{
+    font-size: 20px;
+    line-height: 1.4;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+.benefitsText {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+@media (min-width: 768px){
+    .benefitsTitle {
+    font-size: 28px;
+    }
+}
+
+@media (min-width: 1440px){
+    .benefitsBlock {
+        padding-top: 112px;
+        padding-bottom: 112px;
+        }
+    .benefitsDesc {
+        display: flex;
+        gap: 80px;
+        margin-bottom: 80px;
+        }
+    .benefitsTitle{
+        font-size: 40px;
+        width: 616px;
+        }
+    .benefitsText {
+        font-size: 18px;
+        width: 616px;
+        } 
+    .benefitsLst {
+        display: flex;
+        gap: 32px;
+        }
+    .benefitsListItem {
+        width: 416px;
+        }
+    .benefitsListTitel {
+        font-size: 24px;
+        }
+    .benefitsListText {
+        font-size: 16px;
+        }
 }
