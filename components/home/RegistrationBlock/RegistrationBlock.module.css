@@ -1,0 +1,56 @@
+.div {
+    max-width: 335px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+    margin-bottom: 24px;
+}
+
+.text {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+    margin-bottom: 32px;
+}
+
+.button {
+    border: none;
+    background-color: #8808CC;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 24px;
+    width: 335px;
+    height: 44px;
+    margin-bottom: 32px;
+    cursor: pointer;
+}
+
+
+.RgImg {
+    border-radius: 16px;
+}
+
+@media (min-width: 768px) {
+    .div {
+        max-width: 704px;
+    }
+
+    .title {
+         font-size: 30px;
+    }
+
+    .button {
+        width: 186px;
+        height: 44px;
+    }
+
+    .RgImg {
+        width: 704px;
+        height: 469px;
+    }
+}
