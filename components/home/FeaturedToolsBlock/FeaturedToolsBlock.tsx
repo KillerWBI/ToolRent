@@ -9,7 +9,7 @@ import styles from "./FeaturedToolsBlock.module.css";
 async function getFeaturedTools(): Promise<Tool[]> {
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/tools`,
+            `${process.env.NEXT_SERVER_URL}/api/tools`,
             {
                 next: { revalidate: 60 }, // Обновлять данные раз в минуту
             }
