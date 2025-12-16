@@ -3,8 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, type MouseEvent } from "react";
 import { Tool } from "@/types/tool";
 import { useAuthStore } from "@/store/auth.store";
+import { deleteTool } from "@/lib/api/tools";
+import { ConfirmationModal } from "@/components/modal/ConfirmationModal/ConfirmationModal";
 import styles from "./ToolCard.module.css";
 
 interface ToolCardProps {
@@ -12,6 +16,10 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool }: ToolCardProps) {
+    const router = useRouter();
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
     // Получаем статус авторизации из Zustand стора
     const { isAuthenticated } = useAuthStore();
 
@@ -26,13 +34,39 @@ export default function ToolCard({ tool }: ToolCardProps) {
         }
     }
 
-    const handleDelete = (e: React.MouseEvent) => {
-        e.preventDefault(); // Предотвращаем переход по ссылке, если кнопка внутри Link (хотя здесь мы разделим области)
-        // Логика открытия ConfirmationModal
-        // В зависимости от реализации модалок в проекте (через URL или State), здесь будет вызов.
-        // Например, если через Route Intercepting:
-        // router.push(`/dashboard/tools/${tool._id}/delete`);
-        console.log("Open delete confirmation for:", tool._id);
+    const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setDeleteError(null);
+        setShowConfirm(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (isDeleting) return;
+
+        setIsDeleting(true);
+        setDeleteError(null);
+
+        try {
+            await deleteTool(tool._id);
+            setShowConfirm(false);
+            router.refresh();
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "Не вдалося видалити інструмент. Спробуйте ще раз.";
+
+            setDeleteError(message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleCancelDelete = () => {
+        if (isDeleting) return;
+
+        setShowConfirm(false);
+        setDeleteError(null);
     };
 
     // Формируем звезды рейтинга
@@ -81,7 +115,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
                         // Авторизованный пользователь
                         <>
                             <Link
-                                href={`/dashboard/tools/${tool._id}/edit`} // Исправлен путь согласно структуре dashboard
+                                href={`/tools/${tool._id}/edit`}
                                 className={styles.editButton}
                             >
                                 Редагувати
@@ -106,6 +140,15 @@ export default function ToolCard({ tool }: ToolCardProps) {
                     )}
                 </div>
             </div>
+
+            <ConfirmationModal
+                open={showConfirm}
+                message="Ви впевнені, що хочете видалити оголошення?"
+                isLoading={isDeleting}
+                error={deleteError ?? undefined}
+                onConfirm={handleConfirmDelete}
+                onCancel={handleCancelDelete}
+            />
         </div>
     );
 }
