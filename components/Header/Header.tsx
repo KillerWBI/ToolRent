@@ -19,9 +19,10 @@ export default function Header() {
           <div className={styles.logoWrapper}>
             <Link href="/">
               <img
-                src="/svg/logo.svg"
-                alt="LOGO"
-                className={styles.logo}
+                src="/svg/company-logo.svg"
+                alt="Company logo"
+                className={styles.companyHeder}
+                width={124}
                 height={20}
               />
             </Link>
@@ -48,12 +49,12 @@ export default function Header() {
           <button
             className={styles.burger}
             onClick={() => setIsOpen((prev) => !prev)}
+            aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            <svg className={styles.icon}>
+              <use href={`/svg/sprite.svg#${isOpen ? "close" : "menu"}`} />
+            </svg>
           </button>
-
           {/* Мобильное меню */}
           <MobileMenu
             isOpen={isOpen}

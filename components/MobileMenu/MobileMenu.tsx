@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
 
@@ -17,28 +19,7 @@ export default function MobileMenu({
   return (
     <div className={styles.mobileMenu}>
       <div className="container">
-        <div className={styles.burgerHeader}>
-          <Link href="/">
-            <img
-              src="/svg/logo.svg"
-              alt="LOGO"
-              className={styles.logo}
-              height={20}
-            />
-          </Link>
-
-          {/* Крестик для закрытия */}
-          <button
-            className={`${styles.closeButton} ${isOpen ? styles.open : ""}`}
-            onClick={onClose}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-
-        {/* Ссылки */}
+        {/* Навигация мобильного меню */}
         <nav className={styles.navMobile}>
           <Link
             href="/"
