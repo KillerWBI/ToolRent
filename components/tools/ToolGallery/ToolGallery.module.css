@@ -1,4 +1,13 @@
+.imgWrap {
+  border-radius: 16px;
+  height: 251px;
+  overflow: hidden;
+}
+
 .image {
-    display: block;
-    max-height: 251px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
