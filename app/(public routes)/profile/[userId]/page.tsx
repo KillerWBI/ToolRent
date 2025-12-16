@@ -1,11 +1,11 @@
-import styles from "./ProfilePage.module.css";
-import { request } from "@/lib/api/api";
-import type { PublicUser } from "@/types/user";
+import { api } from "@/lib/api/api";
 import type { Tool } from "@/types/tool";
+import type { PublicUser } from "@/types/user";
+import styles from "./ProfilePage.module.css";
 
+import ProfilePlaceholder from "@/components/profile/ProfilePlaceholder/ProfilePlaceholder";
 import UserProfile from "@/components/profile/UserProfile/UserProfile";
 import ToolsGrid from "@/components/tools/ToolsGrid/ToolsGrid";
-import ProfilePlaceholder from "@/components/profile/ProfilePlaceholder/ProfilePlaceholder";
 
 type PageProps = {
   params: Promise<{ userId: string }>;
@@ -20,14 +20,14 @@ function extractArray<T>(res: any): T[] {
 }
 
 function extractUser(res: any): PublicUser {
-  
+
   if (res?.data && typeof res.data === "object") return res.data as PublicUser;
   return res as PublicUser;
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { userId } = await params;
-  const rawUser = await request<any>(`/api/users/${userId}`);
+  const rawUser = await api<any>(`/api/users/${userId}`);
   const user = extractUser(rawUser);
 
   return {
@@ -40,8 +40,8 @@ export default async function ProfilePage({ params }: PageProps) {
   const { userId } = await params;
 
   const [rawUser, rawTools] = await Promise.all([
-    request<any>(`/api/users/${userId}`),
-    request<any>(`/api/users/${userId}/tools`),
+    api<any>(`/api/users/${userId}`),
+    api<any>(`/api/users/${userId}/tools`),
   ]);
 
   const user = extractUser(rawUser);

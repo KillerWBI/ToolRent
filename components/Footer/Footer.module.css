@@ -31,12 +31,13 @@
 .nav a {
   text-decoration: none;
   color: #111;
+  text-decoration: none;
+  transition: all 0.3s ease;
   font-size: 12px;
   font-weight: 600;
   line-height: 150%;
   letter-spacing: 0%;
   text-align: center;
-  /* width: 335px; */
   height: 40px;
   opacity: 1;
   padding-top: 8px;
@@ -47,10 +48,9 @@
   text-align: center;
 }
 
-.nav a:hover,
-.nav a:focus {
-  background: var(--Color-Electric-Violet, #8808cc);
-  box-sizing: border-box;
+.footerLink:hover,
+.footerLink:focus {
+  text-decoration: underline;
 }
 
 .line {

@@ -1,7 +1,15 @@
 @import "modern-normalize";
 
 body {
-  font-family: var(--font-roboto), sans-serif;
+  font-family:
+      var(--font-Inter),
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -11,7 +19,15 @@ body {
   min-width: 400px; /* Prevent layout breakage on very small screens */
 }
 :root {
-  font-family: var(--font-roboto), sans-serif;
+  font-family:
+      var(--font-Inter),
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
 }
 
 /* Container - Mobile First Approach */

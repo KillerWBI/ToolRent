@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./FilterBar.module.css";
-import { getCategories, type Category } from "@/lib/api/categories";
+import { getCategories } from "@/lib/api/categories";
+import type { Category } from "@/types/category";
 
 const ALL_CATEGORIES_VALUE = "all";
 
@@ -19,12 +20,17 @@ const FilterBar = () => {
 
   const currentCategory = searchParams.get("category") ?? ALL_CATEGORIES_VALUE;
 
+  // === ОНОВЛЕНО ПІД ОБ’ЄКТ ===
   useEffect(() => {
     const loadCategories = async () => {
       try {
         setIsLoading(true);
-        const data = await getCategories();
-        setCategories(data);
+
+        const list = await getCategories();
+
+        console.log("Loaded categories:", list);
+
+        setCategories(list);
       } catch (error) {
         console.error("Failed to load categories", error);
       } finally {
@@ -34,6 +40,7 @@ const FilterBar = () => {
 
     loadCategories();
   }, []);
+  // ===========================
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -85,7 +92,9 @@ const FilterBar = () => {
           onClick={() => setOpen((prev) => !prev)}
         >
           {currentLabel}
-          <span className={styles.arrow} data-open={open}></span>
+          <svg className={`${styles.arrow} ${open ? styles.open : ""}`}>
+            <use href="/svg/sprite.svg#icon-Vector"></use>
+          </svg>
         </button>
 
         {open && (

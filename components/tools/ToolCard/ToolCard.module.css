@@ -91,20 +91,22 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px 24px;
+    padding: 8px 20px;
     background-color: #fff;
     color: #000;
     text-decoration: none;
-    border: 2px solid #000;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+    border: 2px solid #8808cc;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
     transition: all 0.2s;
 }
 
 .detailsButton:hover,
 .editButton:hover {
-    background-color: #f0f0f0;
+    background-color: #8808cc;
+    color: #fff;
 }
 
 .deleteButton {

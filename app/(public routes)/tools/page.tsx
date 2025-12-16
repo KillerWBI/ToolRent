@@ -1,25 +1,15 @@
-// export default function Page() {
-//   return null;
-// }
-
-// змінив щоб протестувати FilterBar на сторінці інструментів
-import { getTools } from "@/lib/api/tools";
-import FilterBar from "@/components/tools/FilterBar/FilterBar";
 import ToolsGrid from "@/components/tools/ToolsGrid/ToolsGrid";
 
-export default async function ToolsPage({ searchParams }: any) {
-  const category = searchParams?.category || undefined;
+export const metadata = {
+  title: "Усі інструменти | ToolNext",
+  description: "Перегляньте всі доступні інструменти для оренди",
+};
 
-  const data = await getTools({
-    category,
-    limit: 50,
-    page: 1,
-  });
-
+export default function Page() {
   return (
-    <div>
-      <FilterBar />
-      <ToolsGrid tools={data.tools} />
-    </div>
+    <main>
+      <ToolsGrid />
+    </main>
   );
 }
+

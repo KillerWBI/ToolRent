@@ -5,7 +5,7 @@ const PRIVATE_ROUTES = ['/profile'];          // свой профиль
 // все приватные маршруты с префиксом
 const PRIVATE_PREFIXES = ['/dashboard'];
 // маршруты авторизации
-const AUTH_PREFIXES = ['/login', '/register'];
+const AUTH_PREFIXES = ['/auth/login', '/auth/register'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

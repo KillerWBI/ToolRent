@@ -14,10 +14,30 @@ export default function Footer() {
             />
           </div>
           <nav className={styles.nav}>
-            <a href="/">Головна</a>
-            <a href="/tools">Інструменти</a>
-            <a href="/auth/login">Увійти</a>
-            <a href="/auth/register">Зареєструватися</a>
+            <Link
+              href="/"
+              className={styles.footerLink}
+            >
+              Головна
+            </Link>
+            <Link
+              href="/tools"
+              className={styles.footerLink}
+            >
+              Інструменти
+            </Link>
+            <Link
+              href="/auth/login"
+              className={styles.footerLink}
+            >
+              Увійти
+            </Link>
+            <Link
+              href="/auth/register"
+              className={styles.footerLink}
+            >
+              Зареєструватися
+            </Link>
           </nav>
           <div className={styles.socialLink}>
             <img

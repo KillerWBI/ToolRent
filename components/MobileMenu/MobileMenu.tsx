@@ -40,17 +40,47 @@ export default function MobileMenu({
 
         {/* Ссылки */}
         <nav className={styles.navMobile}>
-          <Link href="/">Головна</Link>
-          <Link href="/tools">Інструменти</Link>
+          <Link
+            href="/"
+            onClick={onClose}
+          >
+            Головна
+          </Link>
+          <Link
+            href="/tools"
+            onClick={onClose}
+          >
+            Інструменти
+          </Link>
           {isAuth ? (
             <>
-              <Link href="/profile">Мій профіль</Link>
-              <Link href="/create">Опублікувати оголошення</Link>
+              <Link
+                href="/profile"
+                onClick={onClose}
+              >
+                Мій профіль
+              </Link>
+              <Link
+                href="/create"
+                onClick={onClose}
+              >
+                Опублікувати оголошення
+              </Link>
             </>
           ) : (
             <>
-              <Link href="/auth/login">Увійти</Link>
-              <Link href="/auth/register">Зареєструватися</Link>
+              <Link
+                href="/login"
+                onClick={onClose}
+              >
+                Увійти
+              </Link>
+              <Link
+                href="/register"
+                onClick={onClose}
+              >
+                Зареєструватися
+              </Link>
             </>
           )}
         </nav>

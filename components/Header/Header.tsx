@@ -2,14 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAuthStore } from "../../store/auth.store";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
 
 // Временно
-const isAuth = false;
-const user = { name: "Сергій" };
+
 
 export default function Header() {
+const {user, isAuthenticated} = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -31,15 +32,15 @@ export default function Header() {
           <nav className={styles.navHeader}>
             <Link href="/">Головна</Link>
             <Link href="/tools">Інструменти</Link>
-            {isAuth ? (
+            {isAuthenticated ? (
               <>
                 <Link href="/profile">Мій профіль</Link>
                 <Link href="/create">Опублікувати оголошення</Link>
               </>
             ) : (
               <>
-                <Link href="/login">Увійти</Link>
-                <Link href="/register">Зареєструватися</Link>
+                <Link href="/auth/login">Увійти</Link>
+                <Link href="/auth/register">Зареєструватися</Link>
               </>
             )}
           </nav>
@@ -57,7 +58,7 @@ export default function Header() {
           {/* Мобильное меню */}
           <MobileMenu
             isOpen={isOpen}
-            isAuth={isAuth}
+            isAuth={isAuthenticated}
             onClose={() => setIsOpen(false)}
           />
         </div>

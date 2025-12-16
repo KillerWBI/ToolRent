@@ -4,6 +4,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 32px;
 }
 /* Обгортка */
 .selectWrapper {
@@ -14,46 +15,41 @@
 /* --- ЗАКРИТА КНОПКА (SelectButton) --- */
 .selectButton {
   width: 304px;
-  height: 40px;
-
+  min-height: 40px;
+  height: auto;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  gap: 16px;
 
-  padding: 8px 12px;
+  /* border: 2px solid var(--color-neutral-darkest); */
+  border: 2px solid black; /* видалити коли підключать стилі */
 
-  border: 2px solid var(--color-neutral-darkest);
   border-radius: 6px;
-
   background: var(--opacity-transparent);
-
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
   color: var(--color-neutral-darkest);
-
   cursor: pointer;
 }
 
 /* Стрілка */
 .arrow {
   width: 10px;
-  height: 10px;
-  border-right: 2px solid var(--color-neutral-darkest);
-  border-bottom: 2px solid var(--color-neutral-darkest);
-  transform: rotate(45deg);
-  transition: 0.25s ease;
+  height: 7px;
 }
 
 .arrow[data-open="true"] {
-  transform: rotate(-135deg);
+  transform: rotate(-180deg);
 }
 
 /* ВІДКРИТЕ МЕНЮ */
 .dropdown {
   position: absolute;
-  top: 44px; /* вирівнюємо точно під кнопку */
+  top: 44px;
   width: 304px;
   height: 305px;
 
@@ -121,4 +117,36 @@
 .resetButton:disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+.dropdown {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-electric-violet-light)
+    var(--color-electric-violet-dark);
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 7px;
+}
+
+.dropdown::-webkit-scrollbar-track {
+  background: var(--color-electric-violet-dark);
+  border-radius: 4px;
+}
+
+.dropdown::-webkit-scrollbar-thumb {
+  background: var(--color-electric-violet-light);
+  border-radius: 4px;
+}
+
+.arrow {
+  width: 12px;
+  height: 12px;
+  transform: rotate(0deg);
+  transition: transform 0.25s ease;
+  margin-left: auto;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
 }

@@ -26,17 +26,28 @@
 
 .viewAllButton {
     display: inline-block;
-    padding: 12px 32px;
-    background-color: #6c5ce7; /* Example primary color */
+    background-color: #8808cc; /* Example primary color */
     color: #fff;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border: 2px solid #8808cc;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-weight: 500;
+    font-size: 16px;
     transition: background-color 0.3s;
 }
 
-.viewAllButton:hover {
-    background-color: #5a4ad1;
+.viewAllButton:hover,
+.viewAllButton:focus {
+    background-color: white;
+    border: 2px solid #8808cc;
+    color: black;
+}
+
+.viewAllButton:active {
+    background-color: #e7cdf4;
+    border: 2px solid #8808cc;
+    color: black;
 }
 
 @media (min-width: 768px) {
