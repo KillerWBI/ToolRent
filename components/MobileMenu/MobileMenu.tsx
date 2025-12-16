@@ -70,13 +70,13 @@ export default function MobileMenu({
           ) : (
             <>
               <Link
-                href="/auth/login"
+                href="/login"
                 onClick={onClose}
               >
                 Увійти
               </Link>
               <Link
-                href="/auth/register"
+                href="/register"
                 onClick={onClose}
               >
                 Зареєструватися

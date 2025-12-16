@@ -14,10 +14,27 @@ export default function Footer() {
             />
           </div>
           <nav className={styles.nav}>
-            <Link href="/">Головна</Link>
-            <Link href="/tools">Інструменти</Link>
-            <Link href="/login">Увійти</Link>
-            <Link href="/register">Зареєструватися</Link>
+            <Link
+              href="/"
+              className={styles.footerLink}
+            >
+              Головна
+            </Link>
+            <Link
+              href="/tools"
+              className={styles.footerLink}
+            >
+              Інструменти
+            </Link>
+            <Link
+              href="/login"
+              className={styles.footerLink}
+            >
+              Увійти
+            </Link>
+            <Link href="/register className={styles.footerLink}">
+              Зареєструватися
+            </Link>
           </nav>
           <div className={styles.socialLink}>
             <img
