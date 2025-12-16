@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
 import { ToolsResponse } from "@/lib/api/tools";
 import { Tool } from "@/types/tool";
-import styles from "./toolsGrid.module.css";
+import styles from "./ToolsGrid.module.css";
 import Loader from "@/components/ui/Loader/Loader";
 
 
