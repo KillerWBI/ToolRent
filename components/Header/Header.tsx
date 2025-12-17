@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
+import { PublicUser } from "@/types/user"; // убедись, что путь правильный
 
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
@@ -19,6 +20,19 @@ export default function Header() {
     setIsOpen(false); // закрываем мобильное меню
     router.push("/"); // редирект на главную
   };
+
+  const userTyped = user as PublicUser | null;
+  const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U"; // запасная буква
+
+  // Проверка данных (удалить в проде)
+  console.log(
+    "Header userTyped:",
+    userTyped,
+    "isAuthenticated:",
+    isAuthenticated,
+    "firstLetter:",
+    firstLetter
+  );
 
   return (
     <header className={styles.header}>
@@ -37,7 +51,7 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Навигация + пользовательский блок */}
+          {/* Навигация */}
           <div className={styles.navUserWrapper}>
             <nav className={styles.navHeader}>
               <Link href="/">Головна</Link>
@@ -57,16 +71,38 @@ export default function Header() {
             </nav>
 
             {/* Блок пользователя */}
-            {isAuthenticated && user && (
+            {isAuthenticated && (
               <div className={styles.userBlock}>
                 <div className={styles.userAvatar}>
-                  {user.name.charAt(0).toUpperCase()}
+                  {userTyped?.avatarUrl ? (
+                    <img
+                      src={userTyped.avatarUrl}
+                      alt={userTyped.name}
+                      className={styles.avatarImage}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {firstLetter}
+                    </span>
+                  )}
                 </div>
-                <span className={styles.userName}>{user.name}</span>
+
+                <span className={styles.userName}>
+                  {userTyped?.name || "User"}
+                </span>
+
                 <span className={styles.separator}></span>
+
                 <button
                   className={styles.logoutBtn}
                   onClick={handleLogout}
+                  aria-label="Вихід"
                 >
                   <svg
                     className={styles.logoutIcon}
@@ -76,7 +112,6 @@ export default function Header() {
                   >
                     <use href="/svg/sprite.svg#logout" />
                   </svg>
-                  Вийти
                 </button>
               </div>
             )}
@@ -97,6 +132,8 @@ export default function Header() {
           <MobileMenu
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
+            user={userTyped}
+            isAuth={isAuthenticated}
           />
         </div>
       </div>
