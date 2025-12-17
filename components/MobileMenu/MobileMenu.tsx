@@ -121,9 +121,7 @@ export default function MobileMenu({
                   className={styles.logoutBtn}
                   onClick={handleLogout}
                   aria-label="Вийти"
-                >
-                  Вийти
-                </button>
+                ></button>
               </div>
             </>
           ) : (
