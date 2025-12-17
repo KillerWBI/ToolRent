@@ -87,7 +87,7 @@ const FilterBar = () => {
       <div ref={dropdownRef} className={styles.selectWrapper}>
         <button
           type="button"
-          className={styles.selectButton}
+          className={`${styles.selectButton} ${open ? styles.open : ""}`}
           disabled={isLoading}
           onClick={() => setOpen((prev) => !prev)}
         >

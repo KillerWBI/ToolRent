@@ -2,14 +2,14 @@
 
 body {
   font-family:
-      var(--font-Inter),
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
+    var(--font-Inter),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
   font-size: 14px;
   display: flex;
   flex-direction: column;
@@ -19,15 +19,17 @@ body {
   min-width: 375px; /* Prevent layout breakage on very small screens */
 }
 :root {
-  font-family:
-      var(--font-Inter),
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
+  --font-family:
+    var(--font-Inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* === COLORS з макету FilterBar === */
+  --color-neutral-darkest: #1c1c1c;
+  --opacity-transparent: rgba(255, 255, 255, 0);
+  --color-electric-violet-lightest: #f4f1ff;
+  --color-electric-violet-lighter: #e6deff;
+  --color-electric-violet-light: #c5b8ff;
+  --color-electric-violet-dark: #8e7aff;
 }
 
 /* Container - Mobile First Approach */
