@@ -1,18 +1,16 @@
 "use client";
 
 import { useAuth } from "@/store/auth.store";
-import { useEffect } from "react";
 
 export default function ProtectedRoute({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    const { fetchUser } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-    useEffect(() => {
-        fetchUser();
-    }, [fetchUser]);
+  if (loading) return null; // или loader
+  if (!isAuthenticated) return null;
 
-    return <>{children}</>;
+  return <>{children}</>;
 }

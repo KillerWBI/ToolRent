@@ -1,6 +1,7 @@
 "use client";
 
-import axios from "axios";
+import { api } from "@/lib/api/api";
+import { refreshToken } from "@/lib/auth";
 import { create } from "zustand";
 interface User {
     id: string;
@@ -31,37 +32,53 @@ export const useAuthStore = create<AuthState>((set) => ({
             loading: false,
         }),
 
-    fetchUser: async () => {
-        set({ loading: true });
+     fetchUser: async () => {
+    set({ loading: true });
 
-        try {
-            const res = await axios.get<User>(`/api/auth/me`, {
-                withCredentials: true,
-            });
+    try {
+      // 1️ пробуем получить пользователя
+      const res = await api.get<User>("/api/auth/me");
+
+      set({
+        user: res.data,
+        isAuthenticated: true,
+        loading: false,
+      });
+    } catch (error: any) {
+      // 2️ access token умер → пробуем refresh
+      if (error.response?.status === 401) {
+        const refreshed = await refreshToken();
+
+        if (refreshed) {
+          try {
+            // 3️ повторяем запрос
+        const res = await api.get<User>("/api/auth/me");
 
             set({
-                user: res.data,
-                isAuthenticated: true,
-                loading: false,
+              user: res.data,
+              isAuthenticated: true,
+              loading: false,
             });
-        } catch (error) {
-            console.warn(error + "Auth: user not authenticated");
-
-            set({
-                user: null,
-                isAuthenticated: false,
-                loading: false,
-            });
+            return;
+          } catch(error) {
+            console.error(error);
+          }
         }
-    },
+      }
+
+      // 4️refresh не помог → logout
+      set({
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+      });
+    }
+  },
 
     logout: async () => {
         try {
-            await axios.post(
-                `${API_URL}/api/auth/logout`,
-                {},
-                { withCredentials: true }
-            );
+            await await api.post("/api/auth/logout");
+
         } catch {
             // даже если сервер упал — чистим локально
         }
