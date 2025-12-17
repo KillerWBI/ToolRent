@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
-import { PublicUser } from "@/types/user"; // убедись, что путь правильный
+import { PublicUser } from "@/types/user";
 
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
@@ -22,17 +22,7 @@ export default function Header() {
   };
 
   const userTyped = user as PublicUser | null;
-  const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U"; // запасная буква
-
-  // Проверка данных (удалить в проде)
-  console.log(
-    "Header userTyped:",
-    userTyped,
-    "isAuthenticated:",
-    isAuthenticated,
-    "firstLetter:",
-    firstLetter
-  );
+  const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U";
 
   return (
     <header className={styles.header}>

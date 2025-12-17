@@ -121,7 +121,16 @@ export default function MobileMenu({
                   className={styles.logoutBtn}
                   onClick={handleLogout}
                   aria-label="Вийти"
-                ></button>
+                >
+                  <svg
+                    className={styles.logoutIcon}
+                    width={18}
+                    height={18}
+                    aria-hidden="true"
+                  >
+                    <use href="/svg/sprite.svg#logout" />
+                  </svg>
+                </button>
               </div>
             </>
           ) : (
