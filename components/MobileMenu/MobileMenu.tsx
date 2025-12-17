@@ -2,47 +2,65 @@
 
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
+import { PublicUser } from "@/types/user";
 
 interface MobileMenuProps {
   isOpen: boolean;
-  isAuth: boolean;
   onClose: () => void;
+  user?: PublicUser | null;
+  isAuth?: boolean;
+  logout?: () => void; // передаем из Header
 }
 
 export default function MobileMenu({
   isOpen,
-  isAuth,
   onClose,
+  user,
+  isAuth,
+  logout,
 }: MobileMenuProps) {
   if (!isOpen) return null;
+
+  const firstLetter = user?.name?.charAt(0).toUpperCase() || "U";
+
+  const handleLogout = () => {
+    if (logout) logout();
+    onClose();
+  };
 
   return (
     <div className={styles.mobileMenu}>
       <div className="container">
+        {/* Логотип + кнопка закрытия */}
         <div className={styles.headerNavigation}>
-          <div className={styles.logoWrapper}>
-            <Link href="/">
-              <svg
-                width={162}
-                height={26}
-                aria-label="Company logo"
-              >
-                <use href="/svg/sprite.svg#icon-custom-logo" />
-              </svg>
-            </Link>
-          </div>
+          <Link
+            href="/"
+            onClick={onClose}
+          >
+            <svg
+              width={162}
+              height={26}
+              aria-label="Company logo"
+            >
+              <use href="/svg/sprite.svg#icon-custom-logo" />
+            </svg>
+          </Link>
+
           <button
             className={styles.burger}
             onClick={onClose}
             aria-label="Закрити меню"
           >
-            <svg className={styles.icon}>
+            <svg
+              width={24}
+              height={24}
+            >
               <use href="/svg/sprite.svg#close" />
             </svg>
           </button>
         </div>
 
-        {/* Навигация мобильного меню */}
+        {/* Навигация */}
         <nav className={styles.navMobile}>
           <Link
             href="/"
@@ -56,6 +74,7 @@ export default function MobileMenu({
           >
             Інструменти
           </Link>
+
           {isAuth ? (
             <>
               <Link
@@ -70,6 +89,49 @@ export default function MobileMenu({
               >
                 Опублікувати оголошення
               </Link>
+
+              {/* Блок пользователя */}
+              <div className={styles.userBlock}>
+                <div className={styles.userAvatar}>
+                  {user?.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.name}
+                      className={styles.avatarImage}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {firstLetter}
+                    </span>
+                  )}
+                </div>
+
+                <span className={styles.userName}>{user?.name || "User"}</span>
+
+                {/* Separator */}
+                <span className={styles.separator}></span>
+
+                <button
+                  className={styles.logoutBtn}
+                  onClick={handleLogout}
+                  aria-label="Вийти"
+                >
+                  <svg
+                    className={styles.logoutIcon}
+                    width={18}
+                    height={18}
+                    aria-hidden="true"
+                  >
+                    <use href="/svg/sprite.svg#logout" />
+                  </svg>
+                </button>
+              </div>
             </>
           ) : (
             <>
@@ -82,7 +144,6 @@ export default function MobileMenu({
               <Link
                 href="/auth/register"
                 onClick={onClose}
-                className={styles.registerButton}
               >
                 Зареєструватися
               </Link>
