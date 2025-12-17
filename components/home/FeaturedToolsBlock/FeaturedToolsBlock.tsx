@@ -1,20 +1,44 @@
+import { Suspense } from "react";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
 import { ToolsResponse } from "@/lib/api/tools";
 import { Tool } from "@/types/tool";
 import Link from "next/link";
+import Loader from "@/components/ui/Loader/Loader";
 import styles from "./FeaturedToolsBlock.module.css";
 
-// Функция для получения данных на сервере
+// Компонент для відображення під час завантаження
+function LoadingFallback() {
+    return (
+        <section className={styles.section}>
+            <div className="container">
+                <h2 className={styles.heading}>Популярні інструменти</h2>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: "16px",
+                        padding: "40px 0",
+                    }}
+                >
+                    <p>Завантаження інструментів...</p>
+                    <Loader />
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// Функція отримання даних на сервері
 
 async function getFeaturedTools(): Promise<Tool[]> {
     try {
         const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/tools`,
             {
-                next: { revalidate: 60 }, // Обновлять данные раз в минуту
+                next: { revalidate: 60 }, // Оновлювати дані раз на хвилину
             }
         );
-
 
         if (!res.ok) {
             throw new Error("Failed to fetch tools");
@@ -28,7 +52,15 @@ async function getFeaturedTools(): Promise<Tool[]> {
     }
 }
 
-export default async function FeaturedToolsBlock() {
+export default function FeaturedToolsBlockWrapper() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <FeaturedToolsBlock />
+        </Suspense>
+    );
+}
+
+async function FeaturedToolsBlock() {
     const tools = await getFeaturedTools();
 
     if (!tools || tools.length === 0) {
@@ -48,9 +80,12 @@ export default async function FeaturedToolsBlock() {
                 <h2 className={styles.heading}>Популярні інструменти</h2>
 
                 <div className={styles.grid}>
-                    {tools.slice(0, 8).map((tool, index) => (
-                        <ToolCard key={tool._id || index} tool={tool} />
-                    ))}
+                    {[...tools]
+                        .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+                        .slice(0, 8)
+                        .map((tool, index) => (
+                            <ToolCard key={tool._id || index} tool={tool} />
+                        ))}
                 </div>
 
                 <div className={styles.buttonWrapper}>

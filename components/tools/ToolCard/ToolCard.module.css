@@ -53,6 +53,9 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.4;
+    /* Резервируем высоту на две строки, чтобы заголовки
+       с 1 или 2 строками оставались на одном уровне */
+    min-height: calc(1.4em * 2);
 }
 
 .price {
@@ -64,17 +67,14 @@
 
 .rating {
     margin-bottom: 24px;
-    color: #1a1a1a; /* Black stars as per image */
-    font-size: 1.2rem;
-    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.starFilled {
-    color: #000;
-}
-
-.starEmpty {
-    color: #e0e0e0; /* Or transparent with border */
+.starIcon {
+    width: 24px;
+    height: 24px;
 }
 
 .actions {
@@ -91,11 +91,12 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 8px 20px;
+    height: 40px;
+    padding: 10px 20px;
     background-color: #fff;
     color: #000;
     text-decoration: none;
-    border: 2px solid #8808cc;
+    border: 1px solid #8808cc;
     border-radius: 6px;
     font-weight: 500;
     font-size: 16px;
@@ -113,20 +114,38 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border: 2px solid #000;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #8808cc;
     background-color: #fff;
-    color: #000;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
     flex-shrink: 0;
 }
 
 .deleteButton:hover {
-    background-color: #f0f0f0;
+    background-color: #8808cc;
+    border: 2px solid #8808cc;
+}
+
+.deleteButton:focus {
+    border: 2px solid #000;
+    background-color: #e7cdf4;
+    outline: none;
+}
+
+.deleteIcon {
+    width: 24px;
+    height: 24px;
+    fill: #000;
+    stroke: #000;
+}
+
+.deleteButton:hover .deleteIcon {
+    fill: #fff;
+    stroke: #fff;
 }
 
 /* Tablet strict dimensions */

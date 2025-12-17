@@ -6,6 +6,7 @@ import { create } from "zustand";
 interface User {
     id: string;
     email: string;
+    name?: string;
 }
 
 interface AuthState {
@@ -32,53 +33,58 @@ export const useAuthStore = create<AuthState>((set) => ({
             loading: false,
         }),
 
-     fetchUser: async () => {
-    set({ loading: true });
+    fetchUser: async () => {
+        set({ loading: true });
 
-    try {
-      // 1️ пробуем получить пользователя
-      const res = await api.get<User>("/api/auth/me");
+        try {
+            // 1️ пробуем получить пользователя
+            const res = await api.get<any>("/api/auth/me");
 
-      set({
-        user: res.data,
-        isAuthenticated: true,
-        loading: false,
-      });
-    } catch (error: any) {
-      // 2️ access token умер → пробуем refresh
-      if (error.response?.status === 401) {
-        const refreshed = await refreshToken();
-
-        if (refreshed) {
-          try {
-            // 3️ повторяем запрос
-        const res = await api.get<User>("/api/auth/me");
+            // Бэкенд возвращает {success: true, data: {...}}
+            const userData = res.data?.data || res.data;
 
             set({
-              user: res.data,
-              isAuthenticated: true,
-              loading: false,
+                user: userData,
+                isAuthenticated: true,
+                loading: false,
             });
-            return;
-          } catch(error) {
-            console.error(error);
-          }
-        }
-      }
+        } catch (error: any) {
+            // 2️ access token умер → пробуем refresh
+            if (error.response?.status === 401) {
+                const refreshed = await refreshToken();
 
-      // 4️refresh не помог → logout
-      set({
-        user: null,
-        isAuthenticated: false,
-        loading: false,
-      });
-    }
-  },
+                if (refreshed) {
+                    try {
+                        // 3️ повторяем запрос
+                        const res = await api.get<any>("/api/auth/me");
+
+                        // Бэкенд возвращает {success: true, data: {...}}
+                        const userData = res.data?.data || res.data;
+
+                        set({
+                            user: userData,
+                            isAuthenticated: true,
+                            loading: false,
+                        });
+                        return;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
+
+            // 4️refresh не помог → logout
+            set({
+                user: null,
+                isAuthenticated: false,
+                loading: false,
+            });
+        }
+    },
 
     logout: async () => {
         try {
             await await api.post("/api/auth/logout");
-
         } catch {
             // даже если сервер упал — чистим локально
         }
