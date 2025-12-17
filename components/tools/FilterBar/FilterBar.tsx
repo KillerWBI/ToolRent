@@ -20,7 +20,6 @@ const FilterBar = () => {
 
   const currentCategory = searchParams.get("category") ?? ALL_CATEGORIES_VALUE;
 
-  // === ОНОВЛЕНО ПІД ОБ’ЄКТ ===
   useEffect(() => {
     const loadCategories = async () => {
       try {

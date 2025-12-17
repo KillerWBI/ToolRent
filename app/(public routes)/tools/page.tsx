@@ -1,4 +1,3 @@
-import FilterBar from "@/components/tools/FilterBar/FilterBar";
 import ToolsGrid from "@/components/tools/ToolsGrid/ToolsGrid";
 
 export const metadata = {
@@ -9,7 +8,6 @@ export const metadata = {
 export default function Page() {
   return (
     <main>
-      <FilterBar />
       <ToolsGrid />
     </main>
   );
