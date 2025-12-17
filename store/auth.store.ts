@@ -42,10 +42,10 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ loading: true });
 
         try {
-            // пробуем получить пользователя
+            // пробуємо отримати користувача
             const res = await api.get<AuthResponse>("/api/auth/me");
 
-            // Бэкенд возвращает {success: true, data: {...}} или прямые данные пользователя
+            // Бекенд повертає {success: true, data: {...}} або прямі дані користувача
             const userData = res.data?.data || (res.data as User);
 
             set({
@@ -54,15 +54,15 @@ export const useAuthStore = create<AuthState>((set) => ({
                 loading: false,
             });
         } catch (error: unknown) {
-            // если access token умер → пробуем refresh
+            // якщо access token помер → пробуємо refresh
             if (axios.isAxiosError(error) && error.response?.status === 401) {
                 const refreshed = await refreshToken();
                 if (refreshed) {
                     try {
-                        // повторяем запрос после refresh
+                        // повторюємо запит після refresh
                         const res = await api.get<AuthResponse>("/api/auth/me");
 
-                        // Бэкенд возвращает {success: true, data: {...}} или прямые данные пользователя
+                        // Бекенд повертає {success: true, data: {...}} або прямі дані користувача
                         const userData = res.data?.data || (res.data as User);
 
                         set({
@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                 }
             }
 
-            // refresh не помог или другая ошибка → logout
+            // refresh не допоміг або інша помилка → logout
             console.warn("User not authenticated", error);
             set({
                 user: null,
