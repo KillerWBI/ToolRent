@@ -2,8 +2,8 @@
 
 import { api } from "@/lib/api/api";
 import { refreshToken } from "@/lib/auth";
-import { create } from "zustand";
 import axios from "axios";
+import { create } from "zustand";
 
 interface User {
   id: string;
@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           try {
             const res = await api.get<User>("/api/auth/me");
             set({
-                user: userData,
+                user: res.data,
                 isAuthenticated: true,
                 loading: false,
             });
@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState>((set) => ({
                         });
                         return;
                     } catch (error) {
-                        console.error(error);
+                         console.error("Auth fetch after refresh failed:", error);
                     }
                 }
             }
@@ -90,8 +90,6 @@ export const useAuthStore = create<AuthState>((set) => ({
                 loading: false,
             });
             return;
-          } catch (err) {
-            console.error("Auth fetch after refresh failed:", err);
           }
         }
       }
