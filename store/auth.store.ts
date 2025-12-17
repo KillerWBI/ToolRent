@@ -1,82 +1,88 @@
 "use client";
 
+import { api } from "@/lib/api/api";
+import { refreshToken } from "@/lib/auth";
 import axios from "axios";
 import { create } from "zustand";
+
 interface User {
-    id: string;
-    email: string;
+  id: string;
+  email: string;
+  name?: string;
+}
+
+interface AuthResponse {
+  success?: boolean;
+  data?: User;
 }
 
 interface AuthState {
-    user: User | null;
-    isAuthenticated: boolean;
-    loading: boolean;
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
 
-    setUser: (user: User | null) => void;
-    fetchUser: () => Promise<void>;
-    logout: () => void;
+  fetchUser: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
 export const useAuthStore = create<AuthState>((set) => ({
-    user: null,
-    isAuthenticated: false,
-    loading: true,
+  user: null,
+  isAuthenticated: false,
+  loading: true,
 
-    setUser: (user) =>
-        set({
-            user,
-            isAuthenticated: !!user,
-            loading: false,
-        }),
+  fetchUser: async () => {
+    set({ loading: true });
 
-    fetchUser: async () => {
-        set({ loading: true });
+    try {
+      const res = await api.get<AuthResponse>("/api/auth/me");
+      const user = res.data.data ?? (res.data as unknown as User);
 
-        try {
-            const res = await axios.get<User>(`/api/auth/me`, {
-                withCredentials: true,
-            });
+      set({
+        user,
+        isAuthenticated: true,
+        loading: false,
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        const refreshed = await refreshToken();
 
-            set({
-                user: res.data,
-                isAuthenticated: true,
-                loading: false,
-            });
-        } catch (error) {
-            console.warn(error + "Auth: user not authenticated");
+        if (refreshed) {
+          try {
+            const res = await api.get<AuthResponse>("/api/auth/me");
+            const user = res.data.data ?? (res.data as unknown as User);
 
             set({
-                user: null,
-                isAuthenticated: false,
-                loading: false,
+              user,
+              isAuthenticated: true,
+              loading: false,
             });
+            return;
+          } catch(err) {
+            console.error(err);
+          }
         }
-    },
+      }
 
-    logout: async () => {
-        try {
-            await axios.post(
-                `${API_URL}/api/auth/logout`,
-                {},
-                { withCredentials: true }
-            );
-        } catch {
-            // даже если сервер упал — чистим локально
-        }
+      // ❗ если refresh не помог — просто считаем юзера разлогиненным
+      set({
+        user: null,
+        isAuthenticated: false,
+        loading: false,
+      });
+    }
+  },
 
-        set({
-            user: null,
-            isAuthenticated: false,
-        });
-
-        if (typeof window !== "undefined") {
-            document.cookie =
-                "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-        }
-    },
+  logout: async () => {
+    try {
+      await api.post("/api/auth/logout");
+    } finally {
+      // ❗ НЕ ТРОГАЕМ cookie руками
+      set({
+        user: null,
+        isAuthenticated: false,
+      });
+    }
+  },
 }));
 
-// Backwards-compatible alias: some files import `useAuth`
 export const useAuth = useAuthStore;

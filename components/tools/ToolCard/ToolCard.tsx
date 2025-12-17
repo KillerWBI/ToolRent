@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, type MouseEvent } from "react";
 import { Tool } from "@/types/tool";
@@ -20,10 +19,13 @@ export default function ToolCard({ tool }: ToolCardProps) {
     const [showConfirm, setShowConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
-    // Получаем статус авторизации из Zustand стора
-    const { isAuthenticated } = useAuthStore();
+    // Отримуємо статус авторизації та поточного користувача з Zustand стора
+    const { isAuthenticated, user } = useAuthStore();
 
-    // Заглушка для изображения, если массив images пуст
+    // Перевіряємо, чи є поточний користувач власником інструмента
+    const isOwner = isAuthenticated && user && user.id === tool.owner;
+
+    // Заглушка для зображення, якщо масив images порожній або відсутній
     let mainImage = "/image/Placeholder Image.png";
 
     if (tool.images) {
@@ -69,24 +71,52 @@ export default function ToolCard({ tool }: ToolCardProps) {
         setDeleteError(null);
     };
 
-    // Формируем звезды рейтинга
+    // Формуємо зірки рейтингу (з підтримкою половини)
     const renderStars = (rating: number) => {
-        // Округляем до целого или половин (для простоты покажем целые)
+        const safeRating = Math.max(0, Math.min(5, rating ?? 0));
+        const roundedHalf = Math.round(safeRating * 2) / 2; // крок 0.5
+        const filledCount = Math.floor(roundedHalf);
+        const hasHalf = roundedHalf - filledCount === 0.5;
+        const emptyCount = 5 - filledCount - (hasHalf ? 1 : 0);
+
         const stars = [];
-        for (let i = 1; i <= 5; i++) {
+
+        for (let i = 0; i < filledCount; i++) {
             stars.push(
-                <span
-                    key={i}
-                    className={
-                        i <= Math.round(rating)
-                            ? styles.starFilled
-                            : styles.starEmpty
-                    }
+                <svg
+                    key={`filled-${i}`}
+                    className={styles.starIcon}
+                    aria-hidden="true"
                 >
-                    ★
-                </span>
+                    <use href="/svg/sprite.svg#star-filled" />
+                </svg>
             );
         }
+
+        if (hasHalf) {
+            stars.push(
+                <svg
+                    key={`half`}
+                    className={styles.starIcon}
+                    aria-hidden="true"
+                >
+                    <use href="/svg/sprite.svg#star-half" />
+                </svg>
+            );
+        }
+
+        for (let i = 0; i < emptyCount; i++) {
+            stars.push(
+                <svg
+                    key={`empty-${i}`}
+                    className={styles.starIcon}
+                    aria-hidden="true"
+                >
+                    <use href="/svg/sprite.svg#star" />
+                </svg>
+            );
+        }
+
         return <div className={styles.rating}>{stars}</div>;
     };
 
@@ -111,8 +141,8 @@ export default function ToolCard({ tool }: ToolCardProps) {
                 {renderStars(tool.rating ?? 0)}
 
                 <div className={styles.actions}>
-                    {isAuthenticated ? (
-                        // Авторизованный пользователь
+                    {isOwner ? (
+                        // Власник інструмента
                         <>
                             <Link
                                 href={`/tools/${tool._id}/edit`}
@@ -126,11 +156,16 @@ export default function ToolCard({ tool }: ToolCardProps) {
                                 className={styles.deleteButton}
                                 aria-label="Видалити інструмент"
                             >
-                                <Trash2 size={20} />
+                                <svg
+                                    className={styles.deleteIcon}
+                                    aria-hidden="true"
+                                >
+                                    <use href="/svg/sprite.svg#delete" />
+                                </svg>
                             </button>
                         </>
                     ) : (
-                        // НЕавторизованный пользователь
+                        // Не власник (або не авторизований)
                         <Link
                             href={`/tools/${tool._id}`}
                             className={styles.detailsButton}
