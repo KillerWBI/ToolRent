@@ -1,8 +1,11 @@
-// lib/auth.ts (server)
-import { cookies } from "next/headers";
+// lib/auth.client.ts
+import { api } from "@/lib/api/api";
 
-export async function verifyAuthServer(): Promise<boolean> {
-  const token = (await cookies()).get("accessToken")?.value;
-  return Boolean(token);
+export async function refreshToken(): Promise<boolean> {
+  try {
+    await api.post("/api/auth/refresh"); // 👉 Next proxy
+    return true;
+  } catch {
+    return false;
+  }
 }
-
