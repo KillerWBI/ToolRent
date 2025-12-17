@@ -89,3 +89,61 @@
     display: none;
   }
 }
+
+.navUserWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+.userName {
+  font-family: Work Sans;
+  font-weight: 600;
+  font-style: SemiBold;
+  font-size: 10px;
+  line-height: 150%;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.separator {
+  display: inline-block;
+  width: 1px;
+  height: 39px;
+  background-color: #000000;
+  margin: 0 16px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.logoutIcon {
+  fill: #111;
+}
+
+.userBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+}

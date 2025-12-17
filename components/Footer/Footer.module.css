@@ -16,6 +16,41 @@
   gap: 12px;
 }
 
+.socialList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #111; /* базовый цвет иконки */
+  background-color: transparent; /* фон по умолчанию */
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+/* hover */
+.socialList:hover {
+  color: #fff; /* иконка белая */
+  background-color: #8808cc; /* фон фиолетовый */
+}
+
+/* focus (Tab) */
+.socialList:focus-visible {
+  color: #fff; /* иконка белая */
+  background-color: #8808cc; /* фон фиолетовый */
+  outline: none; /* убираем стандартную рамку */
+  box-shadow: 0 0 0 2px #8808cc; /* фокусная рамка */
+  border-radius: 6px;
+}
+
+/* active */
+.socialList:active {
+  color: #fff;
+  background-color: #6a06a3;
+}
 .nav {
   display: flex;
   flex-direction: column;
@@ -39,17 +74,12 @@
   text-decoration: underline;
 }
 
-.active {
-  color: #8808cc;
-  text-decoration: underline;
-}
-
 .copy {
   margin: 32px 0 48px 0;
   text-align: center;
   font-family: Work Sans;
   font-weight: 400;
-  font-style: Regular;
+  font-style: normal;
   font-size: 12px;
 }
 
@@ -86,6 +116,6 @@
   }
   .companyFooter {
     width: 124px;
-    height: 20;
+    height: 20px;
   }
 }
