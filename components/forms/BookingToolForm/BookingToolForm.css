@@ -91,13 +91,17 @@
 /* ===== Footer ===== */
 
 .formFooter {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 16px;
 }
-
+.formFooter-sumbit{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 16px;
+}
 .priceBlock {
   font-size: 18px;
   font-weight: 600;
@@ -111,6 +115,7 @@
   border-radius: 8px;
   background: linear-gradient(135deg, #9f2ce1 0%, #7b1cc1 100%);
   color: #fff;
+  width: 155px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
@@ -142,7 +147,19 @@
 
 /* ===== Responsive tweaks ===== */
 
-@media (min-width: 375px) {
+@media (max-width: 742px) {
+.formFooter-sumbit{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+.submit{
+  width: 100%;
+}
+}
+
+@media (max-width: 375px) {
   .formSection {
     padding: 40px 20px;
   }
@@ -158,7 +175,8 @@
     align-items: stretch;
   }
 
-  .submit {
+  .submit{
     width: 100%;
   }
+
 }
