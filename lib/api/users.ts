@@ -7,9 +7,17 @@ export type PublicUser = {
   avatarUrl?: string;
 };
 
-export async function getPublicUserById(userId: string): Promise<PublicUser> {
-  const res = await api.get<PublicUser>(`/api/users/${userId}`);
-  return res.data;
+export async function getPublicUserById(userId: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) {
+    throw new Error("User not found");
+  }
+
+  return res.json();
 }
 
 // export async function getUserToolsByUserId(userId: string): Promise<Tool[]> {

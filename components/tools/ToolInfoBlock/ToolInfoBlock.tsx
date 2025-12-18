@@ -8,21 +8,33 @@ type ToolInfoBlockProps = {
 };
 
 export const ToolInfoBlock = async ({ tool, owner }: ToolInfoBlockProps) => {
+  const specifications = Object.entries(tool.specifications ?? {});
+
   return (
     <div className={css.wrapper}>
       <h2 className={css.title}>{tool.name}</h2>
       <p className={css.price}>{tool.pricePerDay} грн/день</p>
       <div className={css.userProfile}>
-        <div className={css.userIcon}>
-          <img src={owner.avatarUrl} alt="owner.name" />
+        <div className={css.userIconWrap}>
+          <img className={css.avatar} src={owner.avatarUrl} alt="owner.name" />
         </div>
         <div className={css.userInfo}>
           <p className={css.userName}>{owner.name}</p>
-          <button className={css.profileBtn} type="button">
+          <a href="" className={css.profileBtn} type="button">
             Переглянути профіль
-          </button>
+          </a>
         </div>
       </div>
+      <p className={css.description}>{tool.description}</p>
+      <ul className={css.specificationsList}>
+        {specifications.map(([label, value], index) => (
+          <li key={index} className={css.specItem}>
+            <span className={css.speclabel}>{label}: </span>
+            {value}
+          </li>
+        ))}
+      </ul>
+      <button className={css.rentBtn}>Забронювати</button>
     </div>
   );
 };

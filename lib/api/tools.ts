@@ -54,7 +54,7 @@ export const getTools = async (
  * Отримання одного інструменту за ID (Public)
  */
 export const getToolById = async (toolId: string): Promise<Tool> => {
-  const res = await fetch(`${API_URL}/tools/${toolId}`, {
+  const res = await fetch(`${API_URL}/api/tools/${toolId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
