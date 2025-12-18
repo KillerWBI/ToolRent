@@ -11,3 +11,17 @@
   object-position: center;
   display: block;
 }
+
+@media only screen and (min-width: 768px) {
+  .imgWrap {
+    height: 528px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .imgWrap {
+    height: 480px;
+    width: 640px;
+    flex-shrink: 0;
+  }
+}
