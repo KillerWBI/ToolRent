@@ -15,3 +15,4 @@ export const useToolsStore = create<ToolsStore>((set) => ({
             tools: state.tools.filter((tool) => tool._id !== toolId),
         })),
 }));
+

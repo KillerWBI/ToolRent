@@ -1,3 +1,4 @@
+// components/profile/ProfilePlaceholder/ProfilePlaceholder.tsx
 import Link from "next/link";
 import styles from "./ProfilePlaceholder.module.css";
 
@@ -17,7 +18,7 @@ export default function ProfilePlaceholder({ isAuthorized = false }: Props) {
           <p className={styles.subtext}>
             Опублікуйте свій перший інструмент та почніть заробляти
           </p>
-          <Link className={styles.btn} href="/tools/add">
+          <Link className={styles.btn} href="/dashboard/create">
             Опублікувати інструмент
           </Link>
         </>
