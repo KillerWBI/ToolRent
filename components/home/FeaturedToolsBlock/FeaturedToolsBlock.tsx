@@ -44,8 +44,20 @@ async function getFeaturedTools(): Promise<Tool[]> {
             throw new Error("Failed to fetch tools");
         }
 
-        const data: ToolsResponse = await res.json();
-        return data.tools;
+        const data = await res.json();
+
+        // Підтримуємо різні форми відповіді бекенду
+        const tools =
+            (data as any)?.tools ||
+            (data as any)?.data?.tools ||
+            (Array.isArray(data) ? data : []);
+
+        if (!Array.isArray(tools)) {
+            console.error("Unexpected tools response shape", data);
+            return [];
+        }
+
+        return tools as Tool[];
     } catch (error) {
         console.error("Error fetching featured tools:", error);
         return [];
