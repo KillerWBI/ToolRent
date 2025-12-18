@@ -31,7 +31,11 @@ body {
   --color-electric-violet-light: #c5b8ff;
   --color-electric-violet-dark: #8e7aff;
 }
-
+button{
+    transition:
+        color 0.3s ease,
+        background-color 0.3s ease;
+}
 /* Container - Mobile First Approach */
 .container {
   max-width: 375px;

@@ -1,9 +1,13 @@
 "use client";
 
+import { api } from "@/lib/api/api";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 import * as Yup from "yup";
 import "./BookingToolForm.css";
+
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 interface BookingFormValues {
   firstName: string;
@@ -63,7 +67,7 @@ export default function BookingToolForm({ tool }: Props) {
       postOffice: Yup.string().required("Відділення обовʼязкове"),
     }),
 
-    onSubmit: async (values, { setSubmitting }) => {
+    onSubmit: async (values, { setSubmitting,  resetForm }) => {
       setStatus(null);
       try {
         setSubmitting(true);
@@ -90,8 +94,20 @@ export default function BookingToolForm({ tool }: Props) {
         }
 
         // Подготовка данных для отправки на бэк
-        const payload = { ...values, toolId: tool._id };
+        const payload = {
+  toolId: tool._id,
+  startDate: values.startDate,
+  endDate: values.endDate,
+  firstName: values.firstName,
+  lastName: values.lastName,
+  phone: values.phone,
+  deliveryCity: values.city,
+  deliveryBranch: values.postOffice,
+};
         console.log("SEND TO API:", payload);
+        await api.post("/api/booking", payload);
+         setStatus("✅ Бронювання успішне");
+          resetForm();
       } catch {
         setStatus("Помилка при бронюванні");
       } finally {
@@ -216,10 +232,10 @@ export default function BookingToolForm({ tool }: Props) {
             <div className="priceBlock">
               Вартість: <strong>{totalPrice} грн</strong>
             </div>
-            <button type="submit" className="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Бронювання..." : "Забронювати"}
-            </button>
           </div>
+            <div className="formFooter-sumbit"><button type="submit" className="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Бронювання..." : "Забронювати"}
+            </button></div>
 
           {status && <div className="formStatus">{status}</div>}
         </form>

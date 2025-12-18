@@ -6,8 +6,10 @@ import Loader from "@/components/ui/Loader/Loader";
 import FilterBar from "../FilterBar/FilterBar";
 import styles from "./ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
+
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useToolsStore } from "@/store/tools.store";
+
 
 interface ApiResponse {
     tools: Tool[];
