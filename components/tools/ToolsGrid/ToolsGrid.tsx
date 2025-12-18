@@ -20,28 +20,55 @@ interface ApiResponse {
 }
 
 async function fetchToolsPage(
-    page: number = 1,
-    limit: number = 16
+  page: number = 1,
+  limit: number = 8,
+  category?: string
 ): Promise<ApiResponse> {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/tools?page=${page}&limit=${limit}`
-        );
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  if (category && category !== "all") {
+    params.set("category", category);
+  }
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch tools");
-        }
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/tools?${params.toString()}`
+  );
 
-        return await res.json();
-    } catch (error) {
-        console.error("Error fetching tools:", error);
-        throw error;
-    }
+  if (!res.ok) {
+    throw new Error("Failed to fetch tools");
+  }
+
+  return res.json();
+}
+
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
 }
 
 export default function ToolsListBlock() {
+    const width = useWindowWidth();
+    const limit = width >= 1400 ? 16 : 8;
+
+    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8});
+    const category = get("category") as string;
+    const pageFromUrl = Number(get("page") ?? 1);
+
     const [tools, setTools] = useState<Tool[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
