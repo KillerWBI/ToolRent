@@ -64,7 +64,6 @@ export default function ToolsListBlock() {
     const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8});
     const category = get("category") as string;
     const pageFromUrl = Number(get("page") ?? 1);
-    const limitFromUrl = Number(get("limit") ?? limit);
 
     const [tools, setTools] = useState<Tool[]>([]);
     const [currentPage, setCurrentPage] = useState(pageFromUrl);
