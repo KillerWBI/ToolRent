@@ -4,6 +4,7 @@ import { ToolsResponse } from "@/lib/api/tools";
 import { Tool } from "@/types/tool";
 import Link from "next/link";
 import Loader from "@/components/ui/Loader/Loader";
+import FeaturedToolsClient from "./FeaturedToolsClient";
 import styles from "./FeaturedToolsBlock.module.css";
 
 // Компонент для відображення під час завантаження
@@ -86,26 +87,5 @@ async function FeaturedToolsBlock() {
         );
     }
 
-    return (
-        <section className={styles.section}>
-            <div className="container">
-                <h2 className={styles.heading}>Популярні інструменти</h2>
-
-                <div className={styles.grid}>
-                    {[...tools]
-                        .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
-                        .slice(0, 8)
-                        .map((tool, index) => (
-                            <ToolCard key={tool._id || index} tool={tool} />
-                        ))}
-                </div>
-
-                <div className={styles.buttonWrapper}>
-                    <Link href="/tools" className={styles.viewAllButton}>
-                        До всіх інструментів
-                    </Link>
-                </div>
-            </div>
-        </section>
-    );
+    return <FeaturedToolsClient initialTools={tools} />;
 }

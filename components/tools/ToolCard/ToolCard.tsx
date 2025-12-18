@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { Tool } from "@/types/tool";
 import { useAuthStore } from "@/store/auth.store";
+import { useToolsStore } from "@/store/tools.store";
 import { deleteTool } from "@/lib/api/tools";
 import { ConfirmationModal } from "@/components/modal/ConfirmationModal/ConfirmationModal";
 import styles from "./ToolCard.module.css";
@@ -21,6 +22,8 @@ export default function ToolCard({ tool }: ToolCardProps) {
     const [deleteError, setDeleteError] = useState<string | null>(null);
     // Отримуємо статус авторизації та поточного користувача з Zustand стора
     const { isAuthenticated, user } = useAuthStore();
+    // Отримуємо функцію для видалення інструмента зі стану
+    const removeTool = useToolsStore((state) => state.removeTool);
 
     // Перевіряємо, чи є поточний користувач власником інструмента
     const isOwner = isAuthenticated && user && user.id === tool.owner;
@@ -106,6 +109,8 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
         try {
             await deleteTool(tool._id);
+            // Мгновенно видаляємо інструмент зі стану
+            removeTool(tool._id);
             setShowConfirm(false);
             router.refresh();
         } catch (error) {
