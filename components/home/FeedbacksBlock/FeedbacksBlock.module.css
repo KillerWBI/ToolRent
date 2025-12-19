@@ -1,0 +1,159 @@
+.section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+}
+
+.title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 80px;
+}
+
+.section :global(.swiper-slide) {
+    height: auto;
+    display: flex;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    gap: 32px;
+}
+
+.text {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0; /* прибрати, коли змінять загальні стилі */
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: auto;
+}
+
+/* Контроль пагінації */
+.controls {
+    margin-top: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* pagination dots */
+.pagination {
+    display: flex;
+    gap: 8px;
+}
+
+/* swiper override */
+.pagination :global(.swiper-pagination-bullet) {
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    opacity: 0.2;
+    transition: transform 0.3s, background-color 0.3s;
+}
+/* HOVER / FOCUS */
+.pagination :global(.swiper-pagination-bullet:hover),
+.pagination :global(.swiper-pagination-bullet:focus-visible) {
+    background-color: #000;
+    /* світло-фіолетовий */
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* PRESSED (mousedown) */
+.pagination :global(.swiper-pagination-bullet:active) {
+    background-color: #000;
+    /* фіолетовий */
+    transform: scale(1.3);
+}
+
+/* ACTIVE SLIDE */
+.pagination :global(.swiper-pagination-bullet-active) {
+    background-color: #000;
+    /* фіолетовий */
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* arrows */
+.arrows {
+    display: flex;
+    gap: 16px;
+}
+
+.prev,
+.next {
+    width: 48px;
+    height: 48px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 12px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+        transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease;
+}
+
+.prev svg,
+.next svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* HOVER / FOCUS */
+.prev:hover,
+.next:hover,
+.prev:focus-visible,
+.next:focus-visible {
+    background-color: #e9d5ff;
+    /* світло-фіолетовий */
+    border-color: #e7cdf4;;
+    color: #000;
+    border: 2px solid #000;
+    border-radius: 6px;
+}
+
+/* ACTIVE */
+.prev:active,
+.next:active {
+    background-color: #8808cc;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 6px;
+
+}
+
+/* DISABLED (Swiper додає клас) */
+:global(.swiper-button-disabled).prev,
+:global(.swiper-button-disabled).next {
+    background-color: #fff;
+    /* світло-сірий */
+    border: 2px solid #000;
+    border-radius: 4px;
+    color: #000;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+/* ========== TABLET ========== */
+@media (min-width: 768px) {
+}
+
+/* ========== DESKTOP ========== */
+@media (min-width: 1024px) {
+.section {
+    padding-top: 112px;
+    padding-bottom: 112px;
+}
+}

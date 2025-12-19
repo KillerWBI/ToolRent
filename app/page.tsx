@@ -1,6 +1,11 @@
 import BenefitsBlock from "@/components/home/BenefitsBlock/BenefitsBlock";
 import FeaturedToolsBlock from "@/components/home/FeaturedToolsBlock/FeaturedToolsBlock";
 import RegistrationBlock from "@/components/home/RegistrationBlock/RegistrationBlock";
+import FeedbacksBlock from "../components/home/FeedbacksBlock/FeedbacksBlock";
+import { getFeedbacks } from "@/lib/api/feedbacks";
+
+
+const feedbacks = await getFeedbacks();
 
 export const metadata = {
     title: "ToolNext - Оренда інструментів",
@@ -13,6 +18,7 @@ export default function HomePage() {
             <BenefitsBlock />
             <FeaturedToolsBlock />
             <RegistrationBlock />
+            <FeedbacksBlock feedbacks={feedbacks} />
         </main>
     );
 }
