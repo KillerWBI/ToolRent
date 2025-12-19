@@ -5,9 +5,9 @@ import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import "./BookingToolForm.css";
-
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -95,8 +95,13 @@ export default function BookingToolForm({ tool }: Props) {
               conflict.to
             ).toLocaleDateString()}`
           );
+          toast.error(`Інструмент зайнятий з ${new Date(
+              conflict.from
+            ).toLocaleDateString()} по ${new Date(
+              conflict.to
+            ).toLocaleDateString()}`)
           return;
-        }
+                }
 
         // Подготовка данных для отправки на бэк
         const payload = {
@@ -112,13 +117,16 @@ export default function BookingToolForm({ tool }: Props) {
         console.log("SEND TO API:", payload);
         await api.post("/api/booking", payload);
          setStatus("✅ Бронювання успішне");
+         toast.success("Бронювання успішне")
           resetForm();
       } catch {
         setStatus("Помилка при бронюванні");
+        toast.error("Помилка при бронюванні")
       } finally {
         setSubmitting(false);
       }
     },
+
   });
 
   const totalPrice = useMemo(() => {
@@ -143,6 +151,7 @@ export default function BookingToolForm({ tool }: Props) {
 
   return (
     <main className="container-booking">
+      <div><Toaster/></div>
       <div className="formSection">
         <h1 className="title">Підтвердження бронювання</h1>
 
