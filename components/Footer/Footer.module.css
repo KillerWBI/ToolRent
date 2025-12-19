@@ -24,29 +24,26 @@
   height: 40px;
   border-radius: 6px;
   cursor: pointer;
-  color: #111; /* базовый цвет иконки */
-  background-color: transparent; /* фон по умолчанию */
+  color: #111;
+  background-color: transparent;
   transition:
     color 0.3s ease,
     background-color 0.3s ease;
 }
 
-/* hover */
 .socialList:hover {
-  color: #fff; /* иконка белая */
-  background-color: #8808cc; /* фон фиолетовый */
+  color: #fff;
+  background-color: #8808cc;
 }
 
-/* focus (Tab) */
 .socialList:focus-visible {
-  color: #fff; /* иконка белая */
-  background-color: #8808cc; /* фон фиолетовый */
-  outline: none; /* убираем стандартную рамку */
-  box-shadow: 0 0 0 2px #8808cc; /* фокусная рамка */
+  color: #fff;
+  background-color: #8808cc;
+  outline: none;
+  box-shadow: 0 0 0 2px #8808cc;
   border-radius: 6px;
 }
 
-/* active */
 .socialList:active {
   color: #fff;
   background-color: #6a06a3;
