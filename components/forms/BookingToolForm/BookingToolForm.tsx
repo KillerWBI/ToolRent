@@ -3,7 +3,8 @@
 import { api } from "@/lib/api/api";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import * as Yup from "yup";
 import "./BookingToolForm.css";
 
@@ -38,6 +39,7 @@ interface Props {
 
 export default function BookingToolForm({ tool }: Props) {
   const [status, setStatus] = useState<string | null>(null);
+
 
 
 
@@ -92,14 +94,7 @@ export default function BookingToolForm({ tool }: Props) {
             ).toLocaleDateString()} по ${new Date(
               conflict.to
             ).toLocaleDateString()}`
-
           );
-          const conflictToast = () => toast.error( `Інструмент зайнятий з ${new Date(
-              conflict.from
-            ).toLocaleDateString()} по ${new Date(
-              conflict.to
-            ).toLocaleDateString()}`);
-            conflictToast();
           return;
         }
 
@@ -118,12 +113,8 @@ export default function BookingToolForm({ tool }: Props) {
         await api.post("/api/booking", payload);
          setStatus("✅ Бронювання успішне");
           resetForm();
-          const SucsesToast = () => toast.success( `Бронювання успішне`);
-            SucsesToast();
       } catch {
         setStatus("Помилка при бронюванні");
-        const ErorToast = () => toast.error( `Помилка при бронюванні`);
-            ErorToast();
       } finally {
         setSubmitting(false);
       }
@@ -152,7 +143,6 @@ export default function BookingToolForm({ tool }: Props) {
 
   return (
     <main className="container-booking">
-       <Toaster />
       <div className="formSection">
         <h1 className="title">Підтвердження бронювання</h1>
 
@@ -199,29 +189,61 @@ export default function BookingToolForm({ tool }: Props) {
             )}
           </label>
 
-          <label className="field">
-            <span className="label">Дата початку</span>
-            <input
-              type="date"
-              className="input"
-              name="startDate"
-              value={values.startDate}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </label>
+         <label className="field">
+  <span className="label">Дата початку</span>
 
-          <label className="field">
-            <span className="label">Дата завершення</span>
-            <input
-              type="date"
-              className="input"
-              name="endDate"
-              value={values.endDate}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </label>
+  <DatePicker
+    selected={
+      values.startDate ? new Date(values.startDate) : undefined
+    }
+    onChange={(date: Date | null) => {
+      formik.setFieldValue(
+        "startDate",
+        date ? date.toISOString().split("T")[0] : ""
+      );
+    }}
+    dateFormat="dd.MM.yyyy"
+    placeholderText="Оберіть дату"
+    className={`input calendar-input ${
+      touched.startDate && errors.startDate ? "inputError" : ""
+    }`}
+    popperClassName="calendar-popper"
+  />
+
+  {touched.startDate && errors.startDate && (
+    <span className="errorText">{errors.startDate}</span>
+  )}
+</label>
+
+
+<label className="field">
+  <span className="label">Дата завершення</span>
+
+  <DatePicker
+    selected={
+      values.endDate ? new Date(values.endDate) : undefined
+    }
+    onChange={(date: Date | null) => {
+      formik.setFieldValue(
+        "endDate",
+        date ? date.toISOString().split("T")[0] : ""
+      );
+    }}
+    minDate={
+      values.startDate ? new Date(values.startDate) : undefined
+    }
+    dateFormat="dd.MM.yyyy"
+    placeholderText="Оберіть дату"
+    className={`input calendar-input ${
+      touched.endDate && errors.endDate ? "inputError" : ""
+    }`}
+    popperClassName="calendar-popper"
+  />
+
+  {touched.endDate && errors.endDate && (
+    <span className="errorText">{errors.endDate}</span>
+  )}
+</label>
 
           <label className="field">
             <span className="label">Місто доставки</span>

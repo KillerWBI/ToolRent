@@ -135,6 +135,141 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* ===== Calendary ===== */
+
+/* ===== Calendar container ===== */
+
+.calendar-popper {
+  z-index: 1000;
+}
+
+.react-datepicker {
+
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  box-shadow: 0 12px 30px rgba(159, 44, 225, 0.25);
+}
+
+/* ===== Header ===== */
+
+.react-datepicker__header {
+
+  background-color: #f3e6f9;
+  border-bottom: 1px solid rgba(159, 44, 225, 0.25);
+  padding-top: 8px;
+}
+
+.react-datepicker{
+  background-color: #f3e6f9;
+  border: 1px solid rgba(171, 82, 219, 1);
+}
+.react-datepicker__current-month {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1d1d1d;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+/* ===== Navigation arrows ===== */
+
+.react-datepicker__navigation {
+    color: #c7c7c7;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: rgba(171, 82, 219, 1);
+  border-width: 2px 2px 0 0;
+}
+
+/* ===== Week days ===== */
+
+.react-datepicker__day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+   border-bottom: 1px solid rgba(171, 82, 219, 1);
+   border-top: 1px solid rgba(171, 82, 219, 1);
+}
+
+.react-datepicker__day-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(171, 82, 219, 1);
+  margin: 0;
+  text-align: center;
+}
+
+/* ===== Days grid ===== */
+
+.react-datepicker__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+/* ===== Day cell ===== */
+
+.react-datepicker__day {
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  margin: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #1d1d1d;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+/* ===== Hover ===== */
+
+.react-datepicker__day:hover {
+  background: rgba(159, 44, 225, 0.15);
+  border-color: rgba(171, 82, 219, 1);
+}
+
+/* ===== Selected day ===== */
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background: rgba(171, 82, 219, 1);
+  color: #ffffff;
+  font-weight: 600;
+  border-color: rgba(171, 82, 219, 1);
+}
+
+/* ===== Disabled days ===== */
+
+.react-datepicker__day--disabled {
+  color: #bdbdbd;
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+/* ===== Outside month ===== */
+
+.react-datepicker__day--outside-month {
+  color: #c7c7c7;
+}
+
+/* ===== Input ===== */
+
+.calendar-input {
+  padding: 14px 16px;
+  border: 2px solid rgba(171, 82, 219, 1);
+  border-radius: 6px;
+  font-size: 15px;
+  background: #f5f5f5;
+  width: 100%;
+  cursor: pointer;
+}
+
+.calendar-input:focus {
+  outline: none;
+  border-color: #7b1cc1;
+  box-shadow: 0 0 0 3px rgba(159, 44, 225, 0.2);
+}
+
 
 /* ===== Status ===== */
 
