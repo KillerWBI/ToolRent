@@ -78,7 +78,8 @@ export const getToolById = async (toolId: string): Promise<Tool> => {
  * Використовує FormData для передачі файлів та полів
  */
 export const createTool = async (formData: FormData): Promise<Tool> => {
-    const res = await fetch(`${API_URL}/tools`, {
+    // Use same-origin proxy route to avoid CORS issues with credentials
+    const res = await fetch(`/api/tools`, {
         method: "POST",
         body: formData,
         // credentials: 'include' потрібен, щоб передати куки (accessToken) на бекенд
@@ -100,7 +101,8 @@ export const updateTool = async (
     toolId: string,
     formData: FormData
 ): Promise<Tool> => {
-    const res = await fetch(`${API_URL}/tools/${toolId}`, {
+    // Use same-origin proxy route to avoid CORS issues with credentials
+    const res = await fetch(`/api/tools/${toolId}`, {
         method: "PATCH",
         body: formData,
         credentials: "include",

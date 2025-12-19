@@ -31,11 +31,7 @@ export default function Header() {
           {/* Логотип */}
           <div className={styles.logoWrapper}>
             <Link href="/">
-              <svg
-                width={162}
-                height={26}
-                aria-label="Company logo"
-              >
+              <svg width={162} height={26} aria-label="Company logo">
                 <use href="/svg/sprite.svg#icon-custom-logo" />
               </svg>
             </Link>
@@ -50,7 +46,7 @@ export default function Header() {
               {isAuthenticated ? (
                 <>
                   <Link href="/profile">Мій профіль</Link>
-                  <Link href="/create">Опублікувати оголошення</Link>
+                  <Link href="dashboard/create">Опублікувати оголошення</Link>
                 </>
               ) : (
                 <>
