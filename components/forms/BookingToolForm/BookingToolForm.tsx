@@ -3,6 +3,7 @@
 import { api } from "@/lib/api/api";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import * as Yup from "yup";
 import "./BookingToolForm.css";
 
@@ -37,6 +38,8 @@ interface Props {
 
 export default function BookingToolForm({ tool }: Props) {
   const [status, setStatus] = useState<string | null>(null);
+
+
 
   const formik = useFormik<BookingFormValues>({
     initialValues: {
@@ -89,7 +92,14 @@ export default function BookingToolForm({ tool }: Props) {
             ).toLocaleDateString()} по ${new Date(
               conflict.to
             ).toLocaleDateString()}`
+
           );
+          const conflictToast = () => toast.error( `Інструмент зайнятий з ${new Date(
+              conflict.from
+            ).toLocaleDateString()} по ${new Date(
+              conflict.to
+            ).toLocaleDateString()}`);
+            conflictToast();
           return;
         }
 
@@ -108,8 +118,12 @@ export default function BookingToolForm({ tool }: Props) {
         await api.post("/api/booking", payload);
          setStatus("✅ Бронювання успішне");
           resetForm();
+          const SucsesToast = () => toast.success( `Бронювання успішне`);
+            SucsesToast();
       } catch {
         setStatus("Помилка при бронюванні");
+        const ErorToast = () => toast.error( `Помилка при бронюванні`);
+            ErorToast();
       } finally {
         setSubmitting(false);
       }
@@ -138,6 +152,7 @@ export default function BookingToolForm({ tool }: Props) {
 
   return (
     <main className="container-booking">
+       <Toaster />
       <div className="formSection">
         <h1 className="title">Підтвердження бронювання</h1>
 
