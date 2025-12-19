@@ -1,7 +1,9 @@
 "use client";
 
 import { createTool, updateTool } from "@/lib/api/tools";
-import { Category, Tool } from "@/types/tool";
+import { getCategories } from "@/lib/api/categories";
+import { Tool } from "@/types/tool";
+import { Category } from "@/types/category";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -99,22 +101,7 @@ export default function AddEditToolForm({
       setCategoriesLoading(true);
       setCategoriesError(null);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-        const apiBase = baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
-
-        const res = await fetch(`${apiBase}/categories`, {
-          signal: controller.signal,
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          throw new Error("Не вдалося отримати категорії");
-        }
-
-        const data = await res.json();
-        const received: Category[] = Array.isArray(data)
-          ? data
-          : data?.data || data?.categories || [];
+        const received = await getCategories(controller.signal);
         setCategories(received);
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
