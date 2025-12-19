@@ -59,7 +59,6 @@ export default function ConfirmationModal({
         </button>
 
         <h2 className={styles.title}>{title}</h2>
-
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.actions}>
@@ -70,7 +69,6 @@ export default function ConfirmationModal({
           >
             {cancelButtonText}
           </button>
-
           <button
             onClick={handleConfirm}
             disabled={isLoading || localLoading}

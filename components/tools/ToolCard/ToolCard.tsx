@@ -1,12 +1,13 @@
 "use client";
 
+import ConfirmationModal from "@/components/modal/ConfirmationModal/ConfirmationModal";
 import { useToolImages } from "@/hooks/useToolImages";
+import { deleteTool } from "@/lib/api/tools";
 import { useAuthStore } from "@/store/auth.store";
 import { useToolsStore } from "@/store/tools.store";
 import { Tool } from "@/types/tool";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState, type MouseEvent } from "react";
 import styles from "./ToolCard.module.css";
 
@@ -15,7 +16,6 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool }: ToolCardProps) {
-  const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
   const removeTool = useToolsStore((state) => state.removeTool);
 
@@ -23,6 +23,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   const { firstImage, extractImage } = useToolImages(tool);
   const [mainImage, setMainImage] = useState(firstImage);
+
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Подгрузка изображения при необходимости
   useEffect(() => {
@@ -37,9 +41,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (cancelled || !data) return;
-        const found = extractImage(
-          (data as any).images ?? (data as any).image ?? null
-        );
+        const found = extractImage((data as any).images ?? (data as any).image ?? null);
         if (found) setMainImage(found);
       })
       .catch(() => {})
@@ -50,14 +52,33 @@ export default function ToolCard({ tool }: ToolCardProps) {
     };
   }, [mainImage, tool._id, extractImage]);
 
-  const handleImageError = () => {
-    setMainImage("/image/Placeholder Image.png");
+  const handleImageError = () => setMainImage("/image/Placeholder Image.png");
+
+  const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setDeleteError(null);
+    setOpenConfirm(true);
   };
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    // ⬇️ Открываем confirm-модалку через роут
-    router.push(`/tools/${tool._id}/delete`);
+  const handleConfirmDelete = async () => {
+    if (isDeleting) return;
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteTool(tool._id);
+      removeTool(tool._id);
+      setOpenConfirm(false);
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : "Не вдалося видалити інструмент.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    if (isDeleting) return;
+    setOpenConfirm(false);
+    setDeleteError(null);
   };
 
   const renderStars = (rating: number) => {
@@ -66,7 +87,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
     const filledCount = Math.floor(roundedHalf);
     const hasHalf = roundedHalf - filledCount === 0.5;
     const emptyCount = 5 - filledCount - (hasHalf ? 1 : 0);
-
     const stars = [];
 
     for (let i = 0; i < filledCount; i++) {
@@ -76,7 +96,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
         </svg>
       );
     }
-
     if (hasHalf) {
       stars.push(
         <svg key="half" className={styles.starIcon} aria-hidden="true">
@@ -84,7 +103,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
         </svg>
       );
     }
-
     for (let i = 0; i < emptyCount; i++) {
       stars.push(
         <svg key={`empty-${i}`} className={styles.starIcon} aria-hidden="true">
@@ -92,7 +110,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
         </svg>
       );
     }
-
     return <div className={styles.rating}>{stars}</div>;
   };
 
@@ -121,16 +138,13 @@ export default function ToolCard({ tool }: ToolCardProps) {
         <div className={styles.actions}>
           {isOwner ? (
             <>
-              <Link
-                href={`/tools/${tool._id}/edit`}
-                className={styles.editButton}
-              >
+              <Link href={`/tools/${tool._id}/edit`} className={styles.editButton}>
                 Редагувати
               </Link>
 
               <button
                 type="button"
-                onClick={handleDelete}
+                onClick={handleDeleteClick}
                 className={styles.deleteButton}
                 aria-label="Видалити інструмент"
               >
@@ -140,15 +154,24 @@ export default function ToolCard({ tool }: ToolCardProps) {
               </button>
             </>
           ) : (
-            <Link
-              href={`/tools/${tool._id}`}
-              className={styles.detailsButton}
-            >
+            <Link href={`/tools/${tool._id}`} className={styles.detailsButton}>
               Детальніше
             </Link>
           )}
         </div>
       </div>
+
+      <ConfirmationModal
+        open={openConfirm}
+        title="Ви впевнені, що хочете видалити оголошення?"
+        confirmButtonText="Підтвердити"
+        cancelButtonText="Відмінити"
+        variant="danger"
+        isLoading={isDeleting}
+        error={deleteError ?? undefined}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 }
