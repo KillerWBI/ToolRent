@@ -17,8 +17,8 @@ export default function HomePage() {
         <main>
             <BenefitsBlock />
             <FeaturedToolsBlock />
-            <RegistrationBlock />
             <FeedbacksBlock feedbacks={feedbacks} />
+            <RegistrationBlock />
         </main>
     );
 }
