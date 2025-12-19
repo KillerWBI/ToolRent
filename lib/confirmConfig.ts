@@ -20,9 +20,9 @@ export const confirmConfig: Record<ConfirmType, ConfirmConfigItem> = {
   },
 
   delete: {
-    title: "Ви впевнені, що хочете видалити інструмент?",
+    title: "Ви впевнені, що хочете видалити оголошення?",
     confirmText: "Видалити",
-    cancelText: "Скасувати",
+    cancelText: "Залишити",
     variant: "delete",
     onConfirm: async (id?: string) => {
       if (!id) throw new Error("Missing id");

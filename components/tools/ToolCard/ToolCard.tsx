@@ -40,7 +40,9 @@ export default function ToolCard({ tool }: ToolCardProps) {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (cancelled || !data) return;
-        const found = extractImage((data as any).images ?? (data as any).image ?? null);
+        const found = extractImage(
+          (data as any).images ?? (data as any).image ?? null
+        );
         if (found) setMainImage(found);
       })
       .catch(() => {})
@@ -68,7 +70,11 @@ export default function ToolCard({ tool }: ToolCardProps) {
       setShowConfirm(false);
       router.refresh();
     } catch (error) {
-      setDeleteError(error instanceof Error ? error.message : "Не вдалося видалити інструмент.");
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : "Не вдалося видалити інструмент."
+      );
     } finally {
       setIsDeleting(false);
     }
@@ -137,12 +143,18 @@ export default function ToolCard({ tool }: ToolCardProps) {
         <div className={styles.actions}>
           {isOwner ? (
             <>
-              <Link href={`/tools/${tool._id}/edit`} className={styles.editButton}>
+              <Link
+                href={`/tools/${tool._id}/edit`}
+                className={styles.editButton}
+              >
                 Редагувати
               </Link>
               <button
                 type="button"
-                onClick={handleDelete}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/confirmation/delete/${tool._id}`);
+                }}
                 className={styles.deleteButton}
                 aria-label="Видалити інструмент"
               >
@@ -159,14 +171,14 @@ export default function ToolCard({ tool }: ToolCardProps) {
         </div>
       </div>
 
-      <ConfirmationModal
+      {/* <ConfirmationModal
         open={showConfirm}
         message="Ви впевнені, що хочете видалити оголошення?"
         isLoading={isDeleting}
         error={deleteError ?? undefined}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-      />
+      /> */}
     </div>
   );
 }

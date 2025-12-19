@@ -16,9 +16,9 @@ export default function Header() {
   if (loading) return null;
 
   const handleLogout = () => {
-    logout(); // выход из системы
+    // logout(); // выход из системы
     setIsOpen(false); // закрываем мобильное меню
-    router.push("/"); // редирект на главную
+    router.push("/confirmation/logout"); // редирект на главную
   };
 
   const userTyped = user as PublicUser | null;

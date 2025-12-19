@@ -23,10 +23,13 @@
     top: 16px;
     background: transparent;
     border: none;
-    font-size: 18px;
+    /* font-size: 18px; */
     cursor: pointer;
     padding: 0;
+    width: 32px;
+    height: 32px;
 }
+
 
 .title {
     font-weight: 700;
@@ -46,11 +49,10 @@
 }
 
 .closeIcon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     color: #000;
 }
-
 
 .error {
     margin: 0 0 12px;
@@ -135,32 +137,29 @@
     }
 
     .modal {
-        padding: 64px;
+        padding: 64px 32px;
         max-width: 704px;
         text-align: center;
     }
 
-    .closeButton {
-        top: 16px;
-        right: 16px;
-        width: 32px;
-        height: 32px;
-    }
 
-    .closeIcon {
-        width: 24px;
-        height: 24px;
-    }
 
 
     .actions {
         flex-direction: row;
-        gap: 12px;
+    }
+
+    .cancel {
+        width: 308px;
+    }
+
+    .delete {
+        width: 308px;
     }
 
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
     .dialog {
         max-width: 640px;
         padding: 32px;
@@ -168,6 +167,37 @@
 
     .modal {
         max-width: 768px;
+        padding: 64px;
+    }
+
+    .cancel {
+        border: 2px solid #000;
+        border-radius: 6px;
+        padding: 10px 24px;
+        width: 308px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .default {
+        border: 1px solid #8808cc;
+        border-radius: 6px;
+        padding: 10px 24px;
+        width: 308px;
+        height: 41px;
+    }
+
+    .delete {
+        border: 1px solid #c40202;
+        border-radius: 6px;
+        padding: 10px 24px;
+        width: 308px;
+        height: 44px;
+        font-size: 16px;
+    }
+
+    .title {
+        font-size: 48px;
     }
 
     .closeIcon {
