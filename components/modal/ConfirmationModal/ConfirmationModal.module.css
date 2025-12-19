@@ -1,72 +1,56 @@
-/* Mobile First - базовые стили для мобильных */
 .backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.45);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    padding: 16px;
 }
 
-.dialog {
+.modal {
     position: relative;
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 100%;
-    box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.18),
-        0 4px 18px rgba(15, 23, 42, 0.12);
-    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 16px;
+    padding: 64px 20px;
+    max-width: 335px;
+    text-align: center;
 }
 
-.closeButton {
+.close {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-    padding: 0;
+    right: 16px;
+    top: 16px;
     background: transparent;
     border: none;
+    font-size: 18px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    transition: background 0.2s ease;
+    padding: 0;
 }
 
-.closeButton:hover {
-    background: rgba(0, 0, 0, 0.05);
+.title {
+    font-weight: 700;
+    font-size: 36px;
+    margin: 0;
+    padding-bottom: 48px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #000;
 }
 
-.closeButton:disabled {
+
+.close:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 .closeIcon {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
     color: #000;
 }
 
-.message {
-    width: 100%;
-    margin: 0 0 24px;
-    padding-right: 24px;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    text-align: center;
-    color: #000;
-}
 
 .error {
     margin: 0 0 12px;
@@ -78,61 +62,82 @@
 .actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 24px;
 }
 
-.button {
-    width: 100%;
-    height: 44px;
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 1.5;
-    color: #000;
-    cursor: pointer;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.15s ease;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-}
 
 .cancel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #000;
     border-radius: 6px;
-    padding: 10px 16px;
-    background: #f8fafc;
-    border-color: #e5e7eb;
+    padding: 10px 24px;
+    width: 295px;
+    height: 41px;
+    font-weight: 500;
+    font-size: 14px;
+
+    line-height: 1.5;
+    color: #000;
 }
 
 .cancel:hover {
-    background: #eef2f7;
+    border: 2px solid #000;
+    border-radius: 6px;
+    background-color: #e7cdf4;
 }
 
-.confirm {
+.default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #8808cc;
+    border-radius: 6px;
+    padding: 10px 24px;
+    width: 295px;
+    height: 41px;
+    font-weight: 500;
+    font-size: 14px;
+    background-color: #8808cc;
+
+    line-height: 1.5;
+    color: #fff;
+}
+
+.default:hover {
+    border: 2px solid #8808cc;
+    border-radius: 6px;
+    color: #000;
+    background-color: #fff;
+}
+
+.delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid #c40202;
     border-radius: 6px;
-    padding: 10px 16px;
-    background: #c40202;
-    color: #ffffff;
-    border-color: #c40202;
+    padding: 10px 24px;
+    width: 295px;
+    height: 44px;
+    font-weight: 500;
+    font-size: 16px;
+    background-color: #c40202;
+
+    line-height: 1.5;
+    color: #fff;
 }
 
-.confirm:hover {
-    background: #e03131;
-    border-color: #e03131;
-}
-
-/* Tablet - от 768px */
 @media (min-width: 768px) {
     .backdrop {
-        padding: 24px;
+        padding: 32px;
     }
 
-    .dialog {
-        border-radius: 16px;
-        padding: 28px;
-        max-width: 500px;
+    .modal {
+        padding: 64px;
+        max-width: 704px;
+        text-align: center;
     }
 
     .closeButton {
@@ -147,37 +152,26 @@
         height: 24px;
     }
 
-    .message {
-        margin: 0 0 32px;
-        font-size: 28px;
-        padding-right: 32px;
-    }
 
     .actions {
         flex-direction: row;
         gap: 12px;
     }
 
-    .button {
-        font-size: 16px;
-        padding: 10px 24px;
-    }
 }
 
-/* Desktop - от 1280px */
 @media (min-width: 1280px) {
     .dialog {
         max-width: 640px;
         padding: 32px;
     }
 
-    .message {
-        margin: 0 0 48px;
-        font-size: 48px;
-        line-height: 1.2;
+    .modal {
+        max-width: 768px;
     }
 
-    .button {
-        max-width: 308px;
+    .closeIcon {
+        width: 32px;
+        height: 32px;
     }
 }

@@ -12,7 +12,7 @@ import { ConfirmationModal } from "@/components/modal/ConfirmationModal/Confirma
 import styles from "./ToolCard.module.css";
 
 interface ToolCardProps {
-    tool: Tool;
+  tool: Tool;
 }
 
 export default function ToolCard({ tool }: ToolCardProps) {
@@ -95,17 +95,17 @@ export default function ToolCard({ tool }: ToolCardProps) {
         setMainImage("/image/Placeholder Image.png");
     };
 
-    const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        setDeleteError(null);
-        setShowConfirm(true);
-    };
+  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setDeleteError(null);
+    setShowConfirm(true);
+  };
 
-    const handleConfirmDelete = async () => {
-        if (isDeleting) return;
+  const handleConfirmDelete = async () => {
+    if (isDeleting) return;
 
-        setIsDeleting(true);
-        setDeleteError(null);
+    setIsDeleting(true);
+    setDeleteError(null);
 
         try {
             await deleteTool(tool._id);
@@ -119,18 +119,18 @@ export default function ToolCard({ tool }: ToolCardProps) {
                     ? error.message
                     : "Не вдалося видалити інструмент. Спробуйте ще раз.";
 
-            setDeleteError(message);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
+      setDeleteError(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
-    const handleCancelDelete = () => {
-        if (isDeleting) return;
+  const handleCancelDelete = () => {
+    if (isDeleting) return;
 
-        setShowConfirm(false);
-        setDeleteError(null);
-    };
+    setShowConfirm(false);
+    setDeleteError(null);
+  };
 
     // Формуємо зірки рейтингу (з підтримкою половини)
     const renderStars = (rating: number) => {
@@ -248,5 +248,45 @@ export default function ToolCard({ tool }: ToolCardProps) {
                 onCancel={handleCancelDelete}
             />
         </div>
-    );
+
+        {renderStars(tool.rating ?? 0)}
+
+        <div className={styles.actions}>
+          {isAuthenticated ? (
+            // Авторизованный пользователь
+            <>
+              <Link
+                href={`/tools/${tool._id}/edit`}
+                className={styles.editButton}
+              >
+                Редагувати
+              </Link>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className={styles.deleteButton}
+                aria-label="Видалити інструмент"
+              >
+                <Trash2 size={20} />
+              </button>
+            </>
+          ) : (
+            // НЕавторизованный пользователь
+            <Link href={`/tools/${tool._id}`} className={styles.detailsButton}>
+              Детальніше
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* <ConfirmationModal
+        open={showConfirm}
+        message="Ви впевнені, що хочете видалити оголошення?"
+        isLoading={isDeleting}
+        error={deleteError ?? undefined}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      /> */}
+    </div>
+  );
 }

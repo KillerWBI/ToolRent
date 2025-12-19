@@ -1,78 +1,83 @@
 "use client";
 
-import { useModal } from "@/hooks/useModal";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import styles from "./ConfirmationModal.module.css";
 
-interface ConfirmationModalProps {
-    open: boolean;
-    message?: string;
-    confirmLabel?: string;
-    cancelLabel?: string;
-    isLoading?: boolean;
-    error?: string;
-    onConfirm: () => void;
-    onCancel: () => void;
-}
+type Variant = "default" | "delete";
 
-export function ConfirmationModal({
-    open,
-    message = "Ви впевнені, що хочете видалити оголошення?",
-    confirmLabel = "Видалити",
-    cancelLabel = "Скасувати",
-    isLoading = false,
-    error,
-    onConfirm,
-    onCancel,
+type ConfirmationModalProps = {
+  title: string;
+  confirmButtonText: string;
+  cancelButtonText: string;
+  onConfirm: () => Promise<void>;
+  variant?: Variant;
+};
+
+export default function ConfirmationModal({
+  title,
+  confirmButtonText,
+  cancelButtonText,
+  onConfirm,
+  variant = "default",
 }: ConfirmationModalProps) {
-    const { handleBackdropClick } = useModal({
-        isOpen: open,
-        onClose: onCancel,
-    });
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-    if (!open) return null;
+  const closeModal = () => router.back(); // 🔑 закриття через parallel route
 
-    return (
-        <div
-            className={styles.backdrop}
-            role="dialog"
-            aria-modal="true"
-            onClick={handleBackdropClick}
-        >
-            <div className={styles.dialog}>
-                <button
-                    type="button"
-                    className={styles.closeButton}
-                    onClick={onCancel}
-                    aria-label="Закрити"
-                    disabled={isLoading}
-                >
-                    <svg className={styles.closeIcon}>
-                        <use href="/svg/sprite.svg#close" />
-                    </svg>
-                </button>
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, []);
 
-                <p className={styles.message}>{message}</p>
-                {error ? <p className={styles.error}>{error}</p> : null}
-                <div className={styles.actions}>
-                    <button
-                        type="button"
-                        className={`${styles.button} ${styles.cancel}`}
-                        onClick={onCancel}
-                        disabled={isLoading}
-                    >
-                        {cancelLabel}
-                    </button>
-                    <button
-                        type="button"
-                        className={`${styles.button} ${styles.confirm}`}
-                        onClick={onConfirm}
-                        disabled={isLoading}
-                        aria-busy={isLoading}
-                    >
-                        {isLoading ? "Видаляємо..." : confirmLabel}
-                    </button>
-                </div>
-            </div>
+  const handleConfirm = async () => {
+    setIsLoading(true);
+    try {
+      await onConfirm();
+      router.back(); // Закриваємо після успішного запиту
+    } catch (error) {
+      // console.error("Помилка підтвердження:", error);
+      // Тут можна інтегрувати push-повідомлення (наприклад, toast)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return createPortal(
+    <div className={styles.backdrop} onClick={closeModal}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.close} onClick={closeModal}>
+          <svg className={styles.closeIcon}>
+            <use href="/svg/sprite.svg#close" />
+          </svg>
+        </button>
+
+        <h2 className={styles.title}>{title}</h2>
+
+        <div className={styles.actions}>
+          <button
+            onClick={closeModal}
+            disabled={isLoading}
+            className={styles.cancel}
+          >
+            {cancelButtonText}
+          </button>
+
+          <button
+            onClick={handleConfirm}
+            disabled={isLoading}
+            className={styles[variant]}
+          >
+            {isLoading ? "Завантаження..." : confirmButtonText}
+          </button>
         </div>
-    );
+      </div>
+    </div>,
+    document.body
+  );
 }
