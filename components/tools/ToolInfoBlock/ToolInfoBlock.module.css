@@ -133,6 +133,7 @@ profileBtn:hover {
   line-height: 1.5;
   color: #fff;
   cursor: pointer;
+  text-decoration: none;
   transition:
     color 250ms ease-in-out,
     background-color 250ms ease-in-out;

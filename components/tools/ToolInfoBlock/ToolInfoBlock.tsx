@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Tool } from "@/types/tool";
 import css from "./ToolInfoBlock.module.css";
 import { PublicUser } from "@/types/user";
@@ -34,7 +35,9 @@ export const ToolInfoBlock = async ({ tool, owner }: ToolInfoBlockProps) => {
           </li>
         ))}
       </ul>
-      <button className={css.rentBtn}>Забронювати</button>
+      <Link href={`/dashboard/booking/${tool._id}`} className={css.rentBtn}>
+        Забронювати
+      </Link>
     </div>
   );
 };
