@@ -6,8 +6,10 @@ import Loader from "@/components/ui/Loader/Loader";
 import FilterBar from "../FilterBar/FilterBar";
 import styles from "./ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
+
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useToolsStore } from "@/store/tools.store";
+
 
 interface ApiResponse {
     tools: Tool[];
@@ -17,36 +19,56 @@ interface ApiResponse {
     limit: number;
 }
 
-interface ApiResponse extends ToolsResponse {
-    totalTools: number;
-    totalPages: number;
-    page: number;
-    limit: number;
+async function fetchToolsPage(
+  page: number = 1,
+  limit: number = 8,
+  category?: string
+): Promise<ApiResponse> {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  if (category && category !== "all") {
+    params.set("category", category);
+  }
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/tools?${params.toString()}`
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch tools");
+  }
+
+  return res.json();
 }
 
-async function fetchToolsPage(
-    page: number = 1,
-    limit: number = 16
-): Promise<ApiResponse> {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/tools?page=${page}&limit=${limit}`
-        );
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch tools");
-        }
+function useWindowWidth() {
+  const [width, setWidth] = useState(0);
 
-        return await res.json();
-    } catch (error) {
-        console.error("Error fetching tools:", error);
-        throw error;
-    }
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return width;
 }
 
 export default function ToolsListBlock() {
+    const width = useWindowWidth();
+    const limit = width >= 1400 ? 16 : 8;
+
+    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8});
+    const category = get("category") as string;
+    const pageFromUrl = Number(get("page") ?? 1);
+
     const [tools, setTools] = useState<Tool[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(pageFromUrl);
+
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
