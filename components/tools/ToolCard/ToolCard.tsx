@@ -1,15 +1,15 @@
 "use client";
 
+import ConfirmationModal from "@/components/modal/ConfirmationModal/ConfirmationModal";
+import { useToolImages } from "@/hooks/useToolImages";
+import { deleteTool } from "@/lib/api/tools";
+import { useAuthStore } from "@/store/auth.store";
+import { useToolsStore } from "@/store/tools.store";
+import { Tool } from "@/types/tool";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useMemo, type MouseEvent } from "react";
-import { Tool } from "@/types/tool";
-import { useAuthStore } from "@/store/auth.store";
-import { useToolsStore } from "@/store/tools.store";
-import { useToolImages } from "@/hooks/useToolImages";
-import { deleteTool } from "@/lib/api/tools";
-import { ConfirmationModal } from "@/components/modal/ConfirmationModal/ConfirmationModal";
+import { useEffect, useState, type MouseEvent } from "react";
 import styles from "./ToolCard.module.css";
 
 interface ToolCardProps {
@@ -18,26 +18,24 @@ interface ToolCardProps {
 
 export default function ToolCard({ tool }: ToolCardProps) {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuthStore();
+  const removeTool = useToolsStore((state) => state.removeTool);
+
+  const isOwner = isAuthenticated && user && user.id === tool.owner;
+
+  const { firstImage, extractImage } = useToolImages(tool);
+  const [mainImage, setMainImage] = useState(firstImage);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const { isAuthenticated, user } = useAuthStore();
-  const removeTool = useToolsStore((state) => state.removeTool);
-  const isOwner = isAuthenticated && user && user.id === tool.owner;
-
-  const { firstImage, extractImage } = useToolImages(tool);
-  const [mainImage, setMainImage] = useState<string>(firstImage);
-
+  // Загружаем изображение, если нужно
   useEffect(() => {
-    const hasImage = mainImage && !mainImage.includes("Placeholder Image");
-    if (hasImage) return;
-
+    if (mainImage && !mainImage.includes("Placeholder Image")) return;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiUrl) return;
 
     let cancelled = false;
-
     fetch(`${apiUrl}/api/tools/${tool._id}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -47,15 +45,12 @@ export default function ToolCard({ tool }: ToolCardProps) {
       })
       .catch(() => {})
       .finally(() => {});
-
     return () => {
       cancelled = true;
     };
   }, [mainImage, tool._id, extractImage]);
 
-  const handleImageError = () => {
-    setMainImage("/image/Placeholder Image.png");
-  };
+  const handleImageError = () => setMainImage("/image/Placeholder Image.png");
 
   const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -67,18 +62,13 @@ export default function ToolCard({ tool }: ToolCardProps) {
     if (isDeleting) return;
     setIsDeleting(true);
     setDeleteError(null);
-
     try {
       await deleteTool(tool._id);
       removeTool(tool._id);
       setShowConfirm(false);
       router.refresh();
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Не вдалося видалити інструмент. Спробуйте ще раз.";
-      setDeleteError(message);
+      setDeleteError(error instanceof Error ? error.message : "Не вдалося видалити інструмент.");
     } finally {
       setIsDeleting(false);
     }

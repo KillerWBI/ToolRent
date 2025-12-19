@@ -2,78 +2,75 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
 import styles from "./ConfirmationModal.module.css";
 
-type Variant = "default" | "delete";
-
 type ConfirmationModalProps = {
-  title: string;
-  confirmButtonText: string;
-  cancelButtonText: string;
+  open: boolean;
+  message: string;
+  isLoading?: boolean;
+  error?: string;
   onConfirm: () => Promise<void>;
-  variant?: Variant;
+  onCancel: () => void;
 };
 
 export default function ConfirmationModal({
-  title,
-  confirmButtonText,
-  cancelButtonText,
+  open,
+  message,
+  isLoading = false,
+  error,
   onConfirm,
-  variant = "default",
+  onCancel,
 }: ConfirmationModalProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const closeModal = () => router.back(); // 🔑 закриття через parallel route
+  const [localLoading, setLocalLoading] = useState(false);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") onCancel();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, []);
+  }, [onCancel]);
+
+  if (!open) return null;
 
   const handleConfirm = async () => {
-    setIsLoading(true);
+    if (isLoading || localLoading) return;
+    setLocalLoading(true);
     try {
       await onConfirm();
-      router.back(); // Закриваємо після успішного запиту
-    } catch (error) {
-      // console.error("Помилка підтвердження:", error);
-      // Тут можна інтегрувати push-повідомлення (наприклад, toast)
     } finally {
-      setIsLoading(false);
+      setLocalLoading(false);
     }
   };
 
   return createPortal(
-    <div className={styles.backdrop} onClick={closeModal}>
+    <div className={styles.backdrop} onClick={onCancel}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.close} onClick={closeModal}>
+        <button className={styles.close} onClick={onCancel}>
           <svg className={styles.closeIcon}>
             <use href="/svg/sprite.svg#close" />
           </svg>
         </button>
 
-        <h2 className={styles.title}>{title}</h2>
+        <h2 className={styles.title}>{message}</h2>
+
+        {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.actions}>
           <button
-            onClick={closeModal}
-            disabled={isLoading}
+            onClick={onCancel}
+            disabled={isLoading || localLoading}
             className={styles.cancel}
           >
-            {cancelButtonText}
+            Відмінити
           </button>
 
           <button
             onClick={handleConfirm}
-            disabled={isLoading}
-            className={styles[variant]}
+            disabled={isLoading || localLoading}
+            className={styles.delete}
           >
-            {isLoading ? "Завантаження..." : confirmButtonText}
+            {isLoading || localLoading ? "Завантаження..." : "Підтвердити"}
           </button>
         </div>
       </div>
