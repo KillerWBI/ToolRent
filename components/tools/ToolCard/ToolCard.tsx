@@ -134,12 +134,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
       </div>
 
       <div className={styles.content}>
-        <div className={styles.header}>
-          <h3 className={styles.title}>{tool.name}</h3>
-          <p className={styles.price}>{tool.pricePerDay} грн/доба</p>
-        </div>
-
         {renderStars(tool.rating ?? 0)}
+
+        <h3 className={styles.title}>{tool.name}</h3>
+        <p className={styles.price}>{tool.pricePerDay} грн/доба</p>
 
         <div className={styles.actions}>
           {isOwner ? (
