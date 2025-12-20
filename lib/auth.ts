@@ -25,3 +25,14 @@ export async function AuthMe() {
     throw error;
   }
 }
+
+export async function logoutUser() {
+  try {
+    // вызываем backend logout
+    await apiAuth.post("/api/auth/logout");
+    return true;
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthMe, refreshToken } from "@/lib/auth";
+import { AuthMe, logoutUser, refreshToken } from "@/lib/auth";
 import axios from "axios";
 import { create } from "zustand";
 
@@ -28,59 +28,48 @@ export const useAuthStore = create<AuthState>((set) => ({
   fetchUser: async () => {
     set({ loading: true });
 
-    try {
-      const rawUser = await AuthMe();
-
-      const user = rawUser
-        ? { ...rawUser, id: rawUser.id ?? rawUser._id }
-        : null;
-
-      set({
-        user,
-        isAuthenticated: true,
-        loading: false,
-      });
-    } catch (error) {
-      // ⬇️ если access token умер — пробуем refresh
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        try {
-          await refreshToken();
-
-          const rawUser = await AuthMe();
-          const user = rawUser
-            ? { ...rawUser, id: rawUser.id ?? rawUser._id }
-            : null;
-
-          set({
-            user,
-            isAuthenticated: true,
-            loading: false,
-          });
-          return;
-        } catch (err) {
-          // refresh тоже умер — падаем ниже
-          console.error("Refresh failed", err);
+    const attemptFetch = async (): Promise<User | null> => {
+      try {
+        const rawUser = await AuthMe();
+        return rawUser
+          ? { ...rawUser, id: rawUser.id ?? (rawUser as any)._id }
+          : null;
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          return null; // поймали 401 — нужно делать refresh
         }
+        console.error("Fetch user failed", error);
+        return null;
       }
+    };
 
-      // ❌ если вообще не удалось
-      set({
-        user: null,
-        isAuthenticated: false,
-        loading: false,
-      });
+    let user = await attemptFetch();
+
+    if (!user) {
+      try {
+        // 401 — пробуем обновить токен
+        await refreshToken();
+        user = await attemptFetch();
+      } catch (err) {
+        console.error("Refresh failed", err);
+      }
     }
+
+    set({
+      user,
+      isAuthenticated: !!user,
+      loading: false,
+    });
   },
 
   logout: async () => {
     try {
-      // если у тебя есть logout endpoint — можешь вызвать тут
-      // await apiAuth.post("/api/auth/logout");
+      await logoutUser(); // вызываем backend logout
+    } catch (err) {
+      console.error("Logout error:", err);
     } finally {
-      set({
-        user: null,
-        isAuthenticated: false,
-      });
+      // чистим состояние на фронте
+      set({ user: null, isAuthenticated: false });
     }
   },
 }));
