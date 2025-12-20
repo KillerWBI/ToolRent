@@ -5,6 +5,7 @@ interface ToolsStore {
     tools: Tool[];
     setTools: (tools: Tool[]) => void;
     removeTool: (toolId: string) => void;
+    resetTools: () => void;
 }
 
 export const useToolsStore = create<ToolsStore>((set) => ({
@@ -14,5 +15,6 @@ export const useToolsStore = create<ToolsStore>((set) => ({
         set((state) => ({
             tools: state.tools.filter((tool) => tool._id !== toolId),
         })),
+    resetTools: () => set({ tools: [] }),
 }));
 

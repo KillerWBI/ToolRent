@@ -35,7 +35,8 @@ interface ApiResponse {
 async function fetchToolsPage(
   page: number = 1,
   limit: number = 8,
-  category?: string
+  category?: string,
+  search?: string,
 ): Promise<ApiResponse> {
   const params = new URLSearchParams({
     page: String(page),
@@ -43,6 +44,9 @@ async function fetchToolsPage(
   });
   if (category && category !== "all") {
     params.set("category", category);
+    }
+    if (search) {
+    params.set("search", search);
   }
 
   const res = await fetch(
@@ -75,8 +79,9 @@ export default function ToolsListBlock() {
     const width = useWindowWidth();
     const limit = width >= 1400 ? 16 : 8;
 
-    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8});
+    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8, search: ""});
     const category = get("category") as string;
+    const search = get("search") as string;
     const pageFromUrl = Number(get("page") ?? 1);
     const limitFromUrl = Number(get("limit") ?? limit);
 
@@ -98,11 +103,11 @@ export default function ToolsListBlock() {
     set("page", 1);
 
     try {
-        const data = await fetchToolsPage(1, limit, category);
+        const data = await fetchToolsPage(1, limit, category, search);
         if (!isMounted) return;
 
-          setTools(data.tools);
-           setStoreTools(data.tools);
+        setTools(data.tools);
+        setStoreTools(data.tools);
         setTotalTools(data.totalTools);
         setHasMore(data.page < data.totalPages);
         setCurrentPage(data.page);
@@ -117,7 +122,7 @@ export default function ToolsListBlock() {
     return () => {
       isMounted = false;
     };
-  }, [category, limit]);
+  }, [category, limit, search]);
 
 
   const loadNextPage = async () => {
@@ -128,14 +133,13 @@ export default function ToolsListBlock() {
 
     setLoadingMore(true);
     try {
-      const data = await fetchToolsPage(nextPage, limit, category);
+      const data = await fetchToolsPage(nextPage, limit, category, search);
         setTools(prev => [...prev, ...data.tools]);
         setStoreTools([...tools, ...data.tools]);
         setCurrentPage(nextPage);
         setHasMore(data.page < data.totalPages);
         setLoadingMore(false);
     } catch (error) {
-      console.error("Помилка завантаження наступної сторінки:", error);
       setLoadingMore(false);
     }
   };
@@ -158,7 +162,8 @@ export default function ToolsListBlock() {
     return (
       <section className={styles.section}>
         <div className="container">
-          <h2 className={styles.heading}>Усі інструменти</h2>
+                <h2 className={styles.heading}>Усі інструменти</h2>
+                <FilterBar />
           <div className={styles.empty}>
             <h3 className={styles.title}>Інструментів не знайдено</h3>
             <p className={styles.text}>

@@ -1,4 +1,4 @@
-// app/providers.tsx
+app/providers.tsx
 "use client";
 
 import { useAuth } from "@/store/auth.store";
