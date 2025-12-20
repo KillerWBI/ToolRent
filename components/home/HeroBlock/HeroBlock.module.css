@@ -118,6 +118,9 @@
         min-height: 518px;
         justify-content: flex-start;
     }
+        .title {
+            font-size: 48px;
+        }
 
     .inner {
         max-width: 1440px;
