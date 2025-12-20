@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ConfirmationModal.module.css";
+// import { ConfirmVariant } from "@/types/confirm";
 
 export type ConfirmationModalProps = {
   title: string;
@@ -19,11 +20,13 @@ export type ConfirmationModalProps = {
 
 export default function ConfirmationModal({
   title,
-  confirmButtonText,
-  cancelButtonText,
+  // confirmButtonText,
+  // cancelButtonText,
   variant,
   isLoading = false,
   error,
+  confirmButtonText,
+  cancelButtonText,
   onConfirm,
   onCancel,
   open,

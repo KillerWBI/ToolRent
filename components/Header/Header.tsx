@@ -43,41 +43,26 @@ export default function Header() {
           {/* Навигация */}
           <div className={styles.navUserWrapper}>
             <nav className={styles.navHeader}>
-              <Link
-                href="/"
-                className={styles.headLink}
-              >
+              <Link href="/" className={styles.headLink}>
                 Головна
               </Link>
-              <Link
-                href="/tools"
-                className={styles.headLink}
-              >
+              <Link href="/tools" className={styles.headLink}>
                 Інструменти
               </Link>
 
               {isAuthenticated ? (
                 <>
-                  <Link
-                    href="/profile"
-                    className={styles.headLink}
-                  >
+                  <Link href="/profile" className={styles.headLink}>
                     Мій профіль
                   </Link>
-                  <Link
-                    href="/create"
-                    className={styles.socialButton}
-                  >
+                  <Link href="/create" className={styles.socialButton}>
                     Опублікувати оголошення
                   </Link>
                 </>
               ) : (
                 <>
                   <Link href="/auth/login">Увійти</Link>
-                  <Link
-                    href="/auth/register"
-                    className={styles.socialButton}
-                  >
+                  <Link href="/auth/register" className={styles.socialButton}>
                     Зареєструватися
                   </Link>
                 </>
@@ -143,10 +128,7 @@ export default function Header() {
           </button>
 
           {/* Мобильное меню */}
-          <MobileMenu
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
+          <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
     </header>
