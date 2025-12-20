@@ -1,11 +1,27 @@
 // lib/auth.client.ts
-import { api } from "@/lib/api/api";
+import axios from "axios";
 
-export async function refreshToken(): Promise<boolean> {
+export const apiAuth = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
+
+export async function refreshToken() {
   try {
-    await api.post("/api/auth/refresh"); // 👉 Next proxy
-    return true;
-  } catch {
-    return false;
+    const response = await apiAuth.post("/api/auth/refresh");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to refresh token:", error);
+    throw error;
+  }
+}
+
+export async function AuthMe() {
+  try {
+    const response = await apiAuth.get("/api/users/me");
+    return response.data;
+  } catch (error) {
+    console.error("Dont found token", error);
+    throw error;
   }
 }

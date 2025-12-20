@@ -1,7 +1,6 @@
 "use client";
 
-import { api } from "@/lib/api/api";
-import { refreshToken } from "@/lib/auth";
+import { AuthMe, refreshToken } from "@/lib/auth";
 import axios from "axios";
 import { create } from "zustand";
 
@@ -10,11 +9,6 @@ interface User {
   email: string;
   name?: string;
   avatarUrl?: string;
-}
-
-interface AuthResponse {
-  success?: boolean;
-  data?: User;
 }
 
 interface AuthState {
@@ -35,10 +29,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
 
     try {
-      const res = await api.get<AuthResponse>("/api/auth/me");
-      const rawUser = res.data.data ?? (res.data as unknown as User);
+      const rawUser = await AuthMe();
+
       const user = rawUser
-        ? { ...rawUser, id: rawUser.id ?? (rawUser as any)._id }
+        ? { ...rawUser, id: rawUser.id ?? rawUser._id }
         : null;
 
       set({
@@ -47,30 +41,29 @@ export const useAuthStore = create<AuthState>((set) => ({
         loading: false,
       });
     } catch (error) {
+      // ⬇️ если access token умер — пробуем refresh
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        const refreshed = await refreshToken();
+        try {
+          await refreshToken();
 
-        if (refreshed) {
-          try {
-            const res = await api.get<AuthResponse>("/api/auth/me");
-            const rawUser = res.data.data ?? (res.data as unknown as User);
-            const user = rawUser
-              ? { ...rawUser, id: rawUser.id ?? (rawUser as any)._id }
-              : null;
+          const rawUser = await AuthMe();
+          const user = rawUser
+            ? { ...rawUser, id: rawUser.id ?? rawUser._id }
+            : null;
 
-            set({
-              user,
-              isAuthenticated: true,
-              loading: false,
-            });
-            return;
-          } catch (err) {
-            console.error(err);
-          }
+          set({
+            user,
+            isAuthenticated: true,
+            loading: false,
+          });
+          return;
+        } catch (err) {
+          // refresh тоже умер — падаем ниже
+          console.error("Refresh failed", err);
         }
       }
 
-      // ❗ если refresh не помог — просто считаем юзера разлогиненным
+      // ❌ если вообще не удалось
       set({
         user: null,
         isAuthenticated: false,
@@ -81,9 +74,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: async () => {
     try {
-      await api.post("/api/auth/logout");
+      // если у тебя есть logout endpoint — можешь вызвать тут
+      // await apiAuth.post("/api/auth/logout");
     } finally {
-      // ❗ НЕ ТРОГАЕМ cookie руками
       set({
         user: null,
         isAuthenticated: false,
