@@ -10,15 +10,18 @@ import { PublicUser } from "@/types/user";
 
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
+
+  console.log("User from store:", user);
+
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   if (loading) return null;
 
   const handleLogout = () => {
-    // logout(); // выход из системы
-    setIsOpen(false); // закрываем мобильное меню
-    router.push("/confirmation/logout"); // редирект на главную
+    logout();
+    setIsOpen(false);
+    router.push("/");
   };
 
   const userTyped = user as PublicUser | null;
@@ -40,18 +43,28 @@ export default function Header() {
           {/* Навигация */}
           <div className={styles.navUserWrapper}>
             <nav className={styles.navHeader}>
-              <Link href="/">Головна</Link>
-              <Link href="/tools">Інструменти</Link>
+              <Link href="/" className={styles.headLink}>
+                Головна
+              </Link>
+              <Link href="/tools" className={styles.headLink}>
+                Інструменти
+              </Link>
 
               {isAuthenticated ? (
                 <>
-                  <Link href="/profile">Мій профіль</Link>
-                  <Link href="dashboard/create">Опублікувати оголошення</Link>
+                  <Link href="/profile" className={styles.headLink}>
+                    Мій профіль
+                  </Link>
+                  <Link href="/create" className={styles.socialButton}>
+                    Опублікувати оголошення
+                  </Link>
                 </>
               ) : (
                 <>
                   <Link href="/auth/login">Увійти</Link>
-                  <Link href="/auth/register">Зареєструватися</Link>
+                  <Link href="/auth/register" className={styles.socialButton}>
+                    Зареєструватися
+                  </Link>
                 </>
               )}
             </nav>
@@ -60,9 +73,9 @@ export default function Header() {
             {isAuthenticated && (
               <div className={styles.userBlock}>
                 <div className={styles.userAvatar}>
-                  {userTyped?.avatarUrl ? (
+                  {userTyped?.avatar ? (
                     <img
-                      src={userTyped.avatarUrl}
+                      src={userTyped.avatar}
                       alt={userTyped.name}
                       className={styles.avatarImage}
                     />
@@ -115,12 +128,7 @@ export default function Header() {
           </button>
 
           {/* Мобильное меню */}
-          <MobileMenu
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            user={userTyped}
-            isAuth={isAuthenticated}
-          />
+          <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       </div>
     </header>

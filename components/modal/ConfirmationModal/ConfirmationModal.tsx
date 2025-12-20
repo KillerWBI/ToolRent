@@ -1,46 +1,47 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./ConfirmationModal.module.css";
-import { ConfirmVariant } from "@/types/confirm";
+// import { ConfirmVariant } from "@/types/confirm";
 
-type ConfirmationModalProps = {
+export type ConfirmationModalProps = {
   title: string;
   confirmButtonText: string;
   cancelButtonText: string;
-  variant?: ConfirmVariant;
-  open: boolean;
-  // message: string;
+  variant: "danger" | "default";
   isLoading?: boolean;
   error?: string;
   onConfirm: () => Promise<void>;
   onCancel: () => void;
+  open: boolean;
 };
 
 export default function ConfirmationModal({
-  open,
   title,
-  // message,
-  variant = "default",
+  // confirmButtonText,
+  // cancelButtonText,
+  variant,
   isLoading = false,
   error,
   confirmButtonText,
   cancelButtonText,
   onConfirm,
   onCancel,
+  open,
 }: ConfirmationModalProps) {
+  const router = useRouter();
   const [localLoading, setLocalLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [onCancel]);
+    setIsClient(true); // Теперь рендерим только на клиенте
+  }, []);
 
-  if (!open) return null;
+  const handleCancel = () => {
+    onCancel();
+  };
 
   const handleConfirm = async () => {
     if (isLoading || localLoading) return;
@@ -52,57 +53,24 @@ export default function ConfirmationModal({
     }
   };
 
-  //   return createPortal(
-  //     <div className={styles.backdrop} onClick={onCancel}>
-  //       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-  //         <button className={styles.close} onClick={onCancel}>
-  //           <svg className={styles.closeIcon}>
-  //             <use href="/svg/sprite.svg#close" />
-  //           </svg>
-  //         </button>
+  if (!open || !isClient) return null; // Не рендерим на сервере и если модалка закрыта
 
-  //         <h2 className={styles.title}>{title}</h2>
-
-  //         {error && <p className={styles.error}>{error}</p>}
-
-  //         <div className={styles.actions}>
-  //           <button
-  //             onClick={onCancel}
-  //             disabled={isLoading || localLoading}
-  //             className={styles.cancel}
-  //           >
-  //             Відмінити
-  //           </button>
-
-  //           <button
-  //             onClick={handleConfirm}
-  //             disabled={isLoading || localLoading}
-  //             className={styles.delete}
-  //           >
-  //             {isLoading || localLoading ? "Завантаження..." : confirmButtonText}
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </div>,
-  //     document.body
-  //   );
-  // }
   return createPortal(
-    <div className={styles.backdrop} onClick={onCancel}>
+    <div className={styles.backdrop} onClick={handleCancel}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.close} onClick={onCancel}>
+        <button className={styles.close} onClick={handleCancel}>
           <svg className={styles.closeIcon}>
             <use href="/svg/sprite.svg#close" />
           </svg>
         </button>
 
-        {title && <h2 className={styles.title}>{title}</h2>}
+        <h2 className={styles.title}>{title}</h2>
 
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.actions}>
           <button
-            onClick={onCancel}
+            onClick={handleCancel}
             disabled={isLoading || localLoading}
             className={styles.cancel}
           >
@@ -112,7 +80,7 @@ export default function ConfirmationModal({
           <button
             onClick={handleConfirm}
             disabled={isLoading || localLoading}
-            className={styles[variant]}
+            className={variant === "danger" ? styles.delete : styles.confirm}
           >
             {isLoading || localLoading ? "Завантаження..." : confirmButtonText}
           </button>

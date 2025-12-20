@@ -24,9 +24,16 @@
   color: #111;
   font-size: 16px;
   font-weight: 400;
-  line-height: 150%;
-  letter-spacing: 0%;
   text-align: center;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.navMobile a:hover,
+.navMobile a:focus {
+  text-decoration: underline;
 }
 
 .burger {
@@ -43,12 +50,18 @@
   cursor: pointer;
 }
 
-.burger span {
-  display: block;
-  height: 2px;
-  width: 18px;
-  background-color: #000000;
-  border-radius: 2px;
+.burger:hover {
+  border-color: #e7cdf4;
+}
+
+.burger:focus {
+  background-color: #e7cdf4;
+  border-color: #000000;
+}
+
+.burger:active {
+  background-color: #e7cdf4;
+  border-color: #000000;
 }
 
 .headerNavigation {
@@ -58,35 +71,47 @@
   height: 72px;
 }
 
-.registerButton {
-  display: block;
-  width: 100%;
-  max-width: 335px;
-  height: 40px;
-  padding: 8px 20px;
+.navMobile .socialButton {
+  padding: 8px 98.5px;
   border-radius: 6px;
+  white-space: nowrap;
   text-align: center;
   background-color: #8808cc;
-  color: #ffffff !important;
+  color: #ffffff;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+  display: inline-block;
+  line-height: 24px;
   text-decoration: none;
-  cursor: pointer;
+  border: 2px solid transparent;
 }
 
-.registerButton:hover,
-.registerButton:focus {
-  background-color: #a100e0;
-  outline: none;
+.navMobile .socialButton:hover,
+.navMobile .socialButton:focus {
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 6px;
+  border-color: #8808cc;
+}
+
+.navMobile .socialButton:active {
+  background-color: #e7cdf4;
 }
 
 @media only screen and (min-width: 768px) {
-  .registerButton {
-    max-width: 178px;
+  .navMobile .socialButton {
+    padding: 8px 20px;
   }
 }
 
 @media only screen and (min-width: 1440px) {
   .mobileMenu {
     display: none;
+  }
+
+  .navMobile .socialButton {
+    padding: 8px 20px;
   }
 }
 
@@ -111,7 +136,6 @@
 .userName {
   font-family: Work Sans;
   font-weight: 600;
-  font-style: SemiBold;
   font-size: 10px;
   line-height: 150%;
   letter-spacing: 0%;
@@ -146,4 +170,12 @@
   align-items: center;
   justify-content: center;
   margin-top: 26px;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }

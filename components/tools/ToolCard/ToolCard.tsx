@@ -8,7 +8,6 @@ import { useToolsStore } from "@/store/tools.store";
 import { Tool } from "@/types/tool";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState, type MouseEvent } from "react";
 import styles from "./ToolCard.module.css";
 
@@ -17,7 +16,6 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool }: ToolCardProps) {
-  const router = useRouter();
   const { isAuthenticated, user } = useAuthStore();
   const removeTool = useToolsStore((state) => state.removeTool);
 
@@ -25,17 +23,20 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   const { firstImage, extractImage } = useToolImages(tool);
   const [mainImage, setMainImage] = useState(firstImage);
-  const [showConfirm, setShowConfirm] = useState(false);
+
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  // Загружаем изображение, если нужно
+  // Подгрузка изображения при необходимости
   useEffect(() => {
     if (mainImage && !mainImage.includes("Placeholder Image")) return;
+
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiUrl) return;
 
     let cancelled = false;
+
     fetch(`${apiUrl}/api/tools/${tool._id}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -47,6 +48,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
       })
       .catch(() => {})
       .finally(() => {});
+
     return () => {
       cancelled = true;
     };
@@ -54,10 +56,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   const handleImageError = () => setMainImage("/image/Placeholder Image.png");
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setDeleteError(null);
-    setShowConfirm(true);
+    setOpenConfirm(true);
   };
 
   const handleConfirmDelete = async () => {
@@ -67,8 +69,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
     try {
       await deleteTool(tool._id);
       removeTool(tool._id);
-      setShowConfirm(false);
-      router.refresh();
+      setOpenConfirm(false);
     } catch (error) {
       setDeleteError(
         error instanceof Error
@@ -82,7 +83,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   const handleCancelDelete = () => {
     if (isDeleting) return;
-    setShowConfirm(false);
+    setOpenConfirm(false);
     setDeleteError(null);
   };
 
@@ -103,7 +104,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
     }
     if (hasHalf) {
       stars.push(
-        <svg key={`half`} className={styles.starIcon} aria-hidden="true">
+        <svg key="half" className={styles.starIcon} aria-hidden="true">
           <use href="/svg/sprite.svg#star-half" />
         </svg>
       );
@@ -149,12 +150,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
               >
                 Редагувати
               </Link>
+
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/confirmation/delete/${tool._id}`);
-                }}
+                onClick={handleDeleteClick}
                 className={styles.deleteButton}
                 aria-label="Видалити інструмент"
               >
@@ -171,14 +170,17 @@ export default function ToolCard({ tool }: ToolCardProps) {
         </div>
       </div>
 
-      {/* <ConfirmationModal
-        open={showConfirm}
-        message="Ви впевнені, що хочете видалити оголошення?"
+      <ConfirmationModal
+        open={openConfirm}
+        title="Ви впевнені, що хочете видалити оголошення?"
+        confirmButtonText="Підтвердити"
+        cancelButtonText="Відмінити"
+        variant="danger"
         isLoading={isDeleting}
         error={deleteError ?? undefined}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-      /> */}
+      />
     </div>
   );
 }

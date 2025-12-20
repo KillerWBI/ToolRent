@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
@@ -6,18 +6,31 @@ import Loader from "@/components/ui/Loader/Loader";
 import FilterBar from "../FilterBar/FilterBar";
 import styles from "./ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
-
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useToolsStore } from "@/store/tools.store";
 
 
+export const metadata = {
+  title: "Всі інструменти — каталог професійного обладнання",
+  description:
+    "Перегляньте повний каталог інструментів: електроінструменти, генератори, будівельне та професійне обладнання. Деталі, рейтинг та швидкий доступ до кожного інструмента.",
+  openGraph: {
+    title: "Всі інструменти — каталог професійного обладнання",
+    description:
+      "Каталог професійних інструментів і обладнання з рейтингами та детальним описом.",
+    type: "website",
+  },
+};
+
+
 interface ApiResponse {
-    tools: Tool[];
-    totalTools: number;
-    totalPages: number;
-    page: number;
-    limit: number;
+  tools: Tool[];
+  totalTools: number;
+  totalPages: number;
+  page: number;
+  limit: number;
 }
+
 
 async function fetchToolsPage(
   page: number = 1,
@@ -65,132 +78,122 @@ export default function ToolsListBlock() {
     const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8});
     const category = get("category") as string;
     const pageFromUrl = Number(get("page") ?? 1);
+    const limitFromUrl = Number(get("limit") ?? limit);
 
     const [tools, setTools] = useState<Tool[]>([]);
     const [currentPage, setCurrentPage] = useState(pageFromUrl);
-
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [totalTools, setTotalTools] = useState(0);
-    // Синхронізація зі сторою для мгновенного видалення
     const storeTools = useToolsStore((state) => state.tools);
     const setStoreTools = useToolsStore((state) => state.setTools);
 
-    useEffect(() => {
-        let isMounted = true;
 
-        const loadFirstPage = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchToolsPage(1, 16);
+  useEffect(() => {
+    let isMounted = true;
 
-                if (isMounted) {
-                    setTools(data.tools);
-                    setStoreTools(data.tools);
-                    setTotalTools(data.totalTools);
-                    setHasMore(data.page < data.totalPages);
-                    setCurrentPage(data.page);
-                    setLoading(false);
-                }
-            } catch (error) {
-                console.error("Помилка завантаження першої сторінки:", error);
-                if (isMounted) {
-                    setLoading(false);
-                }
-            }
-        };
+    const loadFirstPage = async () => {
+    setLoading(true);
+    set("page", 1);
 
-        loadFirstPage();
+    try {
+        const data = await fetchToolsPage(1, limit, category);
+        if (!isMounted) return;
 
-        return () => {
-            isMounted = false;
-        };
-    }, []);
-
-    const loadNextPage = async () => {
-        if (loadingMore || !hasMore) return;
-
-        try {
-            setLoadingMore(true);
-            const nextPage = currentPage + 1;
-
-            const data = await fetchToolsPage(nextPage, 16);
-
-            const allTools = [...tools, ...data.tools];
-            setTools(allTools);
-            setStoreTools(allTools);
-            setCurrentPage(nextPage);
-            setHasMore(data.page < data.totalPages);
-            setLoadingMore(false);
-        } catch (error) {
-            console.error("Помилка завантаження наступної сторінки:", error);
-            setLoadingMore(false);
-        }
+          setTools(data.tools);
+           setStoreTools(data.tools);
+        setTotalTools(data.totalTools);
+        setHasMore(data.page < data.totalPages);
+        setCurrentPage(data.page);
+        setLoading(false);
+      } catch (error) {
+        if (isMounted) setLoading(false);
+      }
     };
 
-    if (loading) {
-        return (
-            <section className={styles.section}>
-                <div className="container">
-                    <h2 className={styles.heading}>Усі інструменти</h2>
-                    <div className={styles.loading}>
-                        <div className={styles.spinner}></div>
-                        <p>Завантаження інструментів...</p>
-                        <Loader />
-                    </div>
-                </div>
-            </section>
-        );
+    loadFirstPage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [category, limit]);
+
+
+  const loadNextPage = async () => {
+    if (loadingMore || !hasMore) return;
+
+    const nextPage = currentPage + 1;
+    set("page", nextPage); 
+
+    setLoadingMore(true);
+    try {
+      const data = await fetchToolsPage(nextPage, limit, category);
+        setTools(prev => [...prev, ...data.tools]);
+        setStoreTools([...tools, ...data.tools]);
+        setCurrentPage(nextPage);
+        setHasMore(data.page < data.totalPages);
+        setLoadingMore(false);
+    } catch (error) {
+      console.error("Помилка завантаження наступної сторінки:", error);
+      setLoadingMore(false);
     }
+  };
 
-    const displayTools = storeTools.length > 0 ? storeTools : tools;
-
-    if (!displayTools.length) {
-        return (
-            <section className={styles.section}>
-                <div className="container">
-                    <h2 className={styles.heading}>Усі інструменти</h2>
-                    <div className={styles.empty}>
-                        <h3 className={styles.title}>
-                            Інструментів не знайдено
-                        </h3>
-                        <p className={styles.text}>
-                            Спробуйте змінити параметри пошуку або зайдіть
-                            пізніше.
-                        </p>
-                    </div>
-                </div>
-            </section>
-        );
-    }
-
+  if (loading) {
     return (
-        <section className={styles.section}>
-            <div className="container">
-                <h2 className={styles.heading}>Усі інструменти</h2>
-
-                <FilterBar />
-                <div className={styles.grid}>
-                    {displayTools.map((tool) => (
-                        <ToolCard key={tool._id} tool={tool} />
-                    ))}
-                </div>
-                {hasMore && (
-                    <div className={styles.buttonWrapper}>
-                        {loadingMore ? (
-                            <Loader />
-                        ) : (
-                            <button
-                                className={styles.viewButton}
-                                onClick={loadNextPage}
-                            >
-                                Показати більше
-                            </button>
-                        )}
-                    </div>
-                )}
-            </div>
-        </section>
+      <section className={styles.section}>
+        <div className="container">
+          <h2 className={styles.heading}>Усі інструменти</h2>
+          <div className={styles.loading}>
+            <div className={styles.spinner}></div>
+            <Loader />
+          </div>
+        </div>
+      </section>
     );
+  }
+
+  if (!tools.length) {
+    return (
+      <section className={styles.section}>
+        <div className="container">
+          <h2 className={styles.heading}>Усі інструменти</h2>
+          <div className={styles.empty}>
+            <h3 className={styles.title}>Інструментів не знайдено</h3>
+            <p className={styles.text}>
+              Спробуйте змінити параметри пошуку або зайдіть пізніше.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className={styles.section}>
+      <div className="container">
+        <h2 className={styles.heading}>Усі інструменти</h2>
+        <FilterBar />
+
+        <div className={styles.grid}>
+          {tools.map(tool => (
+            <ToolCard key={tool._id} tool={tool} />
+          ))}
+        </div>
+
+        {hasMore && (
+          <div className={styles.buttonWrapper}>
+            {loadingMore ? (
+              <Loader />
+            ) : (
+              <button className={styles.viewButton} onClick={loadNextPage}>
+                Показати більше
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }

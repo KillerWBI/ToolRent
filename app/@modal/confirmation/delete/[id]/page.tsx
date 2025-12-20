@@ -1,28 +1,30 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
 import ConfirmationModal from "@/components/modal/ConfirmationModal/ConfirmationModal";
 import { confirmConfig } from "@/lib/confirmConfig";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function DeleteModal() {
-  const { _id } = useParams();
-  const router = useRouter();
+  const { id } = useParams();
   const config = confirmConfig.delete;
-  const id = Array.isArray(_id) ? _id[0] : _id;
+  const [open, setOpen] = useState(true);
+
+  const uiVariant: "danger" | "default" =
+    config.variant === "delete" ? "danger" : "default";
 
   return (
     <ConfirmationModal
-      open={true}
+      open={open}
       title={config.title}
       confirmButtonText={config.confirmText}
       cancelButtonText={config.cancelText}
-      variant={config.variant}
+      variant={uiVariant}
       onConfirm={async () => {
-        await config.onConfirm(id); // 🔥 delete API
-        router.refresh(); // 🔄 оновити список
-        router.back(); // ❌ закрити модалку
+        await config.onConfirm(id as string);
+        setOpen(false);
       }}
-      onCancel={() => router.back()}
+      onCancel={() => setOpen(false)}
     />
   );
 }

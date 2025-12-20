@@ -1,9 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import ConfirmationModal from "@/components/modal/ConfirmationModal/ConfirmationModal";
 import { confirmConfig } from "@/lib/confirmConfig";
-import { useAuthStore } from "@/store/auth.store";
+import { useState } from "react";
 
 // export default function LogoutModal() {
 //   const router = useRouter();
@@ -22,23 +21,24 @@ import { useAuthStore } from "@/store/auth.store";
 //   );
 // }
 export default function LogoutModal() {
-  const router = useRouter();
-  const logout = useAuthStore((s) => s.logout);
   const config = confirmConfig.logout;
+  const [open, setOpen] = useState(true);
+
+  const uiVariant: "danger" | "default" =
+    config.variant === "delete" ? "danger" : "default";
 
   return (
     <ConfirmationModal
-      open={true}
-      // message={}
+      open={open}
       title={config.title}
       confirmButtonText={config.confirmText}
       cancelButtonText={config.cancelText}
-      variant={config.variant}
+      variant={uiVariant}
       onConfirm={async () => {
-        await logout();
-        router.back(); // закриває модалку
+        await config.onConfirm();
+        setOpen(false);
       }}
-      onCancel={() => router.back()}
+      onCancel={() => setOpen(false)}
     />
   );
 }

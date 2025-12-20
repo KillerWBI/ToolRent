@@ -90,7 +90,7 @@
     background-color: #e7cdf4;
 }
 
-.default {
+.confirm {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,7 +107,7 @@
     color: #fff;
 }
 
-.default:hover {
+.confirm:hover {
     border: 2px solid #8808cc;
     border-radius: 6px;
     color: #000;
@@ -124,11 +124,18 @@
     width: 295px;
     height: 44px;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     background-color: #c40202;
 
     line-height: 1.5;
     color: #fff;
+}
+
+.delete:hover {
+    border: 2px solid #c40202;
+    border-radius: 6px;
+    color: #000;
+    background-color: #fff;
 }
 
 @media (min-width: 768px) {
@@ -179,12 +186,13 @@
         font-size: 16px;
     }
 
-    .default {
+    .confirm {
         border: 1px solid #8808cc;
         border-radius: 6px;
         padding: 10px 24px;
         width: 308px;
-        height: 41px;
+        height: 44px;
+        font-size: 16px;
     }
 
     .delete {
