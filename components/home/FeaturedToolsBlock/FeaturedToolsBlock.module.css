@@ -1,67 +1,70 @@
 .section {
-    padding: 60px 0;
-    background-color: #f9f9f9;
+  padding: 64px 0;
+  /* background-color: #f9f9f9; */
 }
 
 .heading {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 40px;
-    text-align: center;
-    color: #222;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #222;
 }
 
 .grid {
-    display: grid;
-    gap: 32px;
-    grid-template-columns: 1fr;
-    margin-bottom: 40px;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+  margin-bottom: 40px;
 }
 
 .buttonWrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
 }
 
 .viewAllButton {
-    display: inline-block;
-    background-color: #8808cc; /* Example primary color */
-    color: #fff;
-    text-decoration: none;
-    border: 2px solid #8808cc;
-    border-radius: 6px;
-    padding: 10px 24px;
-    font-weight: 500;
-    font-size: 16px;
-    transition: background-color 0.3s;
+  display: inline-block;
+  background-color: #8808cc; /* Example primary color */
+  color: #fff;
+  text-decoration: none;
+  border: 2px solid #8808cc;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 .viewAllButton:hover,
 .viewAllButton:focus {
-    background-color: white;
-    border: 2px solid #8808cc;
-    color: black;
+  background-color: white;
+  border: 2px solid #8808cc;
+  color: black;
 }
 
 .viewAllButton:active {
-    background-color: #e7cdf4;
-    border: 2px solid #8808cc;
-    color: black;
+  background-color: #e7cdf4;
+  border: 2px solid #8808cc;
+  color: black;
 }
 
 @media (min-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 32px;
-        row-gap: 64px;
-    }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 32px;
+    row-gap: 64px;
+  }
 }
 
 @media (min-width: 1440px) {
-    .grid {
-        grid-template-columns: repeat(4, 1fr);
-        column-gap: 32px;
-        row-gap: 64px;
-    }
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 32px;
+    row-gap: 64px;
+  }
+  .section {
+    padding: 112px 0;
+  }
 }
