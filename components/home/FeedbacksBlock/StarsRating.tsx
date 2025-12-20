@@ -1,4 +1,4 @@
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import styles from './StarsRating.module.css';
 
 type Props = {

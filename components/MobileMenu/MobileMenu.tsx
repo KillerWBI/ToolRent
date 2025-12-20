@@ -2,25 +2,25 @@
 
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
+import { useAuthStore } from "@/store/auth.store";
 import { PublicUser } from "@/types/user";
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  user?: PublicUser | null;
-  isAuth?: boolean;
-  logout?: () => void; // передаем из Header
+  logout?: () => void;
 }
 
 export default function MobileMenu({
   isOpen,
   onClose,
-  user,
-  isAuth,
   logout,
 }: MobileMenuProps) {
+  const { user, isAuthenticated } = useAuthStore();
+
   if (!isOpen) return null;
 
+  const userTyped = user as PublicUser | null;
   const firstLetter = user?.name?.charAt(0).toUpperCase() || "U";
 
   const handleLogout = () => {
@@ -75,7 +75,7 @@ export default function MobileMenu({
             Інструменти
           </Link>
 
-          {isAuth ? (
+          {isAuthenticated ? (
             <>
               <Link
                 href="/profile"
@@ -86,6 +86,7 @@ export default function MobileMenu({
               <Link
                 href="/create"
                 onClick={onClose}
+                className={styles.socialButton}
               >
                 Опублікувати оголошення
               </Link>
@@ -93,10 +94,10 @@ export default function MobileMenu({
               {/* Блок пользователя */}
               <div className={styles.userBlock}>
                 <div className={styles.userAvatar}>
-                  {user?.avatarUrl ? (
+                  {userTyped?.avatar ? (
                     <img
-                      src={user.avatarUrl}
-                      alt={user.name}
+                      src={userTyped.avatar}
+                      alt={userTyped.name}
                       className={styles.avatarImage}
                     />
                   ) : (
@@ -113,8 +114,6 @@ export default function MobileMenu({
                 </div>
 
                 <span className={styles.userName}>{user?.name || "User"}</span>
-
-                {/* Separator */}
                 <span className={styles.separator}></span>
 
                 <button
@@ -144,6 +143,7 @@ export default function MobileMenu({
               <Link
                 href="/auth/register"
                 onClick={onClose}
+                className={styles.socialButton}
               >
                 Зареєструватися
               </Link>
