@@ -7,7 +7,7 @@ import { Tool } from "@/types/tool";
 export async function getFeaturedTools(): Promise<Tool[]> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tools`, {
-      next: { revalidate: 60 }, // revalidate once a minute
+      next: { revalidate: 60 },
     });
 
     if (!res.ok) {

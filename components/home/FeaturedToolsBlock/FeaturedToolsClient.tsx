@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
 import { Tool } from "@/types/tool";
-import { useToolsStore } from "@/store/tools.store";
 import styles from "./FeaturedToolsBlock.module.css";
 
 interface FeaturedToolsClientProps {
@@ -14,35 +13,10 @@ interface FeaturedToolsClientProps {
 export default function FeaturedToolsClient({
   initialTools,
 }: FeaturedToolsClientProps) {
-  const storeTools = useToolsStore((state) => state.tools);
-  const setStoreTools = useToolsStore((state) => state.setTools);
-  const [maxTools, setMaxTools] = useState<number>(8);
-
-  // Синхронізація зі сторою при першому завантаженні
-  useEffect(() => {
-    if (storeTools.length === 0) {
-      setStoreTools(initialTools);
-    }
-  }, []);
-
-  // Ограничение количества карточек в зависимости от разрешения
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setMaxTools(width < 1200 ? 6 : 8);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Використовуємо інструменти зі стору, якщо вони є, інакше — початкові
-  const displayTools = storeTools.length > 0 ? storeTools : initialTools;
-
-  const sortedAndFiltered = [...displayTools]
+  // Відображаємо тільки передані інструменти, без глобального стора
+  const sortedAndFiltered = [...initialTools]
     .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
-    .slice(0, maxTools);
+    .slice(0, 8);
 
   if (!sortedAndFiltered.length) {
     return (
