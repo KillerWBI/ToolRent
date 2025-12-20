@@ -13,11 +13,11 @@ import styles from "./ToolCard.module.css";
 
 interface ToolCardProps {
   tool: Tool;
+  onDeleted?: (id: string) => void;
 }
 
-export default function ToolCard({ tool }: ToolCardProps) {
+export default function ToolCard({ tool, onDeleted }: ToolCardProps) {
   const { isAuthenticated, user } = useAuthStore();
-  const removeTool = useToolsStore((state) => state.removeTool);
 
   const isOwner = isAuthenticated && user && user.id === tool.owner;
 
@@ -68,7 +68,11 @@ export default function ToolCard({ tool }: ToolCardProps) {
     setDeleteError(null);
     try {
       await deleteTool(tool._id);
-      removeTool(tool._id);
+      if (onDeleted) {
+        onDeleted(tool._id);
+      } else {
+        useToolsStore.getState().removeTool(tool._id);
+      }
       setOpenConfirm(false);
     } catch (error) {
       setDeleteError(

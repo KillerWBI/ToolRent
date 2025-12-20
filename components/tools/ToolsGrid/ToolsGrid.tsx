@@ -123,8 +123,12 @@ export default function ToolsListBlock() {
     setLoadingMore(true);
     try {
       const data = await fetchToolsPage(nextPage, limit, category);
-      setTools((prev) => [...prev, ...data.tools]);
-      setStoreTools([...tools, ...data.tools]);
+      // Объединяем текущие инструменты со следующей страницей
+      setTools((prev) => {
+        const merged = [...prev, ...data.tools];
+        setStoreTools(merged);
+        return merged;
+      });
       setCurrentPage(nextPage);
       setHasMore(data.page < data.totalPages);
       setLoadingMore(false);
@@ -148,7 +152,7 @@ export default function ToolsListBlock() {
     );
   }
 
-  if (!tools.length) {
+  if (!storeTools.length) {
     return (
       <section className={styles.section}>
         <div className="container">
@@ -171,7 +175,7 @@ export default function ToolsListBlock() {
         <FilterBar />
 
         <div className={styles.grid}>
-          {tools.map((tool) => (
+          {storeTools.map((tool) => (
             <ToolCard key={tool._id} tool={tool} />
           ))}
         </div>
