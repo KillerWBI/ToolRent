@@ -43,7 +43,7 @@
 @media (max-width: 768px) {
   .wrap {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     margin-bottom: 24px;
   }

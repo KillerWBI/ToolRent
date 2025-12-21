@@ -34,11 +34,7 @@ export default function Header() {
           {/* Логотип */}
           <div className={styles.logoWrapper}>
             <Link href="/">
-              <svg
-                width={162}
-                height={26}
-                aria-label="Company logo"
-              >
+              <svg width={162} height={26} aria-label="Company logo">
                 <use href="/svg/sprite.svg#icon-custom-logo" />
               </svg>
             </Link>
@@ -47,46 +43,28 @@ export default function Header() {
           {/* Навигация */}
           <div className={styles.navUserWrapper}>
             <nav className={styles.navHeader}>
-              <Link
-                href="/"
-                className={styles.headLink}
-              >
+              <Link href="/" className={styles.headLink}>
                 Головна
               </Link>
-              <Link
-                href="/tools"
-                className={styles.headLink}
-              >
+              <Link href="/tools" className={styles.headLink}>
                 Інструменти
               </Link>
 
               {isAuthenticated ? (
                 <>
-                  <Link
-                    href="/profile"
-                    className={styles.headLink}
-                  >
+                  <Link href="/profile" className={styles.headLink}>
                     Мій профіль
                   </Link>
-                  <Link
-                    href="/create"
-                    className={styles.socialButton}
-                  >
+                  <Link href="/create" className={styles.socialButton}>
                     Опублікувати оголошення
                   </Link>
                 </>
               ) : (
                 <>
-                  <Link
-                    href="/auth/login"
-                    className={styles.headLink}
-                  >
+                  <Link href="/auth/login" className={styles.headLink}>
                     Увійти
                   </Link>
-                  <Link
-                    href="/auth/register"
-                    className={styles.listButton}
-                  >
+                  <Link href="/auth/register" className={styles.listButton}>
                     Зареєструватися
                   </Link>
                 </>
@@ -146,11 +124,7 @@ export default function Header() {
             onClick={() => setIsOpen((prev) => !prev)}
             aria-label="Відкрити меню"
           >
-            <svg
-              className={styles.icon}
-              width={40}
-              height={40}
-            >
+            <svg className={styles.icon} width={40} height={40}>
               <use href="/svg/sprite.svg#menu" />
             </svg>
           </button>

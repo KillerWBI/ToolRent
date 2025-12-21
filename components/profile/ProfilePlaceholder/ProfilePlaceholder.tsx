@@ -18,7 +18,7 @@ export default function ProfilePlaceholder({ isAuthorized = false }: Props) {
           <p className={styles.subtext}>
             Опублікуйте свій перший інструмент та почніть заробляти
           </p>
-          <Link className={styles.btn} href="/dashboard/create">
+          <Link className={styles.btn} href="/create">
             Опублікувати інструмент
           </Link>
         </>
