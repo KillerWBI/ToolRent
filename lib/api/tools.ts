@@ -53,7 +53,7 @@ export const getTools = async (
 /**
  * Отримання одного інструменту за ID (Public)
  */
-export const getToolById = async (toolId: string): Promise<Tool> => {
+export const getToolById = async (toolId: string): Promise<Tool | null> => {
     const res = await fetch(`${API_URL}/api/tools/${toolId}`, {
         method: "GET",
         headers: {
@@ -64,7 +64,8 @@ export const getToolById = async (toolId: string): Promise<Tool> => {
 
     if (!res.ok) {
         if (res.status === 404) {
-            throw new Error("Tool not found");
+            // Return null for not found; caller can render a friendly message
+            return null;
         }
         const errorData = await res.json();
         throw new Error(errorData.message || "Failed to fetch tool details");
