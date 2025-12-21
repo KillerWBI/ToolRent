@@ -95,7 +95,7 @@
 
 .button:not(:disabled):hover,
 .button:not(:disabled):focus-visible {
-    background: transparent;
+    background: #fff;
     color: #000;
     border-color: #8808cc;
 }
