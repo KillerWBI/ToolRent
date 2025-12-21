@@ -51,7 +51,11 @@ export const ToolInfoBlock = ({ tool, owner }: ToolInfoBlockProps) => {
 
         <div className={css.userProfile}>
           <div className={css.userIconWrap}>
-            <img className={css.avatar} src={owner.avatar} alt={owner.name} />
+            <img
+              className={css.avatar}
+              src={owner.avatarUrl}
+              alt={owner.name}
+            />
           </div>
 
           <div className={css.userInfo}>

@@ -89,6 +89,16 @@
     outline: none;
 }
 
+.uploadButton:hover {
+  border: 2px solid #000;
+  background-color: #e7cdf4;
+}
+
+.uploadButton:active {
+  border: 2px solid #fff;
+  background-color: #8808cc;
+}
+
 .input {
     border: 2px solid #000;
     border-radius: 6px;
