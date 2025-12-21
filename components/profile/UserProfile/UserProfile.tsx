@@ -1,4 +1,6 @@
-import type { PublicUser } from "@/types/user";
+// components/profile/UserProfile/UserProfile.tsx
+import Image from "next/image";
+import type { PublicUser } from "@/lib/api/users";
 import styles from "./UserProfile.module.css";
 
 type Props = {
@@ -7,18 +9,17 @@ type Props = {
 
 export default function UserProfile({ user }: Props) {
   const letter = (user?.name?.trim()?.[0] || "?").toUpperCase();
-  const hasAvatar = Boolean((user as any)?.avatarUrl);
+  const hasAvatar = Boolean(user.avatarUrl);
 
   return (
     <div className={styles.wrap}>
       {hasAvatar ? (
-        <img
+        <Image
           className={styles.avatarImg}
-          src={(user as any).avatarUrl}
+          src={user.avatarUrl as string}
           alt={user.name}
           width={96}
           height={96}
-          loading="lazy"
         />
       ) : (
         <div className={styles.avatarLetter} aria-label={`Аватар ${user.name}`}>

@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
 
   // ❌ пользователь не залогинен → редирект на /auth/login
   if (!token && isPrivate) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
   // ❌ пользователь залогинен → редирект с /auth/login или /auth/register на /

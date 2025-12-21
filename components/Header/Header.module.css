@@ -7,13 +7,7 @@
 
 .navHeader {
   display: none;
-}
-
-.primary {
-  background: #2563eb;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 8px;
+  align-items: center;
 }
 
 .burger {
@@ -30,15 +24,100 @@
   cursor: pointer;
 }
 
-.burger span {
-  display: block;
-  height: 2px;
-  width: 18px;
+.burger:hover {
+  border-color: #e7cdf4;
+}
+
+.burger:focus {
+  background-color: #e7cdf4;
+  border-color: #000000;
+}
+
+.burger:active {
+  background-color: #e7cdf4;
+  border-color: #000000;
+}
+
+.separator {
+  display: inline-block;
+  width: 1px;
+  height: 24px;
   background-color: #000000;
-  border-radius: 2px;
+  margin: 0 12px;
+  align-self: center;
+}
+
+.userBlock {
+  display: none;
+}
+
+.navUserWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16x;
+  margin-left: auto;
+}
+
+.navHeader .socialButton {
+  padding: 8px 20px;
+  border-radius: 6px;
+  text-align: center;
+  background-color: #8808cc;
+  color: #ffffff;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+  display: inline-block;
+  line-height: 24px;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.socialButton {
+  text-decoration: none !important;
+}
+
+.navHeader .socialButton:hover,
+.navHeader .socialButton:focus {
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+  background-color: #ffffff;
+  color: #000000;
+  border-radius: 6px;
+  border-color: #8808cc;
+}
+
+.navHeader.socialButton:active {
+  background-color: #e7cdf4;
+}
+
+@media only screen and (min-width: 768px) {
+  .navHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    text-align: center;
+  }
+  .headLink {
+    display: none;
+  }
+
+  .socialButton {
+    margin-right: 16px;
+  }
+
+  .listButton {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 1440px) {
+  .userBlock {
+    display: flex;
+    align-items: center;
+  }
+
   .burger {
     display: none;
   }
@@ -47,6 +126,7 @@
     display: flex;
     flex-direction: row;
     gap: 32px;
+    text-align: center;
   }
 
   .navHeader a {
@@ -54,17 +134,91 @@
     color: #111;
     font-size: 16px;
     font-weight: 400;
-    line-height: 150%;
-    letter-spacing: 0%;
     text-align: center;
-    /* width: 335;
-  height: 40;
-  opacity: 1;
-  padding-top: 8px;
-  padding-right: 20px;
-  padding-bottom: 8px;
-  padding-left: 20px;
-  border-radius: 6px;
-  text-align: center; */
   }
+
+  .headLink {
+    display: flex;
+  }
+
+  .navHeader .listButton {
+    display: flex;
+    padding: 8px 20px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #8808cc;
+    color: #ffffff;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
+    display: inline-block;
+    line-height: 24px;
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
+}
+
+.navHeader a:hover,
+.navHeader a:focus {
+  text-decoration: underline;
+}
+
+.navUserWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff;
+}
+
+.userName {
+  font-weight: 600;
+  vertical-align: middle;
+  margin-left: 8px;
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
+}
+
+.separator {
+  display: inline-block;
+  width: 1px;
+  height: 39px;
+  background-color: #000000;
+  margin: 0 16px;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.logoutIcon {
+  fill: #111;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }

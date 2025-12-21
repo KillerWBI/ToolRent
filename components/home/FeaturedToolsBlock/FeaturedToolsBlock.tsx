@@ -1,64 +1,53 @@
-import ToolCard from "@/components/tools/ToolCard/ToolCard";
-import { ToolsResponse } from "@/lib/api/tools";
-import { Tool } from "@/types/tool";
-import Link from "next/link";
+import { Suspense } from "react";
+import Loader from "@/components/ui/Loader/Loader";
+import FeaturedToolsClient from "./FeaturedToolsClient";
 import styles from "./FeaturedToolsBlock.module.css";
+import { getFeaturedTools } from "@/lib/api/featuredTools";
 
-// Функция для получения данных на сервере
-
-async function getFeaturedTools(): Promise<Tool[]> {
-    try {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/tools`,
-            {
-                next: { revalidate: 60 }, // Обновлять данные раз в минуту
-            }
-        );
-
-
-        if (!res.ok) {
-            throw new Error("Failed to fetch tools");
-        }
-
-        const data: ToolsResponse = await res.json();
-        return data.tools;
-    } catch (error) {
-        console.error("Error fetching featured tools:", error);
-        return [];
-    }
+// Компонент для відображення під час завантаження
+function LoadingFallback() {
+  return (
+    <section className={styles.section}>
+      <div className="container">
+        <h2 className={styles.heading}>Популярні інструменти</h2>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "16px",
+            padding: "40px 0",
+          }}
+        >
+          <p>Завантаження інструментів...</p>
+          <Loader />
+        </div>
+      </div>
+    </section>
+  );
 }
 
-export default async function FeaturedToolsBlock() {
-    const tools = await getFeaturedTools();
+export default function FeaturedToolsBlockWrapper() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <FeaturedToolsBlock />
+    </Suspense>
+  );
+}
 
-    if (!tools || tools.length === 0) {
-        return (
-            <section className={styles.section}>
-                <div className="container">
-                    <h2 className={styles.heading}>Популярні інструменти</h2>
-                    <p>На жаль, наразі немає доступних інструментів.</p>
-                </div>
-            </section>
-        );
-    }
+async function FeaturedToolsBlock() {
+  const tools = await getFeaturedTools();
 
+  if (!tools || tools.length === 0) {
     return (
-        <section className={styles.section}>
-            <div className="container">
-                <h2 className={styles.heading}>Популярні інструменти</h2>
-
-                <div className={styles.grid}>
-                    {tools.slice(0, 8).map((tool, index) => (
-                        <ToolCard key={tool._id || index} tool={tool} />
-                    ))}
-                </div>
-
-                <div className={styles.buttonWrapper}>
-                    <Link href="/tools" className={styles.viewAllButton}>
-                        До всіх інструментів
-                    </Link>
-                </div>
-            </div>
-        </section>
+      <section className={styles.section}>
+        <div className="container">
+          <h2 className={styles.heading}>Популярні інструменти</h2>
+          <p>На жаль, наразі немає доступних інструментів.</p>
+        </div>
+      </section>
     );
+  }
+
+  return <FeaturedToolsClient initialTools={tools} />;
 }

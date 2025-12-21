@@ -6,13 +6,15 @@
     font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
+    letter-spacing: -0.01em;
     margin: 0;
     margin-bottom: 24px;
 
 }
 .benefitsText{
+    font-weight: 400;
     font-size: 16px;
-    letter-spacing: 0;
+    line-height: 1.5;
     margin-bottom: 40px;
     margin-top: 0;
 }
@@ -28,19 +30,27 @@
 }
 
 .benefitsListTitel{
+    font-weight: 700;
     font-size: 20px;
     line-height: 1.4;
+    letter-spacing: -0.01em;
     margin-top: 0;
     margin-bottom: 24px;
 }
-.benefitsText {
+.benefitsListText{
+    font-weight: 400;
     font-size: 16px;
     line-height: 1.5;
+    margin-bottom: 0;
 }
+
 
 @media (min-width: 768px){
     .benefitsTitle {
     font-size: 28px;
+    }
+    .benefitsListText {
+        margin-bottom: 47px;
     }
 }
 

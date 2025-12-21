@@ -2,6 +2,10 @@
   background-color: #f3e6f9;
 }
 
+.line {
+  border-bottom: 2px solid #000000;
+}
+
 .logowrapper {
   display: flex;
   justify-content: center;
@@ -16,11 +20,38 @@
   gap: 12px;
 }
 
-.logo img {
-  width: 32px;
-  height: 32px;
+.socialList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #111;
+  background-color: transparent;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
 }
 
+.socialList:hover {
+  color: #fff;
+  background-color: #8808cc;
+}
+
+.socialList:focus-visible {
+  color: #fff;
+  background-color: #8808cc;
+  outline: none;
+  box-shadow: 0 0 0 2px #8808cc;
+  border-radius: 6px;
+}
+
+.socialList:active {
+  color: #fff;
+  background-color: #6a06a3;
+}
 .nav {
   display: flex;
   flex-direction: column;
@@ -31,43 +62,28 @@
 .nav a {
   text-decoration: none;
   color: #111;
-  text-decoration: none;
   transition: all 0.3s ease;
   font-size: 12px;
   font-weight: 600;
   line-height: 150%;
-  letter-spacing: 0%;
   text-align: center;
-  height: 40px;
-  opacity: 1;
-  padding-top: 8px;
-  padding-right: 20px;
-  padding-bottom: 8px;
-  padding-left: 20px;
-  border-radius: 6px;
-  text-align: center;
+  padding: 8px 20px;
 }
 
-.footerLink:hover,
-.footerLink:focus {
+.nav a:hover,
+.nav a:focus {
   text-decoration: underline;
-}
-
-.line {
-  width: 100%;
-  height: 2px;
-  background-color: #000000;
 }
 
 .copy {
   margin: 32px 0 48px 0;
   text-align: center;
-  font-family: Work Sans;
+  font-style: normal;
+  font-family: var(--second-family);
   font-weight: 400;
-  font-style: Regular;
   font-size: 12px;
   line-height: 150%;
-  letter-spacing: 0%;
+  color: var(--color-scheme-3-text);
 }
 
 @media only screen and (min-width: 768px) {
@@ -76,6 +92,10 @@
     flex-direction: row;
     justify-content: center;
     gap: 32px;
+  }
+
+  .copy {
+    font-size: 14px;
   }
 }
 
@@ -100,5 +120,9 @@
 
   .copy {
     margin-bottom: 80px;
+  }
+  .companyFooter {
+    width: 124px;
+    height: 20px;
   }
 }

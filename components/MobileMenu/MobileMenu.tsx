@@ -1,44 +1,61 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./MobileMenu.module.css";
+import { useAuthStore } from "@/store/auth.store";
+import { PublicUser } from "@/types/user";
 
 interface MobileMenuProps {
   isOpen: boolean;
-  isAuth: boolean;
   onClose: () => void;
 }
 
-export default function MobileMenu({
-  isOpen,
-  isAuth,
-  onClose,
-}: MobileMenuProps) {
+export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { user, isAuthenticated, logout } = useAuthStore();
+
   if (!isOpen) return null;
+
+  const userTyped = user as PublicUser | null;
+  const firstLetter = user?.name?.charAt(0).toUpperCase() || "U";
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+  };
 
   return (
     <div className={styles.mobileMenu}>
       <div className="container">
-        <div className={styles.burgerHeader}>
-          <Link href="/">
-            <img
-              src="/svg/logo.svg"
-              alt="LOGO"
-              className={styles.logo}
-              height={20}
-            />
-          </Link>
-
-          {/* Крестик для закрытия */}
-          <button
-            className={`${styles.closeButton} ${isOpen ? styles.open : ""}`}
+        {/* Логотип + кнопка закрытия */}
+        <div className={styles.headerNavigation}>
+          <Link
+            href="/"
             onClick={onClose}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            <svg
+              width={162}
+              height={26}
+              aria-label="Company logo"
+            >
+              <use href="/svg/sprite.svg#icon-custom-logo" />
+            </svg>
+          </Link>
+
+          <button
+            className={styles.burger}
+            onClick={onClose}
+            aria-label="Закрити меню"
+          >
+            <svg
+              width={24}
+              height={24}
+            >
+              <use href="/svg/sprite.svg#close" />
+            </svg>
           </button>
         </div>
 
-        {/* Ссылки */}
+        {/* Навигация */}
         <nav className={styles.navMobile}>
           <Link
             href="/"
@@ -52,7 +69,8 @@ export default function MobileMenu({
           >
             Інструменти
           </Link>
-          {isAuth ? (
+
+          {isAuthenticated ? (
             <>
               <Link
                 href="/profile"
@@ -63,21 +81,64 @@ export default function MobileMenu({
               <Link
                 href="/create"
                 onClick={onClose}
+                className={styles.socialButton}
               >
                 Опублікувати оголошення
               </Link>
+
+              {/* Блок пользователя */}
+              <div className={styles.userBlock}>
+                <div className={styles.userAvatar}>
+                  {userTyped?.avatar ? (
+                    <img
+                      src={userTyped.avatar}
+                      alt={userTyped.name}
+                      className={styles.avatarImage}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "16px",
+                      }}
+                    >
+                      {firstLetter}
+                    </span>
+                  )}
+                </div>
+
+                <span className={styles.userName}>{user?.name || "User"}</span>
+                <span className={styles.separator}></span>
+
+                <button
+                  className={styles.logoutBtn}
+                  onClick={handleLogout}
+                  aria-label="Вихід"
+                >
+                  <svg
+                    className={styles.logoutIcon}
+                    width={18}
+                    height={18}
+                    aria-hidden="true"
+                  >
+                    <use href="/svg/sprite.svg#logout" />
+                  </svg>
+                </button>
+              </div>
             </>
           ) : (
             <>
               <Link
-                href="/login"
+                href="/auth/login"
                 onClick={onClose}
               >
                 Увійти
               </Link>
               <Link
-                href="/register"
+                href="/auth/register"
                 onClick={onClose}
+                className={styles.socialButton}
               >
                 Зареєструватися
               </Link>

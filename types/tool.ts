@@ -20,17 +20,15 @@ export interface Feedback {
     createdAt: string;
 }
 
-
 export type Tool = {
-  _id: string; 
-  owner: string; 
-  category: string;
-  name: string;
-  description: string;
-  pricePerDay: number;
-  images: string; 
-  rating?: number;
-  specifications?: Record<string, string>;
-  rentalTerms?: string;
+    _id: string;
+    owner: string;
+    category: string;
+    name: string;
+    description: string;
+    pricePerDay: number;
+    images: string[] | string; // Масив зображень (1-5) або string для сумісності зі старими даними
+    rating?: number;
+    specifications?: Record<string, string>;
+    rentalTerms?: string;
 };
-

@@ -6,201 +6,172 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuthStore } from "@/store/auth.store";
+import toast from "react-hot-toast";
 import styles from "../register/AuthPage.module.css";
 
 const validationSchema = Yup.object({
-    email: Yup.string()
-        .trim()
-        .email("Некоректна пошта")
-        .required("Обов'язкове поле"),
-    password: Yup.string()
-        .min(8, "Мінімум 8 символів")
-        .required("Обов'язкове поле"),
+  email: Yup.string()
+    .trim()
+    .email("Некоректна пошта")
+    .required("Обов'язкове поле"),
+  password: Yup.string()
+    .min(8, "Мінімум 8 символів")
+    .required("Обов'язкове поле"),
 });
 
 export default function LoginPage() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const redirectTo = searchParams.get("redirect") || "/";
-    const { fetchUser } = useAuthStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+  const { fetchUser } = useAuthStore();
 
-    const formik = useFormik({
-        initialValues: {
-            email: "",
-            password: "",
-        },
-        validationSchema,
-        onSubmit: async (values, { setSubmitting, setStatus }) => {
-            setStatus(undefined);
-            try {
-                const res = await fetch("/api/auth/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({
-                        email: values.email.trim(),
-                        password: values.password,
-                    }),
-                });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            email: values.email.trim(),
+            password: values.password,
+          }),
+        });
 
-                if (!res.ok) {
-                    const data = await res.json().catch(() => ({}));
-                    const message =
-                        data?.message || data?.error || "Не вдалося увійти";
-                    throw new Error(message);
-                }
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          const message = data?.message || data?.error || "Не вдалося увійти";
+          throw new Error(message);
+        }
 
-                // Обновляем состояние авторизации перед редиректом
-                await fetchUser();
-                router.replace(redirectTo);
-            } catch (error: unknown) {
-                const message =
-                    error instanceof Error ? error.message : "Сталася помилка";
-                setStatus(message);
-                if (typeof window !== "undefined") alert(message);
-            } finally {
-                setSubmitting(false);
-            }
-        },
-    });
+        // Обновляем состояние авторизации перед редиректом
+        await fetchUser();
+        toast.success("Успішний вхід!");
+        router.replace(redirectTo);
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : "Сталася помилка";
+        toast.error(message);
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
 
-    const {
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        status,
-    } = formik;
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+  } = formik;
 
-    return (
-        <main className={styles.container}>
-            <div className={styles.page}>
-                <div className={styles.card}>
-                    <div className={styles.formSection}>
-                        <Link href="/" className={styles.logo}>
-                            <Image
-                                src="/svg/logo.svg"
-                                alt="ToolNext"
-                                width={28}
-                                height={28}
-                                className={styles.logoIcon}
-                                priority
-                            />
-                            <span>ToolNext</span>
-                        </Link>
+  return (
+    <main className={styles.container}>
+      <div className={styles.page}>
+        <div className={styles.card}>
+          <div className={styles.formSection}>
+            <Link href="/" className={styles.logo}>
+              <Image
+                src="/svg/company-logo.svg"
+                alt="ToolNext"
+                width={124}
+                height={28}
+                className={styles.logoIcon}
+                priority
+              />
+              
+            </Link>
 
-                        <div>
-                            <h1 className={styles.title}>Вхід</h1>
-                            <p className={styles.subtitle}>
-                                Введіть пошту та пароль, щоб продовжити роботу з
-                                інструментами.
-                            </p>
-                        </div>
-
-                        <form
-                            className={styles.form}
-                            onSubmit={handleSubmit}
-                            noValidate
-                        >
-                            {[
-                                {
-                                    name: "email",
-                                    label: "Пошта*",
-                                    type: "email",
-                                    placeholder: "Ваша пошта",
-                                    autoComplete: "email",
-                                },
-                                {
-                                    name: "password",
-                                    label: "Пароль*",
-                                    type: "password",
-                                    placeholder: "******",
-                                    autoComplete: "current-password",
-                                },
-                            ].map((field) => {
-                                const hasError =
-                                    touched[
-                                        field.name as keyof typeof touched
-                                    ] &&
-                                    errors[field.name as keyof typeof errors];
-                                return (
-                                    <label
-                                        key={field.name}
-                                        className={styles.field}
-                                    >
-                                        <span className={styles.label}>
-                                            {field.label}
-                                        </span>
-                                        <input
-                                            className={`${styles.input} ${
-                                                hasError
-                                                    ? styles.inputError
-                                                    : ""
-                                            }`}
-                                            type={field.type}
-                                            name={field.name}
-                                            placeholder={field.placeholder}
-                                            autoComplete={field.autoComplete}
-                                            value={
-                                                values[
-                                                    field.name as keyof typeof values
-                                                ]
-                                            }
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            aria-invalid={Boolean(hasError)}
-                                            required
-                                        />
-                                        {hasError ? (
-                                            <span className={styles.errorText}>
-                                                {
-                                                    errors[
-                                                        field.name as keyof typeof errors
-                                                    ] as string
-                                                }
-                                            </span>
-                                        ) : null}
-                                    </label>
-                                );
-                            })}
-
-                            <button
-                                type="submit"
-                                className={styles.submit}
-                                disabled={isSubmitting}
-                                aria-busy={isSubmitting}
-                            >
-                                {isSubmitting ? "Вхід..." : "Увійти"}
-                            </button>
-                            {status ? (
-                                <div className={styles.formStatus}>
-                                    {status}
-                                </div>
-                            ) : null}
-                        </form>
-
-                        <div className={styles.switchAuth}>
-                            <span>Не маєте акаунту?</span>
-                            <Link href="/register">Реєстрація</Link>
-                        </div>
-
-                        <p className={styles.footerNote}>© 2025 ToolNext</p>
-                    </div>
-
-                    <div className={styles.imageSection} aria-hidden>
-                        <Image
-                            src="/image/Placeholder Image.png"
-                            alt="Робоче місце з інструментами"
-                            fill
-                            priority
-                            className={styles.image}
-                        />
-                    </div>
-                </div>
+            <div>
+              <h1 className={styles.title}>Вхід</h1>
+              <p className={styles.subtitle}>
+                Введіть пошту та пароль, щоб продовжити роботу з інструментами.
+              </p>
             </div>
-        </main>
-    );
+
+            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+              {[
+                {
+                  name: "email",
+                  label: "Пошта*",
+                  type: "email",
+                  placeholder: "Ваша пошта",
+                  autoComplete: "email",
+                },
+                {
+                  name: "password",
+                  label: "Пароль*",
+                  type: "password",
+                  placeholder: "******",
+                  autoComplete: "current-password",
+                },
+              ].map((field) => {
+                const hasError =
+                  touched[field.name as keyof typeof touched] &&
+                  errors[field.name as keyof typeof errors];
+                return (
+                  <label key={field.name} className={styles.field}>
+                    <span className={styles.label}>{field.label}</span>
+                    <input
+                      className={`${styles.input} ${
+                        hasError ? styles.inputError : ""
+                      }`}
+                      type={field.type}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                      autoComplete={field.autoComplete}
+                      value={values[field.name as keyof typeof values]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      aria-invalid={Boolean(hasError)}
+                      required
+                    />
+                    {hasError ? (
+                      <span className={styles.errorText}>
+                        {errors[field.name as keyof typeof errors] as string}
+                      </span>
+                    ) : null}
+                  </label>
+                );
+              })}
+
+              <button
+                type="submit"
+                className={styles.submit}
+                disabled={isSubmitting}
+                aria-busy={isSubmitting}
+              >
+                {isSubmitting ? "Вхід..." : "Увійти"}
+              </button>
+            </form>
+
+            <div className={styles.switchAuth}>
+              <span>Не маєте акаунту?</span>
+              <Link href="/auth/register">Реєстрація</Link>
+            </div>
+
+            <p className={styles.footerNote}>© 2025 ToolNext</p>
+          </div>
+
+          <div className={styles.imageSection} aria-hidden>
+            <Image
+              src="/image/Placeholder Image.png"
+              alt="Робоче місце з інструментами"
+              fill
+              priority
+              className={styles.image}
+            />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }
