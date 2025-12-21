@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import LogoutModal from "@/app/@modal/confirmation/logout/page";
 import { useAuthStore } from "@/store/auth.store";
+import { PublicUser } from "@/types/user";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
-import { PublicUser } from "@/types/user";
-
 export default function Header() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
+  const [showLogout, setShowLogout] = useState(false);
+
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -100,7 +102,7 @@ export default function Header() {
 
                 <button
                   className={styles.logoutBtn}
-                  onClick={handleLogout}
+                  onClick={() => setShowLogout(true)}
                   aria-label="Вихід"
                 >
                   <svg
@@ -128,7 +130,14 @@ export default function Header() {
           </button>
 
           {/* Мобильное меню */}
-          <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <MobileMenu
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
+          {showLogout && (
+  <LogoutModal open={showLogout} onClose={() => setShowLogout(false)} />
+)}
+
         </div>
       </div>
     </header>

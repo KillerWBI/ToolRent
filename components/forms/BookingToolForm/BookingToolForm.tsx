@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import "./BookingToolForm.css";
+import { SuccessBookung } from "./SuccessBookng";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -39,7 +40,7 @@ interface Props {
 
 export default function BookingToolForm({ tool }: Props) {
   const [status, setStatus] = useState<string | null>(null);
-
+  const [successForm , setsuccessForm] = useState<boolean>(false);
 
 
 
@@ -122,6 +123,7 @@ export default function BookingToolForm({ tool }: Props) {
          setStatus("✅ Бронювання успішне");
          toast.success("Бронювання успішне")
           resetForm();
+          setsuccessForm(true);
       } catch {
         setStatus("Помилка при бронюванні");
         toast.error("Помилка при бронюванні")
@@ -156,7 +158,11 @@ export default function BookingToolForm({ tool }: Props) {
     <main className="container-booking">
       <div><Toaster/></div>
       <div className="formSection">
-        <h1 className="title">Підтвердження бронювання</h1>
+      {successForm ? (
+        <SuccessBookung/>
+      ) : (
+        <>
+          <h1 className="title">Підтвердження бронювання</h1>
 
         <form className="form" onSubmit={handleSubmit} noValidate>
           <label className="field">
@@ -293,6 +299,8 @@ export default function BookingToolForm({ tool }: Props) {
 
           {status && <div className="formStatus">{status}</div>}
         </form>
+        </>
+      )}
       </div>
     </main>
   );

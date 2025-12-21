@@ -1,5 +1,5 @@
+import { useAuthStore } from "@/store/auth.store";
 import { ConfirmType, ConfirmVariant } from "@/types/confirm";
-
 type ConfirmConfigItem = {
   title: string;
   confirmText: string;
@@ -16,6 +16,7 @@ export const confirmConfig: Record<ConfirmType, ConfirmConfigItem> = {
     variant: "default",
     onConfirm: async () => {
       await fetch("/api/auth/logout", { method: "POST" });
+      useAuthStore.getState().logout();
     },
   },
 
