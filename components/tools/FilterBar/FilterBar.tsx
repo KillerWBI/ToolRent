@@ -20,6 +20,9 @@ const FilterBar = () => {
 
   const currentCategory = searchParams.get("category") ?? ALL_CATEGORIES_VALUE;
 
+  const hasCategoryFilter = currentCategory !== ALL_CATEGORIES_VALUE;
+  const hasSearchFilter = !!searchParams.get("search");
+
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -70,10 +73,11 @@ const FilterBar = () => {
   const handleResetFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("category");
+    params.delete("search");
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const isResetDisabled = currentCategory === ALL_CATEGORIES_VALUE;
+  const isResetDisabled = !hasCategoryFilter && !hasSearchFilter;
 
   const currentLabel =
     currentCategory === "all"
