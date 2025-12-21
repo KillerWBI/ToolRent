@@ -4,8 +4,10 @@
 }
 
 .heading {
-  font-size: 2rem;
   font-weight: 700;
+  font-size: 36px;
+  line-height: 1.2;
+  margin-top: 0;
   margin-bottom: 32px;
   text-align: center;
   color: #222;
@@ -79,5 +81,8 @@
   }
   .section {
     padding: 112px 0;
+  }
+  .heading {
+    font-size: 48px;
   }
 }

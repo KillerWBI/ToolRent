@@ -81,7 +81,7 @@
   background-color: #fff;
   color: #000;
   text-decoration: none;
-  border: 1px solid #8808cc;
+  border: 2px solid #000;
   border-radius: 6px;
   font-weight: 500;
   font-size: 16px;
@@ -114,7 +114,7 @@
   width: 40px;
   height: 40px;
   padding: 10px;
-  border: 1px solid #8808cc;
+  border: 2px solid #000;
   background-color: #fff;
   border-radius: 6px;
   cursor: pointer;
@@ -143,17 +143,6 @@
 .deleteButton:hover .deleteIcon {
   fill: #fff;
   stroke: #fff;
-}
-
-/* Tablet strict dimensions */
-@media (min-width: 768px) and (max-width: 1199px) {
-  .card {
-    height: 598px;
-    padding-bottom: 0;
-  }
-  .imageWrapper {
-    height: 360px; /* Adjust based on total height */
-  }
 }
 
 /* Desktop strict dimensions */
