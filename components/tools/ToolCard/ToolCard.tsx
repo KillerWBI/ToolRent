@@ -9,6 +9,7 @@ import { Tool } from "@/types/tool";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type MouseEvent } from "react";
+import toast from "react-hot-toast";
 import styles from "./ToolCard.module.css";
 
 interface ToolCardProps {
@@ -74,12 +75,14 @@ export default function ToolCard({ tool, onDeleted }: ToolCardProps) {
         useToolsStore.getState().removeTool(tool._id);
       }
       setOpenConfirm(false);
+      toast.success(`✅ "${tool.name}" успішно видалено!`);
     } catch (error) {
-      setDeleteError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Не вдалося видалити інструмент."
-      );
+          : "❌ Не вдалося видалити інструмент.";
+      setDeleteError(message);
+      toast.error(message);
     } finally {
       setIsDeleting(false);
     }

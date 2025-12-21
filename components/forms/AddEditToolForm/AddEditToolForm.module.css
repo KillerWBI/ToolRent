@@ -67,8 +67,26 @@
   height: 41px;
   background-color: #f8f9fa;
   cursor: pointer;
-  transition: transform 0.12s ease;
+  transition: all 0.2s ease;
   margin-bottom: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.uploadButton:hover {
+  background-color: #8808cc;
+  color: #fff;
+  border: 2px solid #8808cc;
+}
+
+.uploadButton:focus {
+  border: 2px solid #000;
+  background: #e7cdf4;
+  color: #000;
+  outline: none;
 }
 
 .input {

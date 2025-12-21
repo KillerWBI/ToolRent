@@ -10,6 +10,10 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import styles from "./AddEditToolForm.module.css";
 import { useAuthStore } from "@/store/auth.store";
+import toast from "react-hot-toast";
+import { useToolsStore } from "@/store/tools.store";
+import { useProfileToolsStore } from "@/store/profileTools.store";
+import PhotoManager from "./PhotoManager";
 
 type Mode = "create" | "edit";
 
@@ -60,6 +64,14 @@ const buildValidationSchema = (isEdit: boolean) =>
       ),
   });
 
+const getCategoryId = (tool?: Tool | null): string => {
+  if (!tool) return "";
+  const cat: any = (tool as any).category;
+  if (!cat) return "";
+  if (typeof cat === "string") return cat;
+  return cat._id || cat.id || cat.value || "";
+};
+
 export default function AddEditToolForm({
   mode = "create",
   initialTool,
@@ -67,6 +79,10 @@ export default function AddEditToolForm({
 }: AddEditToolFormProps) {
   const router = useRouter();
   const userId = useAuthStore((state) => state.user?.id);
+  const updateToolsStore = useToolsStore((state) => state.setTools);
+  const toolsStoreItems = useToolsStore((state) => state.tools);
+  const updateProfileStore = useProfileToolsStore((state) => state.setTools);
+  const profileStoreItems = useProfileToolsStore((state) => state.tools);
   const [preview, setPreview] = useState<string | null>(() => {
     if (Array.isArray(initialTool?.images)) {
       return initialTool?.images?.[0] || null;
@@ -77,6 +93,13 @@ export default function AddEditToolForm({
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const formikRef = useRef<any>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(() => {
+    if (Array.isArray(initialTool?.images)) return initialTool?.images ?? [];
+    return initialTool?.images ? [String(initialTool.images)] : [];
+  });
   const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false);
 
@@ -84,7 +107,7 @@ export default function AddEditToolForm({
     () => ({
       name: initialTool?.name || "",
       pricePerDay: initialTool?.pricePerDay ?? "",
-      categoryId: initialTool?.category || "",
+      categoryId: getCategoryId(initialTool),
       terms: initialTool?.rentalTerms || "",
       description: initialTool?.description || "",
       specifications: initialTool?.specifications
@@ -148,6 +171,14 @@ export default function AddEditToolForm({
     return Object.fromEntries(entries);
   };
 
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = (e) => reject(e);
+      reader.readAsDataURL(file);
+    });
+
   const handleCancel = () => {
     if (onCancel) {
       onCancel();
@@ -157,6 +188,16 @@ export default function AddEditToolForm({
   };
 
   useEffect(() => {
+    // Keep existing images in sync with the tool being edited
+    if (mode === "edit") {
+      const arr = Array.isArray(initialTool?.images)
+        ? (initialTool?.images ?? [])
+        : initialTool?.images
+          ? [String(initialTool.images)]
+          : [];
+      setExistingImages(arr);
+      setImagesToDelete([]);
+    }
     const handleClickOutside = (event: MouseEvent) => {
       if (
         categoryDropdownRef.current &&
@@ -169,6 +210,13 @@ export default function AddEditToolForm({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Hook to update Formik field when selectedFiles change in create mode
+  useEffect(() => {
+    if (mode === "create" && formikRef.current && selectedFiles.length > 0) {
+      formikRef.current.setFieldValue("image", selectedFiles[0]);
+    }
+  }, [selectedFiles, mode]);
+
   return (
     <div className={styles.section}>
       <h1 className={styles.title}>
@@ -176,6 +224,7 @@ export default function AddEditToolForm({
       </h1>
 
       <Formik
+        innerRef={formikRef}
         initialValues={initialValues}
         validationSchema={buildValidationSchema(mode === "edit")}
         enableReinitialize
@@ -186,46 +235,128 @@ export default function AddEditToolForm({
               throw new Error("Користувач не авторизований");
             }
 
-            // Debug preview of what we send to backend (files are logged with basic metadata)
             const specsObject = values.specifications.trim()
               ? parseSpecifications(values.specifications)
               : undefined;
 
-            const formData = new FormData();
-            formData.append("owner", userId);
-            formData.append("name", values.name.trim());
-            formData.append("pricePerDay", values.pricePerDay.toString());
-            formData.append("category", values.categoryId);
-            formData.append("rentalTerms", values.terms.trim());
-            formData.append("description", values.description.trim());
-            if (values.specifications.trim()) {
-              formData.append(
-                "specifications",
-                JSON.stringify(specsObject ?? {})
+            let savedTool: Tool;
+
+            if (mode === "edit" && initialTool?._id) {
+              const existingImagesArr = existingImages;
+
+              const updatePayload: Record<string, unknown> = {
+                name: values.name.trim(),
+                pricePerDay: Number(values.pricePerDay),
+                category: values.categoryId,
+                rentalTerms: values.terms.trim(),
+                description: values.description.trim(),
+              };
+
+              // Validate that at least one image will be submitted (with deletions)
+              const remainingExistingCount = existingImagesArr.filter(
+                (u) => !imagesToDelete.includes(u)
+              ).length;
+              const totalImagesCount =
+                remainingExistingCount + selectedFiles.length;
+              if (totalImagesCount === 0) {
+                throw new Error("Потрібно додати хоча б одне фото");
+              }
+
+              // Upload newly selected images (if any) and combine with existing (after deletions)
+              let finalImages = existingImagesArr.filter(
+                (u) => !imagesToDelete.includes(u)
               );
-            }
-            if (values.image) {
-              formData.append("images", values.image);
+              if (selectedFiles.length > 0) {
+                const uploadToastId = toast.loading("📤 Завантаження фото...");
+                try {
+                  const dataUrls = await Promise.all(
+                    selectedFiles.map((f) => fileToDataUrl(f))
+                  );
+                  const res = await fetch("/api/uploads", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ images: dataUrls }),
+                  });
+                  if (!res.ok) {
+                    const err = await res
+                      .json()
+                      .catch(() => ({ message: "Upload failed" }));
+                    throw new Error(err.message || "Upload failed");
+                  }
+                  const payload = await res.json();
+                  const uploaded: string[] = Array.isArray(payload?.urls)
+                    ? payload.urls
+                    : [];
+                  finalImages = [...finalImages, ...uploaded].slice(0, 5);
+                  toast.success("✅ Фото успішно завантажено", {
+                    id: uploadToastId,
+                  });
+                } catch (uploadError) {
+                  toast.error(
+                    uploadError instanceof Error
+                      ? uploadError.message
+                      : "❌ Помилка при завантаженні фото",
+                    { id: uploadToastId }
+                  );
+                  throw uploadError;
+                }
+              }
+              if (finalImages.length) {
+                updatePayload.images =
+                  finalImages.length === 1 ? finalImages[0] : finalImages;
+              }
+              if (specsObject && Object.keys(specsObject).length > 0) {
+                updatePayload.specifications = specsObject;
+              }
+
+              savedTool = await updateTool(initialTool._id, updatePayload);
+              toast.success("✅ Інструмент успішно оновлено!");
+            } else {
+              const formData = new FormData();
+              formData.append("owner", userId);
+              formData.append("name", values.name.trim());
+              formData.append("pricePerDay", values.pricePerDay.toString());
+              formData.append("category", values.categoryId);
+              formData.append("rentalTerms", values.terms.trim());
+              formData.append("description", values.description.trim());
+              if (values.specifications.trim()) {
+                formData.append(
+                  "specifications",
+                  JSON.stringify(specsObject ?? {})
+                );
+              }
+              if (values.image) {
+                formData.append("images", values.image);
+              }
+
+              savedTool = await createTool(formData);
+              toast.success("✅ Інструмент успішно опубліковано!");
             }
 
-            const savedTool =
-              mode === "edit" && initialTool?._id
-                ? await updateTool(initialTool._id, formData)
-                : await createTool(formData);
+            // Обновляем сторы, чтобы карточки и профили сразу показали новые данные
+            const applyUpdate = (list: Tool[] | undefined) => {
+              if (!list || !list.length || !savedTool?._id) return list;
+              return list.map((t) => (t._id === savedTool._id ? savedTool : t));
+            };
 
-            // Після публікації/редагування перенаправляємо в профіль власника
-            router.push(`/profile/${userId}`);
+            const updatedTools = applyUpdate(toolsStoreItems);
+            if (updatedTools) updateToolsStore(updatedTools);
+
+            const updatedProfile = applyUpdate(profileStoreItems);
+            if (updatedProfile) updateProfileStore(updatedProfile);
+
+            const targetId = savedTool?._id ?? initialTool?._id;
+            const fallback = `/profile/${userId ?? ""}`;
+            // Після публікації/редагування перенаправляємо на сторінку інструменту
+            router.push(targetId ? `/tools/${targetId}` : fallback);
             router.refresh();
           } catch (error) {
             const message =
               error instanceof Error
                 ? error.message
-                : "Не вдалося зберегти інструмент. Спробуйте ще раз.";
+                : "❌ Не вдалося зберегти інструмент. Спробуйте ще раз.";
             helpers.setStatus({ error: message });
-            // Просте пуш-повідомлення для користувача
-            if (typeof window !== "undefined") {
-              window.alert(message);
-            }
+            toast.error(message);
           } finally {
             helpers.setSubmitting(false);
           }
@@ -244,57 +375,17 @@ export default function AddEditToolForm({
             <Form className={styles.form}>
               <div className={styles.grid}>
                 <div>
-                  <div className={styles.photoBlock}>
-                    <label className={styles.label}>Фото інструменту</label>
-                    <div className={styles.photoArea}>
-                      <div className={styles.photoInput}>
-                        {preview ? (
-                          <img
-                            src={preview}
-                            alt="Попередній перегляд"
-                            className={styles.preview}
-                          />
-                        ) : (
-                          <div className={styles.placeholder}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src="/image/PlaceholderAddPhoto.jpg"
-                              alt="Додайте зображення"
-                              className={styles.placeholderImage}
-                            />
-                          </div>
-                        )}
-                      </div>
-                      <input
-                        ref={fileInputRef}
-                        className={styles.fileInput}
-                        type="file"
-                        name="image"
-                        id="imageUpload"
-                        accept="image/*"
-                        onChange={(event) => {
-                          const file = event.currentTarget.files?.[0] || null;
-                          setFieldValue("image", file);
-                          if (file) {
-                            const url = URL.createObjectURL(file);
-                            setPreview(url);
-                          }
-                        }}
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.uploadButton}
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      Завантажити фото
-                    </button>
-                    <ErrorMessage
-                      name="image"
-                      component="p"
-                      className={styles.error}
-                    />
-                  </div>
+                  <PhotoManager
+                    mode={mode}
+                    existingImages={existingImages}
+                    selectedFiles={selectedFiles}
+                    imagesToDelete={imagesToDelete}
+                    onExistingImagesChange={setExistingImages}
+                    onSelectedFilesChange={setSelectedFiles}
+                    onImagesToDeleteChange={setImagesToDelete}
+                    onPreviewChange={setPreview}
+                    fileInputRef={fileInputRef}
+                  />
 
                   <div className={styles.fields}>
                     <label className={styles.label} htmlFor="name">

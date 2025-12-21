@@ -64,13 +64,14 @@ export async function PATCH(
 
   const cookie = req.headers.get("cookie") ?? "";
   const authorization = req.headers.get("authorization") ?? undefined;
-  const formData = await req.formData();
+  const bodyText = await req.text();
 
   try {
     const res = await fetch(`${backendBase}/api/tools/${toolId}`, {
       method: "PATCH",
-      body: formData,
+      body: bodyText,
       headers: {
+        "content-type": req.headers.get("content-type") || "application/json",
         cookie,
         ...(authorization ? { authorization } : {}),
       },
