@@ -2,7 +2,7 @@
 import axios from "axios";
 
 export const apiAuth = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: "/",
   withCredentials: true,
 });
 
@@ -11,17 +11,17 @@ export async function refreshToken() {
     const response = await apiAuth.post("/api/auth/refresh");
     return response.data;
   } catch (error) {
-    console.error("Failed to refresh token:", error);
+    //console.error("Failed to refresh token:", error);
     throw error;
   }
 }
 
 export async function AuthMe() {
   try {
-    const response = await apiAuth.get("/api/users/me");
+    const response = await apiAuth.get("/api/auth/me");
     return response.data;
   } catch (error) {
-    console.error("Dont found token", error);
+    //console.error("Dont found token", error);
     throw error;
   }
 }

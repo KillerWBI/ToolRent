@@ -36,9 +36,9 @@ export const useAuthStore = create<AuthState>((set) => ({
           : null;
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
-          return null; // поймали 401 — нужно делать refresh
+          return null;
         }
-        console.error("Fetch user failed", error);
+        //console.error("Fetch user failed", error);
         return null;
       }
     };
@@ -47,11 +47,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     if (!user) {
       try {
-        // 401 — пробуем обновить токен
+        // 401
         await refreshToken();
         user = await attemptFetch();
       } catch (err) {
-        console.error("Refresh failed", err);
+        //console.error("Refresh failed", err);
       }
     }
 
