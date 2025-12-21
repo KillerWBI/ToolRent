@@ -1,4 +1,4 @@
-// app/api/bookings/route.ts
+// app/api/booking/route.ts
 import { NextResponse } from "next/server";
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://toolsbackend-zzml.onrender.com";

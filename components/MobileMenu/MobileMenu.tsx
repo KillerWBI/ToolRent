@@ -8,15 +8,10 @@ import { PublicUser } from "@/types/user";
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  logout?: () => void;
 }
 
-export default function MobileMenu({
-  isOpen,
-  onClose,
-  logout,
-}: MobileMenuProps) {
-  const { user, isAuthenticated } = useAuthStore();
+export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const { user, isAuthenticated, logout } = useAuthStore();
 
   if (!isOpen) return null;
 
@@ -24,7 +19,7 @@ export default function MobileMenu({
   const firstLetter = user?.name?.charAt(0).toUpperCase() || "U";
 
   const handleLogout = () => {
-    if (logout) logout();
+    logout();
     onClose();
   };
 
@@ -119,7 +114,7 @@ export default function MobileMenu({
                 <button
                   className={styles.logoutBtn}
                   onClick={handleLogout}
-                  aria-label="Вийти"
+                  aria-label="Вихід"
                 >
                   <svg
                     className={styles.logoutIcon}

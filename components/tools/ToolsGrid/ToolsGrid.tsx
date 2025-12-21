@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import ToolCard from "@/components/tools/ToolCard/ToolCard";
@@ -8,7 +8,6 @@ import styles from "./ToolsGrid.module.css";
 import { Tool } from "@/types/tool";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { useToolsStore } from "@/store/tools.store";
-
 
 export const metadata = {
   title: "Всі інструменти — каталог професійного обладнання",
@@ -22,7 +21,6 @@ export const metadata = {
   },
 };
 
-
 interface ApiResponse {
   tools: Tool[];
   totalTools: number;
@@ -30,7 +28,6 @@ interface ApiResponse {
   page: number;
   limit: number;
 }
-
 
 async function fetchToolsPage(
   page: number = 1,
@@ -60,7 +57,6 @@ async function fetchToolsPage(
   return res.json();
 }
 
-
 function useWindowWidth() {
   const [width, setWidth] = useState(0);
 
@@ -76,8 +72,8 @@ function useWindowWidth() {
 }
 
 export default function ToolsListBlock() {
-    const width = useWindowWidth();
-    const limit = width >= 1400 ? 16 : 8;
+  const width = useWindowWidth();
+  const limit = width >= 1400 ? 16 : 8;
 
     const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8, search: ""});
     const category = get("category") as string;
@@ -85,25 +81,26 @@ export default function ToolsListBlock() {
     const pageFromUrl = Number(get("page") ?? 1);
     const limitFromUrl = Number(get("limit") ?? limit);
 
-    const [tools, setTools] = useState<Tool[]>([]);
-    const [currentPage, setCurrentPage] = useState(pageFromUrl);
-    const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
-    const [totalTools, setTotalTools] = useState(0);
-    const storeTools = useToolsStore((state) => state.tools);
-    const setStoreTools = useToolsStore((state) => state.setTools);
 
+  const [tools, setTools] = useState<Tool[]>([]);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalTools, setTotalTools] = useState(0);
+  const storeTools = useToolsStore((state) => state.tools);
+  const setStoreTools = useToolsStore((state) => state.setTools);
 
   useEffect(() => {
     let isMounted = true;
 
     const loadFirstPage = async () => {
-    setLoading(true);
-    set("page", 1);
+      setLoading(true);
+      set("page", 1);
 
     try {
         const data = await fetchToolsPage(1, limit, category, search);
+
         if (!isMounted) return;
 
         setTools(data.tools);
@@ -124,21 +121,25 @@ export default function ToolsListBlock() {
     };
   }, [category, limit, search]);
 
-
   const loadNextPage = async () => {
     if (loadingMore || !hasMore) return;
 
     const nextPage = currentPage + 1;
-    set("page", nextPage); 
+    set("page", nextPage);
 
     setLoadingMore(true);
     try {
       const data = await fetchToolsPage(nextPage, limit, category, search);
-        setTools(prev => [...prev, ...data.tools]);
-        setStoreTools([...tools, ...data.tools]);
-        setCurrentPage(nextPage);
-        setHasMore(data.page < data.totalPages);
-        setLoadingMore(false);
+      // Объединяем текущие инструменты со следующей страницей
+      setTools((prev) => {
+        const merged = [...prev, ...data.tools];
+        setStoreTools(merged);
+        return merged;
+      });
+      setCurrentPage(nextPage);
+      setHasMore(data.page < data.totalPages);
+      setLoadingMore(false);
+
     } catch (error) {
       setLoadingMore(false);
     }
@@ -158,7 +159,7 @@ export default function ToolsListBlock() {
     );
   }
 
-  if (!tools.length) {
+  if (!storeTools.length) {
     return (
       <section className={styles.section}>
         <div className="container">
@@ -182,7 +183,7 @@ export default function ToolsListBlock() {
         <FilterBar />
 
         <div className={styles.grid}>
-          {tools.map(tool => (
+          {storeTools.map((tool) => (
             <ToolCard key={tool._id} tool={tool} />
           ))}
         </div>

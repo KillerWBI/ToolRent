@@ -1,9 +1,9 @@
-import HeroBlock from "@/components/home/HeroBlock/HeroBlock";
 import BenefitsBlock from "@/components/home/BenefitsBlock/BenefitsBlock";
 import FeaturedToolsBlock from "@/components/home/FeaturedToolsBlock/FeaturedToolsBlock";
+import HeroBlock from "@/components/home/HeroBlock/HeroBlock";
 import RegistrationBlock from "@/components/home/RegistrationBlock/RegistrationBlock";
-import FeedbacksBlock from "../components/home/FeedbacksBlock/FeedbacksBlock";
 import { getFeedbacks } from "@/lib/api/feedbacks";
+import FeedbacksBlock from "../components/home/FeedbacksBlock/FeedbacksBlock";
 
 const feedbacks = await getFeedbacks();
 

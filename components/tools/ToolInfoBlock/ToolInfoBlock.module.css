@@ -149,6 +149,11 @@ rentBtn:focus {
   background-color: #e7cdf4;
 }
 
+.profileBtn:disabled, rentBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* @media only screen and (min-width: 768px) {
 
 } */

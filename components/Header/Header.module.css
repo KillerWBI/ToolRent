@@ -106,6 +106,10 @@
   .socialButton {
     margin-right: 16px;
   }
+
+  .listButton {
+    display: none;
+  }
 }
 
 @media only screen and (min-width: 1440px) {
@@ -136,6 +140,23 @@
   .headLink {
     display: flex;
   }
+
+  .navHeader .listButton {
+    display: flex;
+    padding: 8px 20px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #8808cc;
+    color: #ffffff;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
+    display: inline-block;
+    line-height: 24px;
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
 }
 
 .navHeader a:hover,
@@ -162,12 +183,14 @@
 }
 
 .userName {
-  font-family: Work Sans;
   font-weight: 600;
-  font-style: SemiBold;
-  font-size: 12px;
   vertical-align: middle;
   margin-left: 8px;
+  font-family: var(--second-family);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 150%;
+  color: var(--color-scheme-1-text);
 }
 
 .separator {

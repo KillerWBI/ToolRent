@@ -10,9 +10,9 @@
 
 .formSection {
   width: 100%;
-  max-width: 920px;
+  max-width: 992px;
   background: #ffffff;
-  padding: 64px 72px 56px;
+  padding: 48px 64px;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -34,7 +34,7 @@
 .form {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(335px, 1fr));
   gap: 24px;
 }
 
@@ -94,13 +94,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
 }
 .formFooter-sumbit{
   display: flex;
   justify-content: end;
   align-items: center;
-  margin-top: 16px;
+
 }
 .priceBlock {
   font-size: 18px;

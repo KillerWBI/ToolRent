@@ -3,7 +3,7 @@ import { ToolInfoBlock } from "@/components/tools/ToolInfoBlock/ToolInfoBlock";
 import css from "./page.module.css";
 import { getToolById } from "@/lib/api/tools";
 import { getPublicUserById } from "@/lib/api/users";
-import { object } from "yup";
+import { useAuthStore } from "@/store/auth.store";
 
 interface DetailsPageProps {
   params: Promise<{ toolId: string }>;
