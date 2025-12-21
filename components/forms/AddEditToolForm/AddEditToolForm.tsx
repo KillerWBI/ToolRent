@@ -10,6 +10,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import styles from "./AddEditToolForm.module.css";
 import { useAuthStore } from "@/store/auth.store";
+import toast from "react-hot-toast";
 
 type Mode = "create" | "edit";
 
@@ -79,6 +80,7 @@ export default function AddEditToolForm({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   const initialValues: FormValues = useMemo(
     () => ({
@@ -115,6 +117,7 @@ export default function AddEditToolForm({
             ? error.message
             : "Помилка під час завантаження категорій";
         setCategoriesError(message);
+        toast.error(message);
       } finally {
         setCategoriesLoading(false);
       }
@@ -123,6 +126,14 @@ export default function AddEditToolForm({
     fetchCategories();
 
     return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const handler = (event: MediaQueryListEvent) => setIsMobile(!event.matches);
+    setIsMobile(!media.matches);
+    media.addEventListener("change", handler);
+    return () => media.removeEventListener("change", handler);
   }, []);
 
   useEffect(() => {
@@ -213,6 +224,12 @@ export default function AddEditToolForm({
                 ? await updateTool(initialTool._id, formData)
                 : await createTool(formData);
 
+            toast.success(
+              mode === "edit"
+                ? "Інструмент оновлено"
+                : "Інструмент опубліковано"
+            );
+
             // Після публікації/редагування перенаправляємо в профіль власника
             router.push(`/profile/${userId}`);
             router.refresh();
@@ -221,11 +238,7 @@ export default function AddEditToolForm({
               error instanceof Error
                 ? error.message
                 : "Не вдалося зберегти інструмент. Спробуйте ще раз.";
-            helpers.setStatus({ error: message });
-            // Просте пуш-повідомлення для користувача
-            if (typeof window !== "undefined") {
-              window.alert(message);
-            }
+            toast.error(message);
           } finally {
             helpers.setSubmitting(false);
           }
@@ -256,7 +269,6 @@ export default function AddEditToolForm({
                           />
                         ) : (
                           <div className={styles.placeholder}>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src="/image/PlaceholderAddPhoto.jpg"
                               alt="Додайте зображення"
@@ -403,12 +415,12 @@ export default function AddEditToolForm({
                       Умови оренди
                     </label>
                     <Field
-                      as="textarea"
+                      as={isMobile ? "textarea" : "input"}
                       id="terms"
                       name="terms"
-                      rows={2}
+                      rows={isMobile ? 2 : undefined}
                       placeholder="Застава 8000 грн. Станина та бак для води надаються."
-                      className={styles.terms}
+                      className={isMobile ? styles.terms : styles.input}
                     />
                     <ErrorMessage
                       name="terms"
