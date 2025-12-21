@@ -73,6 +73,7 @@ const FilterBar = () => {
   const handleResetFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("category");
+    params.delete("search");
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
