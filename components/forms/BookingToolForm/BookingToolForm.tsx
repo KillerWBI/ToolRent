@@ -106,14 +106,17 @@ export default function BookingToolForm({ tool }: Props) {
         // Подготовка данных для отправки на бэк
         const payload = {
   toolId: tool._id,
-  startDate: values.startDate,
-  endDate: values.endDate,
-  firstName: values.firstName,
-  lastName: values.lastName,
-  phone: values.phone,
-  deliveryCity: values.city,
-  deliveryBranch: values.postOffice,
+
+  startDate: new Date(values.startDate).toISOString(),
+  endDate: new Date(values.endDate).toISOString(),
+
+  firstName: values.firstName.trim(),
+  lastName: values.lastName.trim(),
+  phone: values.phone.trim(),
+  deliveryCity: values.city.trim(),
+  deliveryBranch: values.postOffice.trim(),
 };
+
         console.log("SEND TO API:", payload);
         await api.post("/api/booking", payload);
          setStatus("✅ Бронювання успішне");
@@ -164,6 +167,7 @@ export default function BookingToolForm({ tool }: Props) {
               value={values.firstName}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="Ваше імʼя"
             />
             {touched.firstName && errors.firstName && (
               <span className="errorText">{errors.firstName}</span>
@@ -178,6 +182,7 @@ export default function BookingToolForm({ tool }: Props) {
               value={values.lastName}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="Ваше прізвище"
             />
             {touched.lastName && errors.lastName && (
               <span className="errorText">{errors.lastName}</span>
@@ -192,6 +197,7 @@ export default function BookingToolForm({ tool }: Props) {
               value={values.phone}
               onChange={handleChange}
               onBlur={handleBlur}
+              placeholder="+38 (XXX) XXX XX XX"
             />
             {touched.phone && errors.phone && (
               <span className="errorText">{errors.phone}</span>
@@ -261,6 +267,7 @@ export default function BookingToolForm({ tool }: Props) {
               name="city"
               value={values.city}
               onChange={handleChange}
+              placeholder="Ваше місто"
             />
           </label>
 
@@ -271,6 +278,7 @@ export default function BookingToolForm({ tool }: Props) {
               name="postOffice"
               value={values.postOffice}
               onChange={handleChange}
+              placeholder="*№15"
             />
           </label>
 
