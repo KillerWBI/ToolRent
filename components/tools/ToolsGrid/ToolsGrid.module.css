@@ -140,12 +140,12 @@
 }
 
 .loadMoreBtn:hover {
-  background: #e7cdf4;
+  background: #fff;
   color: #000;
 }
 
 .loadMoreBtn:active {
-  background: #e7cdf4;
+  background: #fff;
   color: #000;
 }
 
