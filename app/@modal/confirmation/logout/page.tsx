@@ -4,22 +4,6 @@ import ConfirmationModal from "@/components/modal/ConfirmationModal/Confirmation
 import { confirmConfig } from "@/lib/confirmConfig";
 import { useState } from "react";
 
-// export default function LogoutModal() {
-//   const router = useRouter();
-//   const config = confirmConfig.logout;
-
-//   return (
-//     <ConfirmationModal
-//       title={config.title}
-//       confirmButtonText={config.confirmText}
-//       cancelButtonText={config.cancelText}
-//       variant={config.variant}
-//       onConfirm={async () => {
-//         await config.onConfirm();
-//       }}
-//     />
-//   );
-// }
 export default function LogoutModal() {
   const config = confirmConfig.logout;
   const [open, setOpen] = useState(true);
