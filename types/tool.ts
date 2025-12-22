@@ -31,4 +31,5 @@ export type Tool = {
     rating?: number;
     specifications?: Record<string, string>;
     rentalTerms?: string;
+    feedbacks?: Feedback[];
 };

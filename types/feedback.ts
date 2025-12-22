@@ -4,3 +4,10 @@ export type Feedback = {
   description: string;
   rate: number;
 };
+
+export type UIFeedback = {
+  id: string;
+  name: string;
+  description: string;
+  rate: number;
+};

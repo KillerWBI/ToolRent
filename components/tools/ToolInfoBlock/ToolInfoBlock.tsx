@@ -7,7 +7,7 @@ import css from "./ToolInfoBlock.module.css";
 import { useAuthStore } from "@/store/auth.store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AuthRequiredModal } from "@/components/AuthRequiredModal/AuthRequiredModal";
+import { AuthRequiredModal } from "@/components/modal/AuthRequiredModal/AuthRequiredModal";
 
 type ToolInfoBlockProps = {
   tool: Tool;
@@ -18,8 +18,10 @@ export const ToolInfoBlock = ({ tool, owner }: ToolInfoBlockProps) => {
   const { isAuthenticated } = useAuthStore();
 
   const router = useRouter();
+  console.log(tool);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const specifications = Object.entries(tool.specifications ?? {});
 

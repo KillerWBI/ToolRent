@@ -1,0 +1,124 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #fff;
+  color: #000;
+  border-radius: 16px;
+  max-width: 334px;
+  width: 100%;
+  position: relative;
+  padding: 64px 20px;
+  text-align: center;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition:
+    border-color 250ms ease-in-out,
+    background-color 250ms ease-in-out;
+}
+
+.close:hover,
+.close:focus {
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #e7cdf4;
+}
+
+.close:active {
+  border-color: #8808cc;
+  background-color: #8808cc;
+}
+
+.close:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.closeIcon {
+  width: 24px;
+  height: 24px;
+  color: #000;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+}
+
+.rating {
+  display: flex;
+  gap: 8px;
+}
+
+.star,
+.starActive {
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.star {
+  color: #cfcfcf;
+}
+
+.starActive {
+  color: #ffb400;
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+@media only screen and (min-width: 768px) {
+  .modal {
+    max-width: 704px;
+    padding: 64px 32px;
+  }
+
+  @media only screen and (min-width: 1440px) {
+    .modal {
+      padding: 64px;
+      min-width: 768px;
+    }
+
+    .close {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+   .title {
+    font-size: 48px;
+  }
+
+}

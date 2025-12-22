@@ -3,6 +3,7 @@ import { ToolInfoBlock } from "@/components/tools/ToolInfoBlock/ToolInfoBlock";
 import css from "./page.module.css";
 import { getToolById } from "@/lib/api/tools";
 import { getPublicUserById } from "@/lib/api/users";
+import { FeedbackClientModal } from "@/components/FeedbackClientModal/FeedbackClientModal";
 
 interface DetailsPageProps {
   params: Promise<{ toolId: string }>;
@@ -28,6 +29,7 @@ export default async function DetailsPage({ params }: DetailsPageProps) {
       <div className={css.detailsPage}>
         <ToolGallery tool={tool} />
         <ToolInfoBlock tool={tool} owner={owner} />
+        <FeedbackClientModal feedbacks={tool.feedbacks} />
       </div>
     </div>
   );
