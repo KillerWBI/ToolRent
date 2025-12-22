@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import styles from "./ProfilePage.module.css";
 
-import UserProfile from "@/components/profile/UserProfile/UserProfile";
+import ProfileWrapper from "@/components/profile/ProfileWrapper/ProfileWrapper";
 import ProfilePlaceholderClient from "@/components/profile/ProfilePlaceholder/ProfilePlaceholderClient";
 import UserToolsGrid from "@/components/tools/UserToolsGrid/UserToolsGrid";
 
@@ -95,7 +95,7 @@ export default async function ProfilePage({ params }: PageProps) {
     <main className={styles.page}>
       <div className="container">
         <div className={styles.inner}>
-          <UserProfile user={user} />
+          <ProfileWrapper user={user} />
 
           <section className={styles.toolsSection}>
             <h2 className={styles.toolsTitle}>Інструменти</h2>
