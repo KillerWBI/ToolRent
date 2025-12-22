@@ -92,6 +92,7 @@
 .uploadButton:hover {
   border: 2px solid #000;
   background-color: #e7cdf4;
+  color: #000;
 }
 
 .uploadButton:active {
@@ -335,7 +336,7 @@
   background-color: #8808cc;
   font-weight: 500;
   font-size: 14px;
-
+  cursor: pointer;
   /* line-height: 21px; */
   line-height: 1.5;
   color: #fff;
