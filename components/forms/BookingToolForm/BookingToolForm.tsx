@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 import "./BookingToolForm.css";
 import { SuccessBookung } from "./SuccessBookng";
@@ -153,7 +153,6 @@ export default function BookingToolForm({ tool }: Props) {
 
   return (
     <main className="container-booking">
-      <div><Toaster/></div>
       <div className="formSection">
       {successForm ? (
         <SuccessBookung/>
