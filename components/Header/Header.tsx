@@ -4,25 +4,13 @@ import LogoutModal from "@/app/@modal/confirmation/logout/page";
 import { useAuthStore } from "@/store/auth.store";
 import { PublicUser } from "@/types/user";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
 export default function Header() {
-  const { user, isAuthenticated, loading, logout } = useAuthStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const [showLogout, setShowLogout] = useState(false);
-
-
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-
-  if (loading) return null;
-
-  const handleLogout = () => {
-    logout();
-    setIsOpen(false);
-    router.push("/");
-  };
 
   const userTyped = user as PublicUser | null;
   const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U";
@@ -75,9 +63,9 @@ export default function Header() {
             {isAuthenticated && (
               <div className={styles.userBlock}>
                 <div className={styles.userAvatar}>
-                  {userTyped?.avatar ? (
+                  {userTyped?.avatarUrl || userTyped?.avatar ? (
                     <img
-                      src={userTyped.avatar}
+                      src={userTyped?.avatarUrl || userTyped?.avatar}
                       alt={userTyped.name}
                       className={styles.avatarImage}
                     />
@@ -130,14 +118,13 @@ export default function Header() {
           </button>
 
           {/* Мобильное меню */}
-          <MobileMenu
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
+          <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
           {showLogout && (
-  <LogoutModal open={showLogout} onClose={() => setShowLogout(false)} />
-)}
-
+            <LogoutModal
+              open={showLogout}
+              onClose={() => setShowLogout(false)}
+            />
+          )}
         </div>
       </div>
     </header>
