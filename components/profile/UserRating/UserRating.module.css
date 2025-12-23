@@ -1,0 +1,23 @@
+.ratingWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+    color: #111827; /* Dark color for stars as per design */
+}
+
+.stars svg {
+    width: 16px;
+    height: 16px;
+}
+
+.count {
+    font-weight: 400;
+}

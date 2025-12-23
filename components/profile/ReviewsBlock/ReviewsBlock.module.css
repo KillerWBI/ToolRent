@@ -1,0 +1,82 @@
+.section {
+    margin-top: 64px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #111827;
+}
+
+.emptyState {
+    padding: 32px 0;
+}
+
+.emptyTitle {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.emptyText {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Grid for reviews */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Review Card */
+.card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+    color: #fbbf24; /* Amber color for review stars */
+}
+
+.reviewText {
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.reviewAuthor {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin-top: auto;
+}
