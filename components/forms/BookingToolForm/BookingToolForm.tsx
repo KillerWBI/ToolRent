@@ -43,6 +43,23 @@ export default function BookingToolForm({ tool }: Props) {
   const [successForm , setsuccessForm] = useState<boolean>(false);
 
 
+  const disabledDates = useMemo(() => {
+  const dates: Date[] = [];
+
+  tool.bookedDates.forEach((range) => {
+    const start = new Date(range.from);
+    const end = new Date(range.to);
+
+    const current = new Date(start);
+    while (current <= end) {
+      dates.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+  });
+
+  return dates;
+}, [tool.bookedDates]);
+
 
   const formik = useFormik<BookingFormValues>({
     initialValues: {
@@ -82,27 +99,7 @@ export default function BookingToolForm({ tool }: Props) {
         const end = new Date(values.endDate);
 
         // Проверка пересечения с bookedDates
-        const conflict = tool.bookedDates.find((b) => {
-          const bookedStart = new Date(b.from);
-          const bookedEnd = new Date(b.to);
-          return start <= bookedEnd && end >= bookedStart;
-        });
-
-        if (conflict) {
-          setStatus(
-            `Інструмент зайнятий з ${new Date(
-              conflict.from
-            ).toLocaleDateString()} по ${new Date(
-              conflict.to
-            ).toLocaleDateString()}`
-          );
-          toast.error(`Інструмент зайнятий з ${new Date(
-              conflict.from
-            ).toLocaleDateString()} по ${new Date(
-              conflict.to
-            ).toLocaleDateString()}`)
-          return;
-                }
+        //
 
         // Подготовка данных для отправки на бэк
         const payload = {
@@ -214,22 +211,23 @@ export default function BookingToolForm({ tool }: Props) {
   <span className="label">Дата початку</span>
 
   <DatePicker
-    selected={
-      values.startDate ? new Date(values.startDate) : undefined
-    }
-    onChange={(date: Date | null) => {
-      formik.setFieldValue(
-        "startDate",
-        date ? date.toISOString().split("T")[0] : ""
-      );
-    }}
-    dateFormat="dd.MM.yyyy"
-    placeholderText="Оберіть дату"
-    className={`input calendar-input ${
-      touched.startDate && errors.startDate ? "inputError" : ""
-    }`}
-    popperClassName="calendar-popper"
-  />
+  selected={values.startDate ? new Date(values.startDate) : undefined}
+  onChange={(date: Date | null) => {
+    formik.setFieldValue(
+      "startDate",
+      date ? date.toISOString().split("T")[0] : ""
+    );
+  }}
+  dateFormat="dd.MM.yyyy"
+  placeholderText="Оберіть дату"
+  excludeDates={disabledDates}
+  minDate={new Date()}
+  className={`input calendar-input ${
+    touched.startDate && errors.startDate ? "inputError" : ""
+  }`}
+  popperClassName="calendar-popper"
+/>
+
 
   {touched.startDate && errors.startDate && (
     <span className="errorText">{errors.startDate}</span>
@@ -241,25 +239,23 @@ export default function BookingToolForm({ tool }: Props) {
   <span className="label">Дата завершення</span>
 
   <DatePicker
-    selected={
-      values.endDate ? new Date(values.endDate) : undefined
-    }
-    onChange={(date: Date | null) => {
-      formik.setFieldValue(
-        "endDate",
-        date ? date.toISOString().split("T")[0] : ""
-      );
-    }}
-    minDate={
-      values.startDate ? new Date(values.startDate) : undefined
-    }
-    dateFormat="dd.MM.yyyy"
-    placeholderText="Оберіть дату"
-    className={`input calendar-input ${
-      touched.endDate && errors.endDate ? "inputError" : ""
-    }`}
-    popperClassName="calendar-popper"
-  />
+  selected={values.endDate ? new Date(values.endDate) : undefined}
+  onChange={(date: Date | null) => {
+    formik.setFieldValue(
+      "endDate",
+      date ? date.toISOString().split("T")[0] : ""
+    );
+  }}
+  minDate={values.startDate ? new Date(values.startDate) : undefined}
+  excludeDates={disabledDates}
+  dateFormat="dd.MM.yyyy"
+  placeholderText="Оберіть дату"
+  className={`input calendar-input ${
+    touched.endDate && errors.endDate ? "inputError" : ""
+  }`}
+  popperClassName="calendar-popper"
+/>
+
 
   {touched.endDate && errors.endDate && (
     <span className="errorText">{errors.endDate}</span>
