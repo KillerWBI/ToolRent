@@ -1,8 +1,9 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Providers from "../components/shared/Provider";
 import LayoutChrome from "../components/shared/LayoutChrome";
+import Providers from "../components/shared/Provider";
+import TanStackProvider from "../components/TanStakProvider/TanStakProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,9 +39,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable}`}>
+      <TanStackProvider>
         <Providers>
           <LayoutChrome modal={modal}>{children}</LayoutChrome>
         </Providers>
+      </TanStackProvider>
       </body>
     </html>
   );
