@@ -77,8 +77,7 @@
   text-decoration: none !important;
 }
 
-.navHeader .socialButton:hover,
-.navHeader .socialButton:focus {
+.navHeader .socialButton:hover {
   transition:
     color 0.3s ease,
     background-color 0.3s ease;
@@ -88,8 +87,15 @@
   border-color: #8808cc;
 }
 
+.navHeader .socialButton:focus {
+  background-color: #e7cdf4;
+  border-color: #000000;
+}
+
 .navHeader.socialButton:active {
   background-color: #e7cdf4;
+  border: #8808cc;
+  color: #000000;
 }
 
 @media only screen and (min-width: 768px) {
@@ -156,6 +162,27 @@
     line-height: 24px;
     text-decoration: none;
     border: 2px solid transparent;
+  }
+
+  .navHeader .listButton:hover {
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 6px;
+    border-color: #8808cc;
+    text-decoration: none;
+  }
+
+  .navHeader .listButton:focus {
+    background-color: #e7cdf4;
+    border-color: #000000;
+  }
+  .navHeader .listButton:active {
+    background-color: #e7cdf4;
+    border: #8808cc;
+    color: #000000;
   }
 }
 

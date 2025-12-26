@@ -1,13 +1,9 @@
 export type Feedback = {
-  _id: { $oid: string };
-  name: string;
-  description: string;
-  rate: number;
-};
-
-export type UIFeedback = {
-  id: string;
-  name: string;
-  description: string;
-  rate: number;
+    _id: { $oid: string } | string; // Handle both formats if needed, or just string if normalized
+    name: string;
+    description: string;
+    rate: number;
+    toolId?: string;
+    owner?: string | { _id: string; name: string; avatarUrl?: string };
+    createdAt?: string;
 };

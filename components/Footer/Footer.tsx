@@ -3,9 +3,11 @@
 import Link from "next/link";
 import styles from "./Footer.module.css";
 import { useAuthStore } from "@/store/auth.store";
+import ScrollToTop from "../ui/Button/Button";
 
 export default function Footer() {
   const { isAuthenticated } = useAuthStore();
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className={styles.footer}>
@@ -75,8 +77,11 @@ export default function Footer() {
         </div>
 
         <div className={styles.line}></div>
-        <div className={styles.copy}>© 2025 ToolNext. Всі права захищені.</div>
+        <div className={styles.copy}>
+          © {currentYear} ToolNext. Всі права захищені.
+        </div>
       </div>
+      <ScrollToTop />
     </footer>
   );
 }

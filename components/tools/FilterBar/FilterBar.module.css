@@ -1,20 +1,19 @@
 /* Контейнер */
+
 .wrapper {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   gap: 24px;
   width: 100%;
   margin-bottom: 32px;
-}
+} /* Обгортка */
 
-/* Обгортка */
 .selectWrapper {
   position: relative;
   width: 100%;
-}
+} /* --- ЗАКРИТА КНОПКА (SelectButton) --- */
 
-/* --- ЗАКРИТА КНОПКА (SelectButton) --- */
 .selectButton {
   width: 100%;
   min-height: 40px;
@@ -31,33 +30,29 @@
   line-height: 20px;
   color: var(--color-neutral-darkest);
   cursor: pointer;
-}
 
+  margin-bottom: 32px;
+}
 .selectButton.open {
   background: var(--color-electric-violet-lightest);
   border: 2px solid var(--color-electric-violet-light);
   border-radius: 6px 6px 0 0;
-}
+} /* --- СТРІЛКА SVG --- */
 
-/* --- СТРІЛКА SVG --- */
 .arrow {
   width: 12px;
   height: 12px;
   margin-left: auto;
-
   transition: transform 0.25s ease;
 }
-
 .arrow.open {
   transform: rotate(180deg);
-}
+} /* --- ВІДКРИТЕ МЕНЮ --- */
 
-/* --- ВІДКРИТЕ МЕНЮ --- */
 .dropdown {
   position: absolute;
   top: calc(100% - 2px);
   width: 100%;
-
   max-height: 416px;
   border: 2px solid var(--color-electric-violet-light);
   border-radius: 6px;
@@ -65,7 +60,6 @@
   padding: 6px 0;
   overflow-y: auto;
   z-index: 20;
-
   padding-right: 14px;
 }
 
@@ -86,31 +80,25 @@
   width: 7px;
   height: 56px;
   background: var(--color-electric-violet-dark);
-}
+} /* --- ПУНКТИ МЕНЮ --- */
 
-/* --- ПУНКТИ МЕНЮ --- */
 .option {
   width: 100%;
   min-height: 40px;
   padding: 8px 28px 8px 12px;
-
   display: flex;
   align-items: center;
-
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 16px;
   line-height: 150%;
-
   color: var(--color-neutral-darkest);
   cursor: pointer;
 }
-
 .option:hover {
   background: var(--color-electric-violet-lighter);
-}
+} /* Кнопка скидання */
 
-/* Кнопка скидання */
 .resetButton {
   font-family: var(--font-family);
   font-weight: 500;
@@ -121,27 +109,137 @@
   border: none;
   cursor: pointer;
 }
-
 .resetButton:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
+/* Input для ціни */
+.input {
+  width: 159px;
+  min-height: 40px;
+  padding: 8px 12px;
+
+  border: 2px solid var(--color-neutral-darkest);
+  border-radius: 6px;
+  background: transparent;
+
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--color-neutral-darkest);
+
+  /* margin-bottom: 24px; */
+}
+
+.input:last-child {
+  margin-left: 16px;
+}
+
+.input::placeholder {
+  color: var(--color-neutral-dark);
+}
+
+/* Select для сортування */
+
+.select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+
+  border: 2px solid var(--color-neutral-darkest);
+  border-radius: 6px;
+  background: transparent;
+
+  font-family: var(--font-family);
+  font-size: 16px;
+  color: var(--color-neutral-darkest);
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @media (min-width: 768px) {
   .wrapper {
-    flex-direction: row;
+    gap: 24px;
+  }
+
+  /* ---------- TOP ROW ---------- */
+  .left {
+    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0;
+
+    width: 100%;
   }
 
   .selectButton {
     max-width: 304px;
+    margin-bottom: 0;
   }
+
+  .dropdown {
+    max-width: 304px;
+  }
+
+  /* ---------- PRICE ---------- */
+  .input {
+    width: 159px;
+  }
+
+  /* ---------- BOTTOM ROW ---------- */
+  .right {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .select {
+    width: 200px;
+    margin-bottom: 0;
+  }
+
   .resetButton {
     white-space: nowrap;
   }
-  .dropdown {
-    max-width: 304px;
+
+  .right .resetButton {
+    order: 1;
+  }
+
+  .right .selectWrapper {
+    order: 2;
+    width: auto;
+    margin-left: auto;
+  }
+}
+
+/* ================= DESKTOP ================= */
+
+@media (min-width: 1440px) {
+  .wrapper {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .selectButton {
+    width: auto;
+    margin-right: 32px;
+    min-width: 304px;
+  }
+
+  .left,
+  .right {
+    width: auto;
+  }
+
+  .right {
+    gap: 32px;
+  }
+
+  .left {
+    gap: 0;
   }
 }
