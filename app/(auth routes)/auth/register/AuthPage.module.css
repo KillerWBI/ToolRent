@@ -143,6 +143,21 @@
   object-fit: cover;
 }
 
+.forgotPassword  a{
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  text-align: center;
+  color: #000;
+}
+.forgotPassword a:hover,
+.forgotPassword a:focus
+{
+  text-decoration: underline;
+}
+
 @media (max-width: 1080px) {
   .page {
     grid-template-columns: 1fr;
