@@ -3,10 +3,10 @@
 import { useState } from "react";
 import FeedbacksBlock from "../home/FeedbacksBlock/FeedbacksBlock";
 import { FeedbackFormModal } from "../modal/FeedbackFormModal/FeedbackFormModal";
-import { UIFeedback } from "@/types/feedback";
+import { Feedback } from "@/types/feedback";
 
 interface FeedbackClientModal {
-  feedbacks: UIFeedback[];
+  feedbacks: Feedback[];
 }
 
 export function FeedbackClientModal({ feedbacks }: FeedbackClientModal) {

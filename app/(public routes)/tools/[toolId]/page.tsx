@@ -22,6 +22,8 @@ export default async function DetailsPage({ params }: DetailsPageProps) {
     );
   }
 
+  console.log(tool);
+
   const owner = await getPublicUserById(tool.owner);
 
   return (
