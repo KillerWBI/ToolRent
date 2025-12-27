@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FeedbacksBlock from "../home/FeedbacksBlock/FeedbacksBlock";
 import { FeedbackFormModal } from "../modal/FeedbackFormModal/FeedbackFormModal";
 import { Feedback } from "@/types/feedback";
@@ -15,15 +15,22 @@ export function FeedbackClientModal({
   toolId,
 }: FeedbackClientModal) {
   const [open, setOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <>
-      <FeedbacksBlock
+      {/* <FeedbacksBlock
         feedbacks={feedbacks}
         // onLeaveFeedback={() => setOpen(true)}
-      />
+      /> */}
 
-      {open && (
+      {mounted && open && (
         <FeedbackFormModal
           toolId={toolId}
           onCloseModal={() => setOpen(false)}

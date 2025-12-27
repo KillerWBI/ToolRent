@@ -3,7 +3,7 @@
 import css from "./FeedbackFormModal.module.css";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFeedback } from "@/lib/api/feedbacks";
 
 interface FeedbackFormModalProps {
@@ -19,11 +19,20 @@ export const FeedbackFormModal = ({
 }: FeedbackFormModalProps) => {
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
+  const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
+    mutationKey: ["feedbacks"],
     mutationFn: createFeedback,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["feedbacks"],
+      });
+      console.log("FEEDBACK CREATED");
       onCloseModal();
+    },
+    onError: (error) => {
+      console.error("CREATE FEEDBACK ERROR:", error);
     },
   });
 
@@ -66,18 +75,40 @@ export const FeedbackFormModal = ({
           </svg>
         </button>
         <h2 className={css.title}>Залишити відгук на товар</h2>
-        <form action={handleSubmit}>
+        <form className={css.form} action={handleSubmit}>
           <div className={css.formGroup}>
-            <label htmlFor="name">Ім'я</label>
-            <input id="name" type="text" name="name" className={css.input} />
+            <label className={css.label} htmlFor="name">
+              Ім'я
+            </label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              className={css.input}
+              placeholder="Ваше ім’я"
+            />
           </div>
           <div className={css.formGroup}>
-            <label htmlFor="feedback">Відгук</label>
-            <textarea id="feedback" name="feedback" className={css.input} />
+            <label className={css.label} htmlFor="feedback">
+              Відгук
+            </label>
+            <textarea
+              id="feedback"
+              name="feedback"
+              className={css.text}
+              placeholder="Ваш відгук"
+            />
           </div>
           <div className={css.formGroup}>
-            <label htmlFor="rating">Оцінка</label>
-            <input type="hidden" name="rate" value={rating} />
+            <label className={css.label} htmlFor="rating">
+              Оцінка
+            </label>
+            <input
+              className={css.input}
+              type="hidden"
+              name="rate"
+              value={rating}
+            />
             <div className={css.rating}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -96,7 +127,10 @@ export const FeedbackFormModal = ({
               ))}
             </div>
           </div>
-          <button type="submit" disabled={!rating || isPending}>
+          <button
+            className={css.submitBtn}
+            type="submit"
+            disabled={!rating || isPending}>
             Надіслати
           </button>
         </form>

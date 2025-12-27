@@ -1,5 +1,7 @@
 import { CreateFeedbackPayload, Feedback } from "@/types/feedback";
-import axios from "axios";
+import { api } from "./api";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export async function getFeedbacks(): Promise<Feedback[]> {
     let allFeedbacks: Feedback[] = [];
@@ -104,30 +106,19 @@ export async function getFeedbacksByIds(
 export async function createFeedback(
     payload: CreateFeedbackPayload
 ) {
-    try {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks`,
-        {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-        },
+    'Content-Type': 'application/json',
+    },
+        body: JSON.stringify(payload),
         credentials: "include",
-        body: JSON.stringify({
-            toolId: payload.toolId,
-            rate: payload.rate,
-            description: payload.description,
-        }),
-        }
-    );
+    });
 
     if (!res.ok) {
-        throw new Error("Не вдалося надіслати відгук");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to create tool");
     }
 
-    return await res.json();
-    } catch (e) {
-    console.error("Create feedback error:", e);
-    throw e;
-    }
-}
+    return res.json();
+};

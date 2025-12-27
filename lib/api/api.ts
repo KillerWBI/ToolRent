@@ -5,3 +5,4 @@ export const api = axios.create({
   baseURL: "/", // всегда same-origin
   withCredentials: true,
 });
+
