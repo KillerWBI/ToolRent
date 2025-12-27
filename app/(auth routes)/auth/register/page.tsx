@@ -40,6 +40,7 @@ export default function RegisterPage() {
       confirmPassword: "",
     },
     validationSchema,
+    validateOnMount: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const res = await fetch(`/api/auth/register`, {
@@ -82,6 +83,8 @@ export default function RegisterPage() {
     handleBlur,
     handleSubmit,
     isSubmitting,
+    isValid,
+    dirty,
   } = formik;
 
   return (
@@ -89,16 +92,18 @@ export default function RegisterPage() {
       <div className={styles.page}>
         <div className={styles.card}>
           <div className={styles.formSection}>
-            <Link href="/" className={styles.logo}>
-              <Image
-                src="/svg/company-logo.svg"
-                alt="ToolNext"
-                width={124}
-                height={28}
-                className={styles.logoIcon}
-                priority
-              />
-            </Link>
+            <div className="formatter">
+              <Link href="/" className={styles.logo}>
+                <Image
+                  src="/svg/company-logo.svg"
+                  alt="ToolNext"
+                  width={164}
+                  height={28}
+                  className={styles.logoIcon}
+                  priority
+                />
+              </Link>
+            </div>
             <div className="formatter">
               <h1 className={styles.title}>Реєстрація</h1>
 
@@ -165,10 +170,9 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   className={styles.submit}
-                  disabled={isSubmitting}
-                  aria-busy={isSubmitting}
+                  disabled={isSubmitting || !isValid}
                 >
-                  {isSubmitting ? "Реєстрація..." : "Зареєструватися"}
+                  {isSubmitting ? "Зачекайте..." : "Зареєструватись"}
                 </button>
               </form>
 
@@ -176,9 +180,8 @@ export default function RegisterPage() {
                 <span>Вже маєте акаунт?</span>
                 <Link href="/auth/login">Вхід</Link>
               </div>
-
-              <p className={styles.footerNote}>© 2025 ToolNext</p>
             </div>
+            <p className={styles.footerNote}>© 2025 ToolNext</p>
           </div>
 
           <div className={styles.imageSection}>
