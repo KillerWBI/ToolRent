@@ -13,6 +13,7 @@ interface PhotoManagerProps {
   onImagesToDeleteChange: (urls: string[]) => void;
   onPreviewChange?: (preview: string | null) => void;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
+  hasImageError?: boolean;
 }
 
 export default function PhotoManager({
@@ -25,6 +26,7 @@ export default function PhotoManager({
   onImagesToDeleteChange,
   onPreviewChange,
   fileInputRef,
+  hasImageError = false,
 }: PhotoManagerProps) {
   const remainingExisting = existingImages.length - imagesToDelete.length;
   const maxNew = Math.max(0, 5 - remainingExisting);
@@ -132,7 +134,9 @@ export default function PhotoManager({
           />
           <button
             type="button"
-            className={styles.uploadButton}
+            className={`${styles.uploadButton} ${
+              hasImageError ? styles.uploadButtonError : ""
+            }`}
             onClick={() => fileInputRef.current?.click()}
           >
             Завантажити фото

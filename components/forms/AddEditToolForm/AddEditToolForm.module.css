@@ -103,6 +103,11 @@
   color: #fff;
 }
 
+.uploadButtonError {
+  border: 2px solid #c40202;
+  color: #c40202;
+}
+
 .input {
   border: 2px solid #000;
   border-radius: 6px;
@@ -119,6 +124,20 @@
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+}
+
+.inputError,
+.selectError,
+.textareaError,
+.termsError {
+  border: 2px solid #c40202;
+  color: #c40202;
+}
+
+.input.inputError:focus,
+.textarea.textareaError:focus,
+.terms.termsError:focus {
+  border: 2px solid #c40202;
 }
 
 .input[type="number"]::-webkit-outer-spin-button,
@@ -207,6 +226,13 @@
   border-radius: 6px 6px 0 0;
 }
 
+.selectButton.selectError,
+.selectButton.selectError.selectOpen,
+.selectButton.selectError:focus {
+  border: 2px solid #c40202;
+  color: #c40202;
+}
+
 .arrow {
   width: 12px;
   height: 12px;
@@ -285,10 +311,16 @@
   color: rgba(0, 0, 0, 0.6);
   resize: none;
   display: block;
+  color: #000;
 }
 
 .textarea:last-child {
   margin-bottom: 0px;
+}
+
+.textarea.textareaError {
+  border: 2px solid #c40202;
+  color: #c40202;
 }
 
 .terms {
@@ -302,9 +334,14 @@
   margin-bottom: 24px;
   margin-top: 8px;
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.6);
+  color: #000;
   display: block;
   resize: none;
+}
+
+.terms.termsError {
+  border: 2px solid #c40202;
+  color: #c40202;
 }
 
 .error {

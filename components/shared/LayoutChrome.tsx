@@ -4,6 +4,7 @@ import Footer from "@/components/Footer/Footer";
 import Header from "@/components/Header/Header";
 import { usePathname } from "next/navigation";
 import { PropsWithChildren } from "react";
+import styles from "./LayoutChrome.module.css";
 
 type LayoutChromeProps = PropsWithChildren<{
   modal?: React.ReactNode;
@@ -25,11 +26,14 @@ export default function LayoutChrome({ children, modal }: LayoutChromeProps) {
   }
 
   return (
-    <>
+    <div className={styles.appLayout}>
       <Header />
-      <main>{children}</main>
+
+      <main className={styles.appMain}>{children}</main>
+
       {modal}
+
       <Footer />
-    </>
+    </div>
   );
 }
