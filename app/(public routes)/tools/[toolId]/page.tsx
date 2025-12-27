@@ -31,7 +31,7 @@ export default async function DetailsPage({ params }: DetailsPageProps) {
       <div className={css.detailsPage}>
         <ToolGallery tool={tool} />
         <ToolInfoBlock tool={tool} owner={owner} />
-        <FeedbackClientModal feedbacks={tool.feedbacks} />
+        <FeedbackClientModal toolId={toolId} feedbacks={tool.feedbacks} />
       </div>
     </div>
   );

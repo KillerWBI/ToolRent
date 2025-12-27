@@ -3,21 +3,42 @@
 import css from "./FeedbackFormModal.module.css";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { createFeedback } from "@/lib/api/feedbacks";
 
 interface FeedbackFormModalProps {
   onCloseModal: () => void;
+  toolId: string;
   //   onLoginBtn: () => void;
   //   onRegisterBtn: () => void;
 }
 
-export const FeedbackFormModal = ({ onCloseModal }: FeedbackFormModalProps) => {
-  const [rating, setRating] = useState<number>(0); // выбранный
-  const [hoverRating, setHoverRating] = useState<number>(0); // hover
+export const FeedbackFormModal = ({
+  onCloseModal,
+  toolId,
+}: FeedbackFormModalProps) => {
+  const [rating, setRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createFeedback,
+    onSuccess: () => {
+      onCloseModal();
+    },
+  });
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onCloseModal();
     }
+  };
+
+  const handleSubmit = (formData: FormData) => {
+    const rate = Number(formData.get("rate"));
+    const description = String(formData.get("feedback") || "").trim();
+    const values = { toolId, rate, description };
+    mutate(values);
+    console.log(values);
   };
 
   useEffect(() => {
@@ -45,25 +66,22 @@ export const FeedbackFormModal = ({ onCloseModal }: FeedbackFormModalProps) => {
           </svg>
         </button>
         <h2 className={css.title}>Залишити відгук на товар</h2>
-        <form action="">
+        <form action={handleSubmit}>
           <div className={css.formGroup}>
             <label htmlFor="name">Ім'я</label>
             <input id="name" type="text" name="name" className={css.input} />
           </div>
           <div className={css.formGroup}>
             <label htmlFor="feedback">Відгук</label>
-            <input
-              id="feedback"
-              type="text"
-              name="feedback"
-              className={css.input}
-            />
+            <textarea id="feedback" name="feedback" className={css.input} />
           </div>
           <div className={css.formGroup}>
-            <p>Оцінка</p>
+            <label htmlFor="rating">Оцінка</label>
+            <input type="hidden" name="rate" value={rating} />
             <div className={css.rating}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
+                  id="rating"
                   key={star}
                   type="button"
                   className={
@@ -78,7 +96,9 @@ export const FeedbackFormModal = ({ onCloseModal }: FeedbackFormModalProps) => {
               ))}
             </div>
           </div>
-          <button type="button">Надіслати</button>
+          <button type="submit" disabled={!rating || isPending}>
+            Надіслати
+          </button>
         </form>
       </div>
     </div>,

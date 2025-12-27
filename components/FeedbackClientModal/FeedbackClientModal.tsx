@@ -7,9 +7,13 @@ import { Feedback } from "@/types/feedback";
 
 interface FeedbackClientModal {
   feedbacks: Feedback[];
+  toolId: string;
 }
 
-export function FeedbackClientModal({ feedbacks }: FeedbackClientModal) {
+export function FeedbackClientModal({
+  feedbacks,
+  toolId,
+}: FeedbackClientModal) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -19,7 +23,12 @@ export function FeedbackClientModal({ feedbacks }: FeedbackClientModal) {
         // onLeaveFeedback={() => setOpen(true)}
       />
 
-      {open && <FeedbackFormModal onCloseModal={() => setOpen(false)} />}
+      {open && (
+        <FeedbackFormModal
+          toolId={toolId}
+          onCloseModal={() => setOpen(false)}
+        />
+      )}
     </>
   );
 }

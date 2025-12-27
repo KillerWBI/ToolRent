@@ -1,4 +1,5 @@
-import { Feedback } from "@/types/feedback";
+import { CreateFeedbackPayload, Feedback } from "@/types/feedback";
+import axios from "axios";
 
 export async function getFeedbacks(): Promise<Feedback[]> {
     let allFeedbacks: Feedback[] = [];
@@ -98,4 +99,35 @@ export async function getFeedbacksByIds(
     }
 
     return matches.slice(0, limit);
+}
+
+export async function createFeedback(
+    payload: CreateFeedbackPayload
+) {
+    try {
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks`,
+        {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            toolId: payload.toolId,
+            rate: payload.rate,
+            description: payload.description,
+        }),
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Не вдалося надіслати відгук");
+    }
+
+    return await res.json();
+    } catch (e) {
+    console.error("Create feedback error:", e);
+    throw e;
+    }
 }
