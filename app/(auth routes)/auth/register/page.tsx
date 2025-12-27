@@ -9,6 +9,8 @@ import { useAuthStore } from "@/store/auth.store";
 import toast from "react-hot-toast";
 import styles from "./AuthPage.module.css";
 
+const currentYear = new Date().getFullYear();
+
 const validationSchema = Yup.object({
   name: Yup.string()
     .trim()
@@ -40,6 +42,7 @@ export default function RegisterPage() {
       confirmPassword: "",
     },
     validationSchema,
+    validateOnMount: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
         const res = await fetch(`/api/auth/register`, {
@@ -82,108 +85,105 @@ export default function RegisterPage() {
     handleBlur,
     handleSubmit,
     isSubmitting,
+    isValid,
+    dirty,
   } = formik;
 
   return (
-    <main className={styles.container}>
+    <div className={`${styles.container} ${styles.fadeIn}`}>
       <div className={styles.page}>
         <div className={styles.card}>
           <div className={styles.formSection}>
-            <Link href="/" className={styles.logo}>
-              <Image
-                src="/svg/company-logo.svg"
-                alt="ToolNext"
-                width={124}
-                height={28}
-                className={styles.logoIcon}
-                priority
-              />
-            </Link>
-
-            <div>
+            <div className="formatter">
+              <Link href="/" className={styles.logo}>
+                <Image
+                  src="/svg/company-logo.svg"
+                  alt="ToolNext"
+                  width={164}
+                  height={28}
+                  className={styles.logoIcon}
+                  priority
+                />
+              </Link>
+            </div>
+            <div className="formatter">
               <h1 className={styles.title}>Реєстрація</h1>
-              <p className={styles.subtitle}>
-                Заповніть форму, щоб створити акаунт та розпочати роботу з
-                інструментами.
-              </p>
+
+              <form className={styles.form} onSubmit={handleSubmit} noValidate>
+                {[
+                  {
+                    name: "name",
+                    label: "Ім'я*",
+                    type: "text",
+                    placeholder: "Ваше ім'я",
+                    autoComplete: "name",
+                  },
+                  {
+                    name: "email",
+                    label: "Пошта*",
+                    type: "email",
+                    placeholder: "Ваша пошта",
+                    autoComplete: "email",
+                  },
+                  {
+                    name: "password",
+                    label: "Пароль*",
+                    type: "password",
+                    placeholder: "******",
+                    autoComplete: "new-password",
+                  },
+                  {
+                    name: "confirmPassword",
+                    label: "Підтвердіть пароль*",
+                    type: "password",
+                    placeholder: "******",
+                    autoComplete: "new-password",
+                  },
+                ].map((field) => {
+                  const hasError =
+                    touched[field.name as keyof typeof touched] &&
+                    errors[field.name as keyof typeof errors];
+                  return (
+                    <label key={field.name} className={styles.field}>
+                      <span className={styles.label}>{field.label}</span>
+                      <input
+                        className={`${styles.input} ${
+                          hasError ? styles.inputError : ""
+                        }`}
+                        type={field.type}
+                        name={field.name}
+                        placeholder={field.placeholder}
+                        autoComplete={field.autoComplete}
+                        value={values[field.name as keyof typeof values]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        aria-invalid={Boolean(hasError)}
+                        required
+                      />
+                      {hasError ? (
+                        <span className={styles.errorText}>
+                          {errors[field.name as keyof typeof errors] as string}
+                        </span>
+                      ) : null}
+                    </label>
+                  );
+                })}
+
+                <button
+                  type="submit"
+                  className={styles.submit}
+                  disabled={isSubmitting || !isValid}
+                >
+                  {isSubmitting ? "Зачекайте..." : "Зареєструватись"}
+                </button>
+              </form>
+
+              <div className={styles.switchAuth}>
+                <span>Вже маєте акаунт?</span>
+                <Link href="/auth/login">Вхід</Link>
+              </div>
             </div>
-
-            <form className={styles.form} onSubmit={handleSubmit} noValidate>
-              {[
-                {
-                  name: "name",
-                  label: "Ім'я*",
-                  type: "text",
-                  placeholder: "Ваше ім'я",
-                  autoComplete: "name",
-                },
-                {
-                  name: "email",
-                  label: "Пошта*",
-                  type: "email",
-                  placeholder: "Ваша пошта",
-                  autoComplete: "email",
-                },
-                {
-                  name: "password",
-                  label: "Пароль*",
-                  type: "password",
-                  placeholder: "******",
-                  autoComplete: "new-password",
-                },
-                {
-                  name: "confirmPassword",
-                  label: "Підтвердіть пароль*",
-                  type: "password",
-                  placeholder: "******",
-                  autoComplete: "new-password",
-                },
-              ].map((field) => {
-                const hasError =
-                  touched[field.name as keyof typeof touched] &&
-                  errors[field.name as keyof typeof errors];
-                return (
-                  <label key={field.name} className={styles.field}>
-                    <span className={styles.label}>{field.label}</span>
-                    <input
-                      className={`${styles.input} ${
-                        hasError ? styles.inputError : ""
-                      }`}
-                      type={field.type}
-                      name={field.name}
-                      placeholder={field.placeholder}
-                      autoComplete={field.autoComplete}
-                      value={values[field.name as keyof typeof values]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      aria-invalid={Boolean(hasError)}
-                      required
-                    />
-                    {hasError ? (
-                      <span className={styles.errorText}>
-                        {errors[field.name as keyof typeof errors] as string}
-                      </span>
-                    ) : null}
-                  </label>
-                );
-              })}
-
-              <button
-                type="submit"
-                className={styles.submit}
-                disabled={isSubmitting}
-                aria-busy={isSubmitting}
-              >
-                {isSubmitting ? "Реєстрація..." : "Зареєструватися"}
-              </button>
-            </form>
-
-            <div className={styles.switchAuth}>
-              <span>Вже маєте акаунт?</span>
-              <Link href="/auth/login">Вхід</Link>
-            </div>
-
-            <p className={styles.footerNote}>© 2025 ToolNext</p>
+            <p className={styles.footerNote}>© {currentYear} ToolNext</p>
           </div>
 
           <div className={styles.imageSection}>
@@ -197,6 +197,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
