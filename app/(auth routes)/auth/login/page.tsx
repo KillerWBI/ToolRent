@@ -142,6 +142,12 @@ export default function LoginPage() {
                 );
               })}
 
+            <div className={styles.forgotPassword}>
+            <Link href="/auth/resetPassword">
+            Забули пароль?
+                </Link>
+                
+            </div>
               <button
                 type="submit"
                 className={styles.submit}
