@@ -117,7 +117,7 @@ export async function getFeedbacksByIds(
 export async function createFeedback(
     payload: CreateFeedbackPayload
 ) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks`, {
+    const res = await fetch(`/api/feedbacks`, {
         method: "POST",
         headers: {
     'Content-Type': 'application/json',

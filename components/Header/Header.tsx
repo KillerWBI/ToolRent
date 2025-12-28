@@ -4,7 +4,7 @@ import LogoutModal from "@/app/@modal/confirmation/logout/page";
 import { useAuthStore } from "@/store/auth.store";
 import { PublicUser } from "@/types/user";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import styles from "./Header.module.css";
 export default function Header() {
@@ -12,6 +12,17 @@ export default function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const userTyped = user as PublicUser | null;
   const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U";
@@ -76,8 +87,7 @@ export default function Header() {
                         color: "white",
                         fontWeight: "bold",
                         fontSize: "16px",
-                      }}
-                    >
+                      }}>
                       {firstLetter}
                     </span>
                   )}
@@ -92,14 +102,12 @@ export default function Header() {
                 <button
                   className={styles.logoutBtn}
                   onClick={() => setShowLogout(true)}
-                  aria-label="Вихід"
-                >
+                  aria-label="Вихід">
                   <svg
                     className={styles.logoutIcon}
                     width={18}
                     height={18}
-                    aria-hidden="true"
-                  >
+                    aria-hidden="true">
                     <use href="/svg/sprite.svg#logout" />
                   </svg>
                 </button>
@@ -111,8 +119,7 @@ export default function Header() {
           <button
             className={styles.burger}
             onClick={() => setIsOpen((prev) => !prev)}
-            aria-label="Відкрити меню"
-          >
+            aria-label="Відкрити меню">
             <svg className={styles.icon} width={40} height={40}>
               <use href="/svg/sprite.svg#menu" />
             </svg>

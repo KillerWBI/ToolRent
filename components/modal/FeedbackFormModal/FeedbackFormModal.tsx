@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useFeedbackDraftStore } from "@/store/feedbackStore";
 import { FeedbackDraft } from "@/store/feedbackStore";
+import { useRouter } from "next/navigation";
 
 interface FeedbackFormModalProps {
   onCloseModal: () => void;
@@ -35,7 +36,7 @@ export const FeedbackFormModal = ({
   toolId,
 }: FeedbackFormModalProps) => {
   const { draft, setDraft, clearDraft } = useFeedbackDraftStore();
-  const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [hoverRating, setHoverRating] = useState<number>(0);
 
@@ -53,10 +54,10 @@ export const FeedbackFormModal = ({
     mutationKey: ["feedbacks"],
     mutationFn: createFeedback,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["feedbacks"] });
       clearDraft();
       onCloseModal();
       toast.success("Відгук успішно опубліковано!");
+      router.refresh();
     },
     onError: () => {
       toast.error("Не вдалося опублікувати відгук. Спробуйте ще раз.");

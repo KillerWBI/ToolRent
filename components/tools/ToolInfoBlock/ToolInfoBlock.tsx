@@ -18,7 +18,6 @@ export const ToolInfoBlock = ({ tool, owner }: ToolInfoBlockProps) => {
   const { isAuthenticated } = useAuthStore();
 
   const router = useRouter();
-  console.log(tool);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
