@@ -78,6 +78,10 @@
   height: 44px;
   padding: 10px 24px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   border-radius: 6px;
   border: 2px solid transparent;
   background: #8808cc;
