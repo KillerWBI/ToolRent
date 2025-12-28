@@ -1,18 +1,19 @@
-/* Контейнер */
+/* ================= BASE ================= */
 
 .wrapper {
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   gap: 24px;
   width: 100%;
   margin-bottom: 32px;
-} /* Обгортка */
+}
 
 .selectWrapper {
   position: relative;
   width: 100%;
-} /* --- ЗАКРИТА КНОПКА (SelectButton) --- */
+}
+
+/* ================= SELECT BUTTON ================= */
 
 .selectButton {
   width: 100%;
@@ -30,14 +31,16 @@
   line-height: 20px;
   color: var(--color-neutral-darkest);
   cursor: pointer;
-
   margin-bottom: 32px;
 }
+
 .selectButton.open {
   background: var(--color-electric-violet-lightest);
-  border: 2px solid var(--color-electric-violet-light);
+  border-color: var(--color-electric-violet-light);
   border-radius: 6px 6px 0 0;
-} /* --- СТРІЛКА SVG --- */
+}
+
+/* ================= ARROW ================= */
 
 .arrow {
   width: 12px;
@@ -45,9 +48,12 @@
   margin-left: auto;
   transition: transform 0.25s ease;
 }
+
 .arrow.open {
   transform: rotate(180deg);
-} /* --- ВІДКРИТЕ МЕНЮ --- */
+}
+
+/* ================= DROPDOWN ================= */
 
 .dropdown {
   position: absolute;
@@ -57,10 +63,9 @@
   border: 2px solid var(--color-electric-violet-light);
   border-radius: 6px;
   background: var(--color-electric-violet-lightest);
-  padding: 6px 0;
+  padding: 6px 14px 6px 0;
   overflow-y: auto;
   z-index: 20;
-  padding-right: 14px;
 }
 
 .dropdown::-webkit-scrollbar {
@@ -77,10 +82,11 @@
 
 .dropdown::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  width: 7px;
   height: 56px;
   background: var(--color-electric-violet-dark);
-} /* --- ПУНКТИ МЕНЮ --- */
+}
+
+/* ================= OPTIONS ================= */
 
 .option {
   width: 100%;
@@ -89,46 +95,77 @@
   display: flex;
   align-items: center;
   font-family: var(--font-family);
-  font-weight: 400;
   font-size: 16px;
   line-height: 150%;
   color: var(--color-neutral-darkest);
   cursor: pointer;
 }
+
 .option:hover {
   background: var(--color-electric-violet-lighter);
-} /* Кнопка скидання */
+}
+
+/* ================= RESET ================= */
 
 .resetButton {
   font-family: var(--font-family);
   font-weight: 500;
   font-size: 16px;
   color: var(--color-neutral-darkest);
-  margin-left: 0;
   background: transparent;
   border: none;
   cursor: pointer;
 }
+
 .resetButton:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-/* Input для ціни */
+/* ================= RESET BUTTON INTERACTION ================= */
+
+.resetButton {
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* Normal */
+.resetButton {
+  color: var(--color-neutral-darkest);
+}
+
+/* Hover + Focus */
+.resetButton:hover,
+.resetButton:focus-visible {
+  color: var(--color-electric-violet-light);
+  outline: none;
+}
+
+/* Active */
+.resetButton:active {
+  color: var(--color-electric-violet-dark);
+}
+
+/* Disabled */
+.resetButton:disabled {
+  color: var(--color-neutral-dark);
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ================= INPUT ================= */
+
 .input {
   width: 159px;
   min-height: 40px;
   padding: 8px 12px;
-
   border: 2px solid var(--color-neutral-darkest);
   border-radius: 6px;
   background: transparent;
-
   font-family: var(--font-family);
   font-size: 16px;
   color: var(--color-neutral-darkest);
-
-  /* margin-bottom: 24px; */
 }
 
 .input:last-child {
@@ -139,38 +176,50 @@
   color: var(--color-neutral-dark);
 }
 
-/* Select для сортування */
+/* ================= SORT SELECT ================= */
 
 .select {
   width: 100%;
   min-height: 40px;
   padding: 8px 12px;
-  margin-bottom: 16px;
-
   border: 2px solid var(--color-neutral-darkest);
   border-radius: 6px;
   background: transparent;
-
   font-family: var(--font-family);
   font-size: 16px;
   color: var(--color-neutral-darkest);
   cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-@media (min-width: 768px) {
-  .wrapper {
-    gap: 24px;
-  }
+/* ================= INTERACTION ================= */
 
-  /* ---------- TOP ROW ---------- */
-  .left {
+.input:hover,
+.select:hover,
+.selectButton:hover,
+.input:focus,
+.select:focus,
+.input:focus-visible,
+.select:focus-visible {
+  outline: none;
+  border-color: var(--color-electric-violet-light);
+  background: var(--color-electric-violet-lightest);
+}
+
+.input:active,
+.select:active {
+  border-color: var(--color-electric-violet-dark);
+}
+
+/* ================= TABLET ================= */
+
+@media (min-width: 768px) {
+  .left,
+  .right {
     display: flex;
     align-items: center;
-
     width: 100%;
   }
 
@@ -183,21 +232,8 @@
     max-width: 304px;
   }
 
-  /* ---------- PRICE ---------- */
-  .input {
-    width: 159px;
-  }
-
-  /* ---------- BOTTOM ROW ---------- */
-  .right {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-
   .select {
     width: 200px;
-    margin-bottom: 0;
   }
 
   .resetButton {
@@ -226,8 +262,8 @@
 
   .selectButton {
     width: auto;
-    margin-right: 32px;
     min-width: 304px;
+    margin-right: 32px;
   }
 
   .left,
@@ -237,9 +273,5 @@
 
   .right {
     gap: 32px;
-  }
-
-  .left {
-    gap: 0;
   }
 }

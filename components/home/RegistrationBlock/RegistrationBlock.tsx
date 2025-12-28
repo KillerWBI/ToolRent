@@ -1,14 +1,20 @@
 "use client";
 
-import css from "./RegistrationBlock.module.css";
-import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth.store";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import css from "./RegistrationBlock.module.css";
 
 export default function RegistrationBlock() {
   const router = useRouter();
+  const {isAuthenticated} = useAuthStore();
 
-  const handleButtonClick = () => {
-    router.push("/auth/register");
+  const AuthBuutonTools = () => {
+    if (isAuthenticated) {
+      router.push("/tools");
+    } else {
+      router.push("/auth/register");
+    }
   };
 
   return (
@@ -17,7 +23,7 @@ export default function RegistrationBlock() {
         <div className={css.wrapper}>
           <div className={css.textDiv}>
             <h2 className={css.title}>
-              Зареєструйтесь і отримайте доступ до інструментів поруч із вами
+              {isAuthenticated ? "" : "Зареєструватися i"} отримайте доступ до інструментів поруч із вами
             </h2>
             <p className={css.text}>
               Не витрачайте гроші на купівлю — орендуйте зручно та швидко.
@@ -25,10 +31,10 @@ export default function RegistrationBlock() {
             </p>
             <button
               type="button"
-              onClick={handleButtonClick}
+              onClick={AuthBuutonTools}
               className={css.button}
             >
-              Зареєструватися
+              {isAuthenticated ? "до інструментів" : "Зареєструватися"}
             </button>
           </div>
           <Image
