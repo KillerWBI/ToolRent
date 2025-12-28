@@ -12,6 +12,7 @@ export default function Header() {
   const [showLogout, setShowLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+
   const userTyped = user as PublicUser | null;
   const firstLetter = userTyped?.name?.charAt(0).toUpperCase() || "U";
 

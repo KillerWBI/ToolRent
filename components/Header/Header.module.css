@@ -1,3 +1,8 @@
+.header {
+  top: 0;
+  z-index: 100;
+}
+
 .headerNavigation {
   display: flex;
   align-items: center;
