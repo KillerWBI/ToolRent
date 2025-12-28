@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./FilterBar.module.css";
 import { getCategories } from "@/lib/api/categories";
 import type { Category } from "@/types/category";
 
-const ALL_CATEGORIES_VALUE = "all";
+const ALL = "all";
 
 const SORT_OPTIONS = [
   { value: "popular", label: "Популярні" },
@@ -16,220 +16,187 @@ const SORT_OPTIONS = [
   { value: "price_desc", label: "Спочатку дорожчі" },
 ];
 
-const FilterBar = () => {
+export default function FilterBar() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [catOpen, setCatOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  const searchParams = useSearchParams();
+  const catRef = useRef<HTMLDivElement>(null);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  const params = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  // ================== URL params ==================
+  const category = params.get("category") ?? ALL;
+  const priceFrom = params.get("priceFrom") ?? "";
+  const priceTo = params.get("priceTo") ?? "";
+  const sort = params.get("sort") ?? "popular";
+  const search = params.get("search");
 
-  const currentCategory = searchParams.get("category") ?? ALL_CATEGORIES_VALUE;
-  const priceFrom = searchParams.get("priceFrom") ?? "";
-  const priceTo = searchParams.get("priceTo") ?? "";
-  const sort = searchParams.get("sort") ?? "popular";
-  const hasSearchFilter = !!searchParams.get("search");
+  const hasFilters =
+    category !== ALL || priceFrom || priceTo || sort !== "popular" || search;
 
-  const hasCategoryFilter = currentCategory !== ALL_CATEGORIES_VALUE;
-  const hasPriceFilter = !!priceFrom || !!priceTo;
-  const hasSortFilter = sort !== "popular";
+  // ===== локальний стан input =====
+  const [localPriceFrom, setLocalPriceFrom] = useState(priceFrom);
+  const [localPriceTo, setLocalPriceTo] = useState(priceTo);
 
-  // ==================== Load categories ====================
+  // ===== Commit (оновлюємо URL тільки коли ввод завершено) =====
+  const commitPriceFrom = () => {
+    update("priceFrom", localPriceFrom || undefined);
+  };
 
+  const commitPriceTo = () => {
+    update("priceTo", localPriceTo || undefined);
+  };
+
+  // ===== Load categories =====
   useEffect(() => {
-    const loadCategories = async () => {
+    const load = async () => {
+      setLoadingCategories(true);
       try {
-        setIsLoading(true);
-        const list = await getCategories();
-        setCategories(list);
-      } catch (error) {
-        console.error("Failed to load categories", error);
+        const data = await getCategories();
+        setCategories(data);
       } finally {
-        setIsLoading(false);
+        setLoadingCategories(false);
       }
     };
-
-    loadCategories();
+    load();
   }, []);
 
-  // ================= Close dropdown on outside click =================
-
+  // ===== Close dropdowns =====
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-      if (
-        sortDropdownRef.current &&
-        !sortDropdownRef.current.contains(e.target as Node)
-      ) {
+    const close = (e: MouseEvent) => {
+      if (catRef.current && !catRef.current.contains(e.target as Node))
+        setCatOpen(false);
+      if (sortRef.current && !sortRef.current.contains(e.target as Node))
         setSortOpen(false);
-      }
     };
-
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
   }, []);
 
-  // ========================= Helpers =========================
+  // ===== Update URL =====
+  const update = (key: string, value?: string) => {
+    const next = new URLSearchParams(params.toString());
+    next.set("page", "1");
 
-  const updateParam = (key: string, value?: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    if (!value) next.delete(key);
+    else next.set(key, value);
 
-    if (!value) {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
-  const changeCategory = (value: string) => {
-    updateParam("category", value === ALL_CATEGORIES_VALUE ? undefined : value);
-    setOpen(false);
+  const reset = () => {
+    const next = new URLSearchParams();
+    next.set("page", "1");
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+
+    setLocalPriceFrom("");
+    setLocalPriceTo("");
   };
-
-  const handleResetFilters = () => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    params.delete("category");
-    params.delete("search");
-    params.delete("priceFrom");
-    params.delete("priceTo");
-    params.delete("sort");
-
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
-
-  const isResetDisabled =
-    !hasCategoryFilter && !hasSearchFilter && !hasPriceFilter && !hasSortFilter;
 
   const currentLabel =
-    currentCategory === ALL_CATEGORIES_VALUE
+    category === ALL
       ? "Всі категорії"
-      : categories.find((c) => c._id === currentCategory)?.title ||
-        "Всі категорії";
+      : (categories.find((c) => c._id === category)?.title ?? "Всі категорії");
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.left}>
-        {/* CATEGORY */}
-        <div ref={dropdownRef} className={styles.selectWrapper}>
+        {/* Category */}
+        <div ref={catRef} className={styles.selectWrapper}>
           <button
-            type="button"
-            className={`${styles.selectButton} ${open ? styles.open : ""}`}
-            disabled={isLoading}
-            onClick={() => setOpen((prev) => !prev)}
+            disabled={loadingCategories}
+            className={styles.selectButton}
+            onClick={() => setCatOpen((p) => !p)}
           >
             {currentLabel}
-            <svg className={`${styles.arrow} ${open ? styles.open : ""}`}>
-              <use href="/svg/sprite.svg#icon-Vector"></use>
+            <svg className={styles.arrow}>
+              <use href="/svg/sprite.svg#icon-Vector" />
             </svg>
           </button>
 
-          {open && (
+          {catOpen && (
             <div className={styles.dropdown}>
-              <div
-                className={`${styles.option} ${
-                  currentCategory === ALL_CATEGORIES_VALUE
-                    ? styles.selectedOption
-                    : ""
-                }`}
-                onClick={() => changeCategory(ALL_CATEGORIES_VALUE)}
-              >
+              <div className={styles.option} onClick={() => update("category")}>
                 Всі категорії
               </div>
-
-              {categories.map((cat) => (
+              {categories.map((c) => (
                 <div
-                  key={cat._id}
-                  className={`${styles.option} ${
-                    currentCategory === cat._id ? styles.selectedOption : ""
-                  }`}
-                  onClick={() => changeCategory(cat._id)}
+                  key={c._id}
+                  className={styles.option}
+                  onClick={() => update("category", c._id)}
                 >
-                  {cat.title}
+                  {c.title}
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* PRICE */}
+        {/* Price */}
         <input
-          type="number"
-          placeholder="Ціна від"
           className={styles.input}
-          value={priceFrom}
-          onChange={(e) => updateParam("priceFrom", e.target.value)}
+          type="text"
+          placeholder="Ціна від"
+          value={localPriceFrom}
+          onChange={(e) => setLocalPriceFrom(e.target.value.replace(/\D/g, ""))}
+          onBlur={commitPriceFrom}
+          onKeyDown={(e) => e.key === "Enter" && commitPriceFrom()}
         />
 
         <input
-          type="number"
-          placeholder="Ціна до"
           className={styles.input}
-          value={priceTo}
-          onChange={(e) => updateParam("priceTo", e.target.value)}
+          type="text"
+          placeholder="Ціна до"
+          value={localPriceTo}
+          onChange={(e) => setLocalPriceTo(e.target.value.replace(/\D/g, ""))}
+          onBlur={commitPriceTo}
+          onKeyDown={(e) => e.key === "Enter" && commitPriceTo()}
         />
       </div>
 
       <div className={styles.right}>
-        {/* SORT */}
-
-        <div ref={sortDropdownRef} className={styles.selectWrapper}>
+        {/* Sort */}
+        <div ref={sortRef} className={styles.selectWrapper}>
           <button
-            type="button"
-            className={`${styles.select} ${sortOpen ? styles.open : ""}`}
-            onClick={() => setSortOpen((prev) => !prev)}
+            className={styles.select}
+            onClick={() => setSortOpen((p) => !p)}
           >
             {SORT_OPTIONS.find((o) => o.value === sort)?.label}
-
-            <svg className={`${styles.arrow} ${sortOpen ? styles.open : ""}`}>
+            <svg className={styles.arrow}>
               <use href="/svg/sprite.svg#icon-Vector" />
             </svg>
           </button>
 
           {sortOpen && (
             <div className={styles.dropdown}>
-              {SORT_OPTIONS.map((opt) => (
+              {SORT_OPTIONS.map((o) => (
                 <div
-                  key={opt.value}
+                  key={o.value}
                   className={styles.option}
                   onClick={() => {
-                    updateParam("sort", opt.value);
+                    update("sort", o.value);
                     setSortOpen(false);
                   }}
                 >
-                  {opt.label}
+                  {o.label}
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* RESET */}
-
         <button
-          type="button"
           className={styles.resetButton}
-          onClick={handleResetFilters}
-          disabled={isResetDisabled}
+          disabled={!hasFilters}
+          onClick={reset}
         >
           Скинути фільтри
         </button>
       </div>
     </div>
   );
-};
-
-export default FilterBar;
+}
