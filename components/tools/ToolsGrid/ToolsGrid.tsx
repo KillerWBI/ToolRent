@@ -34,6 +34,9 @@ async function fetchToolsPage(
   limit: number = 8,
   category?: string,
   search?: string,
+  sort?: string,
+  priceFrom?: string,
+  priceTo?: string
 ): Promise<ApiResponse> {
   const params = new URLSearchParams({
     page: String(page),
@@ -44,6 +47,15 @@ async function fetchToolsPage(
     }
     if (search) {
     params.set("search", search);
+  }
+  if (sort) {
+    params.set("sort", sort);
+  }
+  if (priceFrom) {
+    params.set("priceFrom", priceFrom);
+  }
+  if (priceTo) {
+    params.set("priceTo", priceTo);
   }
 
   const res = await fetch(
@@ -75,11 +87,15 @@ export default function ToolsListBlock() {
   const width = useWindowWidth();
   const limit = width >= 1400 ? 16 : 8;
 
-    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8, search: ""});
+    const { get, set } = useQueryParams({ category: "all", page: 1, limit: 8, search: "", sort: "", priceFrom: "", priceTo: "" });
     const category = get("category") as string;
     const search = get("search") as string;
     const pageFromUrl = Number(get("page") ?? 1);
-    const limitFromUrl = Number(get("limit") ?? limit);
+  const limitFromUrl = Number(get("limit") ?? limit);
+  
+  const priceFrom = get("priceFrom") as string;
+  const priceTo = get("priceTo") as string;
+  const sort = get("sort") as string;
 
 
   const [tools, setTools] = useState<Tool[]>([]);
@@ -96,10 +112,13 @@ export default function ToolsListBlock() {
 
     const loadFirstPage = async () => {
       setLoading(true);
-      set("page", 1);
+      if (pageFromUrl !== 1) {
+  set("page", 1);
+}
+
 
     try {
-        const data = await fetchToolsPage(1, limit, category, search);
+        const data = await fetchToolsPage(1, limit, category, search, sort, priceFrom, priceTo);
 
         if (!isMounted) return;
 
@@ -119,7 +138,7 @@ export default function ToolsListBlock() {
     return () => {
       isMounted = false;
     };
-  }, [category, limit, search]);
+  }, [category, limit, search, sort, priceFrom, priceTo]);
 
   const loadNextPage = async () => {
     if (loadingMore || !hasMore) return;
@@ -129,7 +148,7 @@ export default function ToolsListBlock() {
 
     setLoadingMore(true);
     try {
-      const data = await fetchToolsPage(nextPage, limit, category, search);
+      const data = await fetchToolsPage(nextPage, limit, category, search, sort, priceFrom, priceTo);
       // Объединяем текущие инструменты со следующей страницей
       setTools((prev) => {
         const merged = [...prev, ...data.tools];
@@ -164,7 +183,9 @@ export default function ToolsListBlock() {
       <section className={styles.section}>
         <div className="container">
                 <h2 className={styles.heading}>Усі інструменти</h2>
-                <FilterBar />
+
+        <FilterBar />
+
           <div className={styles.empty}>
             <h3 className={styles.title}>Інструментів не знайдено</h3>
             <p className={styles.text}>
@@ -180,7 +201,9 @@ export default function ToolsListBlock() {
     <section className={styles.section}>
       <div className="container">
         <h2 className={styles.heading}>Усі інструменти</h2>
+
         <FilterBar />
+
 
         <div className={styles.grid}>
           {storeTools.map((tool) => (
