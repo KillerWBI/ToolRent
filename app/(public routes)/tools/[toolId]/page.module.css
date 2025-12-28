@@ -1,14 +1,18 @@
-
-.detailsPage {
+.detailsPageWrap {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 32px;
-    padding: 32px 0 64px;
+    padding: 32px 0 32px;
+}
+
+.detailsPage {
+    display: flex;
+    flex-direction: column;
 }
 
 @media only screen and (min-width: 1440px) {
-    .detailsPage {
+    .detailsPageWrap {
         flex-direction: row;
     }
 }

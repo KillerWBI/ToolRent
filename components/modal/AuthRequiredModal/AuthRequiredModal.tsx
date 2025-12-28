@@ -8,9 +8,11 @@ interface AuthRequiredModalProps {
   onCloseModal: () => void;
   onLoginBtn: () => void;
   onRegisterBtn: () => void;
+  description?: string;
 }
 
 export const AuthRequiredModal = ({
+  description,
   onCloseModal,
   onLoginBtn,
   onRegisterBtn,
@@ -47,8 +49,7 @@ export const AuthRequiredModal = ({
         </button>
         <h2 className={css.title}>Спочатку авторизуйтесь</h2>
         <p className={css.description}>
-          Щоб забрронювати інструмент, треба спочатку зареєструватись, або
-          авторизуватись на платформі
+          {description}
         </p>
         <div className={css.btnsWrap}>
           <button onClick={onLoginBtn} className={css.loginBtn} type="button">

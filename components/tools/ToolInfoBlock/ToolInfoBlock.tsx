@@ -21,7 +21,6 @@ export const ToolInfoBlock = ({ tool, owner }: ToolInfoBlockProps) => {
   console.log(tool);
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const specifications = Object.entries(tool.specifications ?? {});
 
@@ -91,6 +90,9 @@ export const ToolInfoBlock = ({ tool, owner }: ToolInfoBlockProps) => {
           onRegisterBtn={handleRegisterClick}
           onLoginBtn={handleLoginClick}
           onCloseModal={closeModal}
+          description={
+            "Щоб забрронювати інструмент, треба спочатку зареєструватись, або авторизуватись на платформі"
+          }
         />
       )}
     </>

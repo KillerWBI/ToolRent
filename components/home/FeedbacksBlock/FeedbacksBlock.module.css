@@ -3,10 +3,70 @@
     padding-bottom: 64px;
 }
 
+.titleWrap {
+    margin-bottom: 80px;
+    display: flex;
+    flex-direction: column;
+}
+
 .title {
     font-size: 36px;
     font-weight: 700;
-    margin-bottom: 80px;
+}
+
+.createFeedbackBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 34px;
+    height: 44px;
+    width: 100%;
+    border: 2px solid #000;
+    border-radius: 6px;
+    padding: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #000;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out, border-color 250ms ease-in-out;
+}
+
+.notFeedbacks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: #000;
+}
+
+.notFeedbacksTitle {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+.notFeedbacksText {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.createFeedbackBtn:hover, .createFeedbackBtn:focus {
+background-color: #e7cdf4;
+}
+
+.createFeedbackBtn:active {
+    color: #fff;
+    background-color: #8808cc;
+    border-color: #8808cc;
+}
+
+.createFeedbackBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
 /* swiper slide fix */
@@ -51,6 +111,7 @@
 .pagination {
     display: flex;
     align-items: center;
+    /* margin-left: 40px; */
 
     max-width: 88px;
     /* 5 bullets */
@@ -146,7 +207,22 @@
     cursor: not-allowed;
 }
 
+
 /* ================= BREAKPOINTS ================= */
+
+
+@media only screen and (min-width: 768px) {
+.titleWrap {
+    flex-direction: row;
+    align-items: start;
+    justify-content: space-between;
+}
+
+.createFeedbackBtn {
+    max-width: 180px;
+    margin-top: 0;
+}
+}
 
 @media (min-width: 1024px) {
     .section {
@@ -154,3 +230,15 @@
         padding-bottom: 112px;
     }
 }
+
+@media only screen and (min-width: 1440px) {
+    .notFeedbacksTitle {
+    font-size: 24px;
+}
+
+.notFeedbacksText {
+    font-size: 18px;
+    }
+}
+
+

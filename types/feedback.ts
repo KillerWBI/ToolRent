@@ -13,3 +13,13 @@ export type CreateFeedbackPayload = {
     rate: number;
     description: string;
 }
+
+export type FeedbacksByToolId = {
+    _id: string;
+    toolId: string;
+    owner: string;
+    name: string;
+    description: string;
+    rate: number;
+    createdAt: string;
+};
