@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import styles from "./MobileMenu.module.css";
+import LogoutModal from "@/app/@modal/confirmation/logout/page";
 import { useAuthStore } from "@/store/auth.store";
 import { PublicUser } from "@/types/user";
+import Link from "next/link";
+import { useState } from "react";
+import styles from "./MobileMenu.module.css";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,16 +14,14 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { user, isAuthenticated, logout } = useAuthStore();
+  const [showLogout, setShowLogout] = useState(false);
 
   if (!isOpen) return null;
 
   const userTyped = user as PublicUser | null;
   const firstLetter = user?.name?.charAt(0).toUpperCase() || "U";
 
-  const handleLogout = () => {
-    logout();
-    onClose();
-  };
+
 
   return (
     <div className={styles.mobileMenu}>
@@ -113,7 +113,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
                 <button
                   className={styles.logoutBtn}
-                  onClick={handleLogout}
+                  onClick={ () => {
+                  setShowLogout(true);
+                          }}
+
                   aria-label="Вихід"
                 >
                   <svg
@@ -144,6 +147,12 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               </Link>
             </>
           )}
+          {showLogout && (
+                <LogoutModal
+                  open={showLogout}
+                  onClose={() => setShowLogout(false)}
+                />
+              )}
         </nav>
       </div>
     </div>
