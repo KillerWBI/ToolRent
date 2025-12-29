@@ -13,7 +13,8 @@ import {
 } from "@/lib/api/users";
 import FeedbacksBlock from "@/components/home/FeedbacksBlock/FeedbacksBlock";
 import ReviewsBlock from "@/components/profile/ReviewsBlock/ReviewsBlock";
-import type { Feedback } from "@/types/feedback";
+import type { Feedback, FeedbacksByToolId } from "@/types/feedback";
+import { getFeedbacksByToolId } from "@/lib/api/feedbacks";
 
 type PageProps = {
     params: Promise<{ userId: string }>;
@@ -84,24 +85,32 @@ export default async function ProfilePage({ params }: PageProps) {
         user = rawUser;
         tools = extractArray<Tool>(rawTools);
 
-        // 2. Extract Feedback IDs from Tools
-        const userFeedbackIds = new Set<string>();
-        tools.forEach((t) => {
-            if (Array.isArray(t.feedbacks)) {
-                t.feedbacks.forEach((f) => {
-                    const id = typeof f._id === "string" ? f._id : f._id?.$oid;
-                    if (id) userFeedbackIds.add(id);
-                });
+        // Get feedbacks for all user tools
+        const allFeedbacks: Feedback[] = [];
+        for (const tool of tools) {
+            try {
+                const toolFeedbacks = await getFeedbacksByToolId(tool._id);
+                const converted: Feedback[] = toolFeedbacks.map(
+                    (f: FeedbacksByToolId) => ({
+                        _id: f._id,
+                        name: f.name,
+                        description: f.description,
+                        rate: f.rate,
+                        toolId: f.toolId,
+                        owner: f.owner,
+                        createdAt: f.createdAt,
+                    })
+                );
+                allFeedbacks.push(...converted);
+            } catch (e) {
+                console.warn(`Failed to fetch feedbacks for tool ${tool._id}`);
             }
-        });
-
-        // 3. Fetch specific feedbacks if we have IDs
-        if (userFeedbackIds.size > 0) {
-            const { getFeedbacksByIds } = await import("@/lib/api/feedbacks");
-            feedbacks = await getFeedbacksByIds(userFeedbackIds, 10);
         }
 
-        // 4. Calculate rating from feedbacks
+        // Take only top 10 feedbacks
+        feedbacks = allFeedbacks.slice(0, 10);
+
+        // 3. Calculate rating from feedbacks
         if (user) {
             let avgRating = 0;
             let reviewsCount = feedbacks.length;
@@ -157,7 +166,7 @@ export default async function ProfilePage({ params }: PageProps) {
                     </section>
 
                     {feedbacks.length > 0 ? (
-                        <FeedbacksBlock feedbacks={feedbacks} />
+                        <FeedbacksBlock feedbacks={feedbacks} title="Відгуки" />
                     ) : (
                         <ReviewsBlock feedbacks={[]} />
                     )}

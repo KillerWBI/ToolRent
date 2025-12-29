@@ -1,4 +1,8 @@
-import { CreateFeedbackPayload, Feedback, FeedbacksByToolId } from "@/types/feedback";
+import {
+    CreateFeedbackPayload,
+    Feedback,
+    FeedbacksByToolId,
+} from "@/types/feedback";
 
 export async function getFeedbacks(): Promise<Feedback[]> {
     let allFeedbacks: Feedback[] = [];
@@ -8,7 +12,7 @@ export async function getFeedbacks(): Promise<Feedback[]> {
 
     while (hasMore) {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks?page=${page}&limit=100`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks?page=${page}&limit=10`,
             {
                 cache: "no-store",
             }
@@ -22,7 +26,6 @@ export async function getFeedbacks(): Promise<Feedback[]> {
         const data = await res.json();
 
         if (Array.isArray(data) && data.length > 0) {
-            // Filter out duplicates
             const uniqueData = data.filter((f: any) => {
                 const id = typeof f._id === "string" ? f._id : f._id?.$oid;
                 if (!id || seenIds.has(id)) return false;
@@ -41,66 +44,9 @@ export async function getFeedbacks(): Promise<Feedback[]> {
     return allFeedbacks;
 }
 
-export async function getFeedbacksByIds(
-    ids: Set<string>,
-    limit: number = 10
-): Promise<Feedback[]> {
-    let matches: Feedback[] = [];
-    const seenIds = new Set<string>();
-    let page = 1;
-    let hasMore = true;
-    const MAX_PAGES = 20;
-    let emptyPagesCount = 0;
-
-    while (hasMore && matches.length < limit && page <= MAX_PAGES) {
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks?page=${page}&limit=100`,
-                {
-                    cache: "no-store",
-                }
-            );
-
-            if (!res.ok) {
-                // If error, stop scanning
-                break;
-            }
-
-            const data = await res.json();
-
-            if (Array.isArray(data) && data.length > 0) {
-                const pageMatches = data.filter((f: any) => {
-                    const fId = typeof f._id === "string" ? f._id : f._id?.$oid;
-                    // Check if ID is in the requested set AND not already seen
-                    if (!fId || !ids.has(fId) || seenIds.has(fId)) return false;
-                    seenIds.add(fId);
-                    return true;
-                });
-
-                if (pageMatches.length > 0) {
-                    matches = [...matches, ...pageMatches];
-                    emptyPagesCount = 0;
-                } else {
-                    emptyPagesCount++;
-                }
-                if (emptyPagesCount >= 3) {
-                    break;
-                }
-
-                page++;
-            } else {
-                hasMore = false;
-            }
-        } catch (e) {
-            console.error("Error fetching feedbacks page:", page, e);
-            break;
-        }
-    }
-
-    return matches.slice(0, limit);
-}
-
-    export const getFeedbacksByToolId = async (toolId: string): Promise<FeedbacksByToolId[]> => {
+export const getFeedbacksByToolId = async (
+    toolId: string
+): Promise<FeedbacksByToolId[]> => {
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/feedbacks/tools/${toolId}`,
         { cache: "no-store" }
@@ -113,16 +59,13 @@ export async function getFeedbacksByIds(
     const data = await res.json();
     return Array.isArray(data) ? data : [];
 };
-    
 
-export async function createFeedback(
-    payload: CreateFeedbackPayload
-) {
+export async function createFeedback(payload: CreateFeedbackPayload) {
     const res = await fetch(`/api/feedbacks`, {
         method: "POST",
         headers: {
-    'Content-Type': 'application/json',
-    },
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
         credentials: "include",
     });
@@ -133,4 +76,4 @@ export async function createFeedback(
     }
 
     return res.json();
-};
+}
