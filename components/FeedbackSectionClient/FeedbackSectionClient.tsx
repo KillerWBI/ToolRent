@@ -1,5 +1,6 @@
 "use client";
 
+import css from "./FeedbackSectionClient.module.css"
 import { useEffect, useState } from "react";
 import { FeedbackFormModal } from "../modal/FeedbackFormModal/FeedbackFormModal";
 import FeedbacksBlock from "../home/FeedbacksBlock/FeedbacksBlock";
@@ -36,7 +37,7 @@ export function FeedbackSectionClient({
   const handleRegisterClick = () => router.push(`/auth/register`);
 
   return (
-    <>
+    <div className={css.wrapper}>
       <FeedbacksBlock
         isShowFeedbackBtn={true}
         title={"Відгуки"}
@@ -59,6 +60,6 @@ export function FeedbackSectionClient({
             onCloseModal={() => setIsOpen(false)}
           />
         ))}
-    </>
+    </div>
   );
 }
